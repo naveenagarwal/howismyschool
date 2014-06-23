@@ -41,6 +41,7 @@ group :development, :test do
   gem 'mocha'
   gem 'annotate', '>=2.6.0'
   gem 'spring'
+  gem 'rack-dev-mark'
 end
 
 # For authentoication and autherization
@@ -49,6 +50,7 @@ gem 'cancancan', '~> 1.8'
 
 # For Front end
 gem 'twitter-bootstrap-rails'
+gem 'therubyracer'
 gem 'less-rails'
 
 
