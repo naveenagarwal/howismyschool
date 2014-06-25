@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     root 'home#index'
   end
 
+  resources :class_rooms
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

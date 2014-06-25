@@ -3,12 +3,16 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_session_nil?, :current_entity_type
+  helper_method :current_session_nil?, :current_entity_type, :current_entity
 
 
   protected
 
   def current_session?
+    current_entity
+  end
+
+  def current_entity
     current_teacher || current_school_controller || current_manager || current_admin
   end
 

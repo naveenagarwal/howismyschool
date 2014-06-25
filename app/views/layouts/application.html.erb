@@ -63,6 +63,7 @@
               </div>
             <% else %>
               <ul class="nav">
+                <%= render partial: "/layouts/#{current_entity_type}_sign_in_links" %>
                 <li><%= link_to "Singn Out", send("destroy_#{current_entity_type}_session_path"), method: :delete %></li>
               </ul>
             <% end %>
