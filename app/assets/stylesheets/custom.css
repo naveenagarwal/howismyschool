@@ -40,3 +40,21 @@ body div.github-fork-ribbon-wrapper.left {
   min-width: 100%;
   height: inherit;
 }
+
+.navbar .brand {
+  color: #F58220;
+}
+
+.btn-navbar-custom {
+    background-color: ##666666;
+    background-image: linear-gradient(to bottom, #666660, #666666);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn-navbar-custom:hover {
+    background-color: #666666;
+    color: #FFFFFF;
+}
