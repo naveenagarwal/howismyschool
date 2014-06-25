@@ -13,11 +13,11 @@ class ApplicationController < ActionController::Base
   end
 
   def current_session_nil?
-    !current_session?    
+    !current_session?
   end
 
   def current_entity_type
-    session[:current_entity_type] ||= case 
+    session[:current_entity_type] ||= case
       when current_admin
         "admin"
       when current_teacher
@@ -29,6 +29,10 @@ class ApplicationController < ActionController::Base
       else
         "guest"
       end
-  end       
+  end
+
+  def after_sign_in_path_for(resource_or_scope)
+    send("#{current_entity_type}s_root_url")
+  end
 
 end

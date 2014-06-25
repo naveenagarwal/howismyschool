@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  
 
   devise_for :admins
   devise_for :managers
@@ -10,6 +9,22 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'home#index'
+
+  namespace :teachers do
+    root 'home#index'
+  end
+
+  namespace :school_controllers do
+    root 'home#index'
+  end
+
+  namespace :managers do
+    root 'home#index'
+  end
+
+  namespace :admins do
+    root 'home#index'
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

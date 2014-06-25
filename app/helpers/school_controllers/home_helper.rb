@@ -1,0 +1,2 @@
+module SchoolControllers::HomeHelper
+end
