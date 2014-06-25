@@ -7,3 +7,36 @@ body div.github-fork-ribbon-wrapper.left {
        -o-transform: rotate(90deg);
           transform: rotate(90deg);
 }
+
+.center-block {
+  display: table;
+  margin: 0 auto;
+}
+
+#myCarousel .carousel-inner .carousel-caption h3{
+    margin: 0;
+    color: #666;
+    padding-top: auto;
+    font-size: 40px;
+    font-family: "trebuchet ms", sans-serif;
+}
+.item{
+    background: #333;
+    text-align: center;
+    height: 600px;
+    /*height: 300px !important;*/
+}
+.carousel{
+    margin-top: 20px;
+}
+.bs-example{
+  margin: 20px;
+}
+
+.carousel img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: inherit;
+}
