@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   end
 
   resources :class_rooms
+  resources :class_tests
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

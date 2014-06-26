@@ -2,10 +2,12 @@
   <p id="notice"><%= notice %></p>
 
   <p>
-    Name: <%= @class_room.name %>
+    <strong>Name:</strong>
+    <%= @class_room.name %>
   </p>
   <p>
-    Name: <%= @class_room.grade %>
+    <strong>Grade:</strong>
+    <%= @class_room.grade %>
   </p>
 
   <%= link_to 'Edit', edit_class_room_path(@class_room) %> |
