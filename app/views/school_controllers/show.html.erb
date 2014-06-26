@@ -1,0 +1,16 @@
+<div class="center-block">
+  <p id="notice"><%= notice %></p>
+
+  <p>
+    <strong>Email:</strong>
+    <%= @school_controller.email %>
+  </p>
+
+  <p>
+    <strong>School Branch:</strong>
+    <%= @school_controller.school_branch.name %>
+  </p>
+
+  <%= link_to 'Edit', edit_school_controller_path(@school_controller) %> |
+  <%= link_to 'Back', school_controllers_path %>
+</div>

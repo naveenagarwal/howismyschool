@@ -1,0 +1,35 @@
+<%= form_for(@school_controller) do |f| %>
+  <% if @school_controller.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@school_controller.errors.count, "error") %> prohibited this school_controller from being saved:</h2>
+
+      <ul>
+      <% @school_controller.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :email %><br>
+    <%= f.email_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :password %><br>
+    <%= f.password_field :password %>
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation %><br>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <div class="field">
+    <%= f.label :school_branch %><br>
+    <%= f.select :school_branch_id, current_manager.school_branches.collect { |p| [ p.name, p.id ] }, incldue_blank: true, class: "select2" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

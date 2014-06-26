@@ -1,0 +1,27 @@
+<h1>Listing School Controllers</h1>
+
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>School Branch</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @school_controllers.each do |school_controller| %>
+      <tr>
+        <td><%= school_controller.email %></td>
+        <td><%= school_controller.school_branch.name %></td>
+        <td><%= link_to 'Show', school_controller %></td>
+        <td><%= link_to 'Edit', edit_school_controller_path(school_controller) %></td>
+        <td><%= link_to 'Destroy', school_controller, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New School controller', new_school_controller_path %>
