@@ -33,8 +33,8 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # gem 'capistrano-rails', group: :development
 
 # Use debugger
-group :development, :test do 
-	# gem 'debugger' 
+group :development, :test do
+	# gem 'debugger'
   gem 'rspec-rails'
   gem 'factory_girl_rails', '4.2.1'
   gem 'nifty-generators'
@@ -53,4 +53,10 @@ gem 'twitter-bootstrap-rails'
 gem 'therubyracer'
 gem 'less-rails'
 
+# For pagination
+gem 'will_paginate'
+
+
+# For admin management
+gem 'activeadmin' , github: 'gregbell/active_admin'
 
