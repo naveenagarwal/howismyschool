@@ -77,4 +77,14 @@ class ApplicationController < ActionController::Base
   def entity_root_url
     send("#{current_entity_type}s_root_url")
   end
+
+  def set_flash_messages(type: "", message: "")
+    return unless request.xhr?
+
+    response.headers['X-Message'] = message
+    response.headers["X-Message-Type"] = type
+
+    flash.discard
+  end
+
 end

@@ -9,6 +9,16 @@ class ClassRoom < ActiveRecord::Base
             presence: true,
             uniqueness: { scope: [ :school_id, :school_branch_id, :grade ], case_sensitive: false }
 
+  class << self
+    def get_class_rooms_array_for_select_option(school_branch_id: nil)
+      select(:id, :name, :grade).
+      where(
+          school_branch_id: school_branch_id
+        ).
+      map { |p| [ p.full_name, p.id ] }
+    end
+  end
+
   def full_name
     "#{name}#{grade}"
   end

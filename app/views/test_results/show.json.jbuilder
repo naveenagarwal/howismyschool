@@ -1,0 +1,1 @@
+json.extract! @test_result, :id, :percentage, :grade, :outcome, :remarks, :subject_id, :student_id, :class_test_id, :school_branch_id, :class_room, :creator_id, :creator_type, :created_at, :updated_at

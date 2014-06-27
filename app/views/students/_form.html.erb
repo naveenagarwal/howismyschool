@@ -21,7 +21,7 @@
   </div>
   <div class="field">
     <%= f.label :class_room %><br>
-    <%= f.select :class_room_id, current_school_branch.class_rooms.collect { |p| [ p.full_name, p.id ] }, include_blank: true, class: "select2" %>
+    <%= f.select :class_room_id, current_school_branch.class_rooms.collect { |p| [ p.full_name, p.id ] }, { include_blank: true }, class: "select2" %>
   </div>
 
   <div class="actions">

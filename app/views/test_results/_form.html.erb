@@ -1,0 +1,54 @@
+<%= form_for(@test_result, html: { data: { remote: true } }) do |f| %>
+
+  <div id="form_errors">
+    <% render partial: "/shared/form_errors", locals: { obj: @test_result, name: "test result" } %>
+  </div>
+
+
+  <div class="field">
+    <div class="inline-div">
+      <%= f.label :class_room %>
+      <%= f.select :class_room_id, @class_rooms_array, { include_blank: true }, class: "select2" %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :student %>
+      <%= f.select :student_id, @students_array, { include_blank: true }, class: "select2" %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :class_test %>
+      <%= f.select :class_test_id, @class_tests_array, { include_blank: true }, class: "select2" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="inline-div">
+      <%= f.label :subject %>
+      <%= f.select :subject_id, @subjects_array, { include_blank: true }, class: "select2 clear_fields" %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :percentage %>
+      <%= f.text_field :percentage, class: "clear_fields" %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :grade %>
+      <%= f.text_field :grade, class: "clear_fields" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="inline-div">
+      <%= f.label :outcome, "Passed?" %>
+      <%= f.check_box :outcome, class: "clear_fields" %>
+    </div>
+    <br>
+    <br>
+    <div class="inline-div">
+      <%= f.label :remarks %>
+      <%= f.text_area :remarks, class: "clear_fields test-result-textarea" %>
+    </div>
+  </div>
+
+  <div class="actions inline-div">
+    <%= f.submit %>
+  </div>
+<% end %>

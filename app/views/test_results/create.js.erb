@@ -1,0 +1,7 @@
+<% if @test_result.errors.blank? %>
+  clearFields();
+  $('#form_errors').html('');
+<% else %>
+  $('#form_errors').html('<%= j render(partial: "/shared/form_errors", locals: { obj: @test_result, name: "test result" }) %>');
+<% end %>
+$(window).scrollTop(0);

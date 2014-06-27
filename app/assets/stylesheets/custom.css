@@ -108,3 +108,13 @@ div.field, div.actions {
     font-size: 12px;
     list-style: square outside none;
 }
+
+div.inline-div {
+  display: inline-table;
+  width: 30%;
+  padding-left: 10px;
+}
+
+div.inline-div textarea.test-result-textarea {
+  width: 210%;
+}

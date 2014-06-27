@@ -1,10 +1,11 @@
 class ClassTestsController < ApplicationController
+  before_action :authenticate_teacher!
   before_action :set_class_test, only: [:show, :edit, :update, :destroy]
 
   # GET /class_tests
   # GET /class_tests.json
   def index
-    @class_tests = ClassTest.all
+    @class_tests = current_school_branch.class_tests.all
   end
 
   # GET /class_tests/1
@@ -25,6 +26,8 @@ class ClassTestsController < ApplicationController
   # POST /class_tests.json
   def create
     @class_test = ClassTest.new(class_test_params)
+    @class_test.school_branch = current_school_branch
+    @class_test.creator = current_teacher || current_entity
 
     respond_to do |format|
       if @class_test.save
@@ -64,7 +67,7 @@ class ClassTestsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_class_test
-      @class_test = ClassTest.find(params[:id])
+      @class_test = current_school_branch.class_tests.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

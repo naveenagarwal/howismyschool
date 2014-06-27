@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Percentage:</strong>
+  <%= @test_result.percentage %>
+</p>
+
+<p>
+  <strong>Grade:</strong>
+  <%= @test_result.grade %>
+</p>
+
+<p>
+  <strong>Outcome:</strong>
+  <%= @test_result.outcome %>
+</p>
+
+<p>
+  <strong>Remarks:</strong>
+  <%= @test_result.remarks %>
+</p>
+
+<p>
+  <strong>Subject:</strong>
+  <%= @test_result.subject %>
+</p>
+
+<p>
+  <strong>Student:</strong>
+  <%= @test_result.student %>
+</p>
+
+<p>
+  <strong>Class test:</strong>
+  <%= @test_result.class_test %>
+</p>
+
+<p>
+  <strong>School branch:</strong>
+  <%= @test_result.school_branch %>
+</p>
+
+<p>
+  <strong>Class room:</strong>
+  <%= @test_result.class_room %>
+</p>
+
+<p>
+  <strong>Creator:</strong>
+  <%= @test_result.creator %>
+</p>
+
+<%= link_to 'Edit', edit_test_result_path(@test_result) %> |
+<%= link_to 'Back', test_results_path %>
