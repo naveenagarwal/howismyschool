@@ -8,4 +8,5 @@ class Teacher < ActiveRecord::Base
   belongs_to :creator, polymorphic: true
 
   has_many :subjects, as: :creator
+  has_many :students, as: :creator
 end

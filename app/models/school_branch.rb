@@ -3,4 +3,7 @@ class SchoolBranch < ActiveRecord::Base
   has_one :school_controller
   has_many :teachers
   has_many :subjects
+  has_many :students
+  has_many :class_rooms
+
 end

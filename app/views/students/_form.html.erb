@@ -1,0 +1,30 @@
+<%= form_for(@student) do |f| %>
+  <% if @student.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@student.errors.count, "error") %> prohibited this student from being saved:</h2>
+
+      <ul>
+      <% @student.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :roll_number %><br>
+    <%= f.text_field :roll_number %>
+  </div>
+  <div class="field">
+    <%= f.label :class_room %><br>
+    <%= f.select :class_room_id, current_school_branch.class_rooms.collect { |p| [ p.full_name, p.id ] }, include_blank: true, class: "select2" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

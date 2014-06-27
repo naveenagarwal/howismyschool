@@ -1,4 +1,5 @@
 class ClassRoomsController < ApplicationController
+  before_action :authenticate_teacher!
   before_action :set_class_room, only: [:show, :edit, :update, :destroy]
 
   # GET /class_rooms
@@ -25,7 +26,8 @@ class ClassRoomsController < ApplicationController
   # POST /class_rooms.json
   def create
     @class_room = ClassRoom.new(class_room_params)
-    @class_room.creator = current_entity
+    @class_room.school_branch = current_school_branch
+    @class_room.creator = current_teacher || current_entity
 
     respond_to do |format|
       if @class_room.save

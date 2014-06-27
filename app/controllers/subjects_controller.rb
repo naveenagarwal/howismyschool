@@ -6,7 +6,7 @@ class SubjectsController < ApplicationController
   # GET /subjects
   # GET /subjects.json
   def index
-    @subjects = Subject.all
+    @subjects = current_school_branch.subjects.all
   end
 
   # GET /subjects/1
