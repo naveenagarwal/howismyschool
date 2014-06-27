@@ -27,6 +27,9 @@ class TeachersController < ApplicationController
   # POST /teachers.json
   def create
     @teacher = Teacher.new(teacher_params)
+    @teacher.school_branch = current_school_branch
+    @teacher.school = current_school
+    @teacher.creator = current_school_controller || current_entity
 
     respond_to do |format|
       if @teacher.save
@@ -66,11 +69,11 @@ class TeachersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_teacher
-      @teacher = Teacher.find(params[:id])
+      @teacher = current_school_branch.teachers.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def teacher_params
-      params[:teacher]
+      params.require(:teacher).permit(:email, :password, :password_confirmation)
     end
 end

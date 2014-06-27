@@ -1,4 +1,16 @@
-<p id="notice"><%= notice %></p>
+<div class="center-block">
+  <p id="notice"><%= notice %></p>
 
-<%= link_to 'Edit', edit_teacher_path(@teacher) %> |
-<%= link_to 'Back', teachers_path %>
+  <p>
+    <strong>Email:</strong>
+    <%= @teacher.email %>
+  </p>
+
+  <p>
+    <strong>School Branch:</strong>
+    <%= @teacher.school_branch.name %>
+  </p>
+
+  <%= link_to 'Edit', edit_teacher_path(@teacher) %> |
+  <%= link_to 'Back', teachers_path %>
+</div>

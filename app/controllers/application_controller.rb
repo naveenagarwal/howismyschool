@@ -21,17 +21,17 @@ class ApplicationController < ActionController::Base
   end
 
   def current_school
-    current_school_branch.try(:school)
+    @current_school ||= current_school_branch.try(:school)
   end
 
   def current_school_branch
     if session[:current_school_branch_id]
-      branch = School.where(id: session[:current_school_branch_id]).first
+      branch = SchoolBranch.where(id: session[:current_school_branch_id]).first
     else
-      if current_teacher
-        branch = current_teacher.school_branch
-      elsif current_controller_or_manager
-        branch = current_entity.school_branches.first
+      if current_teacher || current_school_controller
+        branch = current_entity.school_branch
+      elsif current_manager
+        branch = current_manager.school_branches.first
       end
       session[:current_school_branch_id] = branch.id
     end

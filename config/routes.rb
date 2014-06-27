@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   root 'home#index'
 
   namespace :teachers do
-    root 'home#index'
+    get '/home' => 'home#index', as: :root
   end
 
   namespace :school_controllers do
@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   resources :class_rooms
   resources :class_tests
   resources :school_controllers
+  resources :teachers
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
