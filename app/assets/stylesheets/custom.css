@@ -117,4 +117,5 @@ div.inline-div {
 
 div.inline-div textarea.test-result-textarea {
   width: 210%;
+  height: 130px;
 }
