@@ -29,7 +29,13 @@ var showAjaxCompleteNotification = function(){
 };
 
 var flashMessageHTML = function(type, msg){
-  var html = '<div class="alert fade in alert-success"><button class="close" data-dismiss="alert">×</button>' + msg + '</div>';
+  if(type == "notice" || type == "success"){
+    type = "success";
+  }else if(type == "alert" || type == "error"){
+    type = "error";
+  }
+
+  var html = '<div class="alert fade in alert-' + type + '"><button class="close" data-dismiss="alert">×</button>' + msg + '</div>';
 
   return html
 };

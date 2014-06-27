@@ -50,7 +50,7 @@ class TestResultsController < ApplicationController
         format.js { set_flash_messages type: 'notice', message: 'Test result was successfully created.' }
         format.json { render :show, status: :created, location: @test_result }
       else
-        format.js { set_flash_messages type: 'notice', message: 'Error in saving Test result' }
+        format.js { set_flash_messages type: 'error', message: 'Error in saving Test result' }
         format.html { render :new }
         format.json { render json: @test_result.errors, status: :unprocessable_entity }
       end
