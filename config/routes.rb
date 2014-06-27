@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+
+  resources :subjects
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   # devise_for :admins
@@ -32,7 +35,6 @@ Rails.application.routes.draw do
   resources :class_tests
   resources :school_controllers
   resources :teachers
-
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
