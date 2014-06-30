@@ -35,6 +35,13 @@ Rails.application.routes.draw do
   resources :subjects
   resources :students
   resources :test_results
+
+  resources :draw_chart, only: [] do
+    collection do
+      get 'chart_for_latest_test_results'
+    end
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

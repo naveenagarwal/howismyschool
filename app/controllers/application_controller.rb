@@ -87,4 +87,8 @@ class ApplicationController < ActionController::Base
     flash.discard
   end
 
+  def ensure_session_exists!
+    return redirect_to root_url unless current_session?
+  end
+
 end
