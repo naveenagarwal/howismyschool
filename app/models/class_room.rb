@@ -1,8 +1,14 @@
 class ClassRoom < ActiveRecord::Base
+
+  DEFAULT_LIMIT = 5
+
   belongs_to :creator, polymorphic: true
   belongs_to :school
   belongs_to :school_branch
 
+  has_many :test_results
+  has_many :subjects
+  has_many :class_tests
   has_many :students
 
   validates :name,

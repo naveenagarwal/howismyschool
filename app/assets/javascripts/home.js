@@ -2,6 +2,7 @@ $(document).on('page:load', function() {
   loadCarousel();
   showAjaxCompleteNotification();
   ajaxLoaderDisplay();
+  fadeOutFlashMessages();
 
 });
 
@@ -9,6 +10,7 @@ $(document).ready(function() {
   loadCarousel();
   showAjaxCompleteNotification();
   ajaxLoaderDisplay();
+  fadeOutFlashMessages();
 
 });
 
@@ -26,6 +28,7 @@ var showAjaxCompleteNotification = function(){
 
     if(msg){
       $("#flash_messages").html(flashMessageHTML(type, msg));
+      fadeOutFlashMessages();
     }
   });
 };
@@ -51,3 +54,10 @@ var ajaxLoaderDisplay = function(){
   });
 };
 
+
+var fadeOutFlashMessages = function(){
+  setTimeout(function() {
+    $("div.alert").removeClass("in");
+    $("div.alert button.close").trigger("click");
+  }, 2000);
+};

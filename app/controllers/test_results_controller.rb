@@ -5,6 +5,23 @@ class TestResultsController < ApplicationController
   # GET /test_results
   # GET /test_results.json
   def index
+    @class_room = current_school_branch.test_results.last.class_room
+
+    test_results = TestResult.where(class_room_id: @class_room.id)
+    class_test_ids = test_results.pluck(:class_test_id).uniq
+
+    average_test_results = []
+
+    class_test_ids.each do |class_test_id|
+      test_result = test_results.where(class_test_id: class_test_id).select("avg(percentage) as percent, class_test_id").group("id, class_test_id").first
+
+      average_test_results << {
+          test_name: test_result.class_test.name,
+          percentage:  test_result.percent
+        }
+    end
+
+    render json: { result: average_test_results }
   end
 
   # GET /test_results/1
