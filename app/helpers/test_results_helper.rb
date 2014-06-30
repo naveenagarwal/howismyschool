@@ -9,6 +9,8 @@ module TestResultsHelper
         myChart.setAxisNameX('Tests');
         myChart.setAxisNameY('Percentage(%)', true);
         myChart.colorizeBars(colors);
+        myChart.setFontFamily('\"Comic Sans MS\", cursive, sans-serif');
+        myChart.setLabelFontFamily('\"Comic Sans MS\", cursive, sans-serif');
         myChart.draw();
       </script>
     ".html_safe

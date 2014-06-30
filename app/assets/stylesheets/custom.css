@@ -68,7 +68,7 @@ body {
     line-height: 18px;
 }
 p, ol, ul, td {
-    font-family: verdana,arial,helvetica,sans-serif;
+    /*font-family: verdana,arial,helvetica,sans-serif;*/
     font-size: 13px;
     line-height: 18px;
 }
@@ -146,4 +146,8 @@ div.inline-div textarea.test-result-textarea {
 .absoulte-position {
   position: absolute;
   margin: 0 0 0 5%;
+}
+
+body {
+  font-family: "Comic Sans MS", cursive, sans-serif;
 }
