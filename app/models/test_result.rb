@@ -1,4 +1,6 @@
 class TestResult < ActiveRecord::Base
+  default_scope -> { order("") }
+
   belongs_to :subject
   belongs_to :student
   belongs_to :class_test
