@@ -1,5 +1,64 @@
 <%= link_to 'New Test result', new_test_result_path %>
+<br>
 
-<div id="chartcontainer" class="center-block">Hey, howdy!. Is every thing all right with you?</div>
+<div id="inline-div">
+  <div class="have-margin">
+    <div class="absoulte-position">
+      Class Room
+      <strong>
+        <%= @class_room.full_name %>
+      </strong>
+      Performance
+    </div>
+    <div id="chartcontainer1">
+      Hey, howdy!. Is every thing all right with you?
+      <%= barchart_for_latest_test_results("chartcontainer1") %>
+    </div>
+  </div>
 
-<%= barchart_for_latest_test_results %>
+  <div class="have-margin">
+    <div class="absoulte-position">
+      Class Room
+      <strong>
+        <%= @class_room.full_name %>
+      </strong>
+      Performance
+    </div>
+    <div id="chartcontainer2">
+      Hey, howdy!. Is every thing all right with you?
+      <%= barchart_for_latest_test_results("chartcontainer2") %>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="have-margin">
+    <div class="absoulte-position">
+      Class Room
+      <strong>
+        <%= @class_room.full_name %>
+      </strong>
+      Performance
+    </div>
+
+    <div id="chartcontainer3">
+      Hey, howdy!. Is every thing all right with you?
+      <%= barchart_for_latest_test_results("chartcontainer3") %>
+    </div>
+  </div>
+
+  <div class="have-margin">
+    <div class="absoulte-position">
+      Class Room
+      <strong>
+        <%= @class_room.full_name %>
+      </strong>
+      Performance
+    </div>
+
+    <div id="chartcontainer4">
+      Hey, howdy!. Is every thing all right with you?
+      <%= barchart_for_latest_test_results("chartcontainer4") %>
+    </div>
+  </div>
+</div>

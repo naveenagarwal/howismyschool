@@ -5,6 +5,7 @@ class TestResultsController < ApplicationController
   # GET /test_results
   # GET /test_results.json
   def index
+    @class_room = current_school_branch.test_results.last.class_room
   end
 
   # GET /test_results/1

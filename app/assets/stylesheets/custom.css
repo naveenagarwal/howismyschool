@@ -134,3 +134,16 @@ div.inline-div textarea.test-result-textarea {
   background: url('/assets/page-loader.gif') 50% 50% no-repeat rgb(249,249,249);
   display: none;
 }
+
+#inline-div div {
+  display: inline-table;
+}
+
+.have-margin {
+  margin: 10px 10px 10px 10px;
+}
+
+.absoulte-position {
+  position: absolute;
+  margin: 0 0 0 5%;
+}

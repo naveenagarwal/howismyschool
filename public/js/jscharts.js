@@ -212,7 +212,8 @@ function mx() {
     this.dG = 8;
     this.dH = 15;
     this.dI = true;
-    this.dJ = 'JS Chart';
+    // this.dJ = 'JS Chart';
+    this.dJ = '';
     this.dK = '#8E8E8E';
     this.dL = false;
     this.dM = 11;

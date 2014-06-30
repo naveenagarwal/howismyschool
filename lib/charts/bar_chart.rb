@@ -17,9 +17,9 @@ module Charts
 
       js_chart = default_chart_hash(chart_type)
 
-      @class_room = current_school_branch.test_results.last.class_room
+      class_room = current_school_branch.test_results.last.class_room
 
-      test_results = TestResult.where(class_room_id: @class_room.id)
+      test_results = TestResult.where(class_room_id: class_room.id)
       class_test_ids = test_results.pluck(:class_test_id).uniq
 
       average_test_results = []
