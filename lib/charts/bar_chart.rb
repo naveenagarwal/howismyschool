@@ -25,7 +25,7 @@ module Charts
       average_test_results = []
 
       class_test_ids.each do |class_test_id|
-        test_result = test_results.where(class_test_id: class_test_id).select("avg(percentage) as percent, class_test_id").group("id, class_test_id").first
+        test_result = test_results.where(class_test_id: class_test_id).select("avg(percentage) as percent, class_test_id, id").group("id, class_test_id").first
 
         average_test_results << {
             unit: test_result.class_test.name,
