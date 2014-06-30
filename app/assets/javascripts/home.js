@@ -1,12 +1,14 @@
 $(document).on('page:load', function() {
   loadCarousel();
   showAjaxCompleteNotification();
+  ajaxLoaderDisplay();
 
 });
 
 $(document).ready(function() {
   loadCarousel();
   showAjaxCompleteNotification();
+  ajaxLoaderDisplay();
 
 });
 
@@ -39,3 +41,13 @@ var flashMessageHTML = function(type, msg){
 
   return html
 };
+
+
+var ajaxLoaderDisplay = function(){
+  $(document).bind("ajaxSend", function(){
+    $("#ajax-loader").show();
+  }).bind("ajaxComplete", function(){
+    $("#ajax-loader").hide();
+  });
+};
+
