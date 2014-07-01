@@ -28,4 +28,20 @@ class ClassRoom < ActiveRecord::Base
   def full_name
     "#{name}#{grade}"
   end
+
+  def current_students
+    students.where(year: current_year)
+  end
+
+  private
+
+  def current_year
+    time = Time.now
+
+    if time.month.betwwen? 4, 12
+      "#{time.year}-#{time.year + 1}"
+    else
+      "#{time.year - 1}-#{time.year}"
+    end
+  end
 end

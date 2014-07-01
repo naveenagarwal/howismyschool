@@ -3,10 +3,10 @@ class Student < ActiveRecord::Base
   belongs_to :school_branch
   belongs_to :class_room
 
-  validates :name, :roll_number, :class_room_id, presence: true
+  validates :name, :roll_number, :class_room_id, :year, presence: true
   validates :name, :roll_number,
     uniqueness: {
-      scope: [ :class_room_id, :roll_number ],
+      scope: [ :class_room_id, :roll_number, :school_branch_id, :year ],
       message: " - This student already exists with same name and roll number"
     }
 
@@ -23,4 +23,5 @@ class Student < ActiveRecord::Base
   def name_with_rno
     "#{name.titleize} - #{roll_number}"
   end
+
 end

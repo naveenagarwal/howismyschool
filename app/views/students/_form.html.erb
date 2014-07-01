@@ -24,6 +24,10 @@
     <%= f.select :class_room_id, current_school_branch.class_rooms.collect { |p| [ p.full_name, p.id ] }, { include_blank: true }, class: "select2" %>
   </div>
 
+  <div class="field">
+    <%= f.label :year, "Year(In the format 2013-2014)" %><br>
+    <%= f.text_field :year %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

@@ -94,7 +94,7 @@ class TestResultsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def test_result_params
-      params.require(:test_result).permit(:percentage, :grade, :outcome, :remarks, :subject_id, :student_id, :class_test_id, :class_room_id)
+      params.require(:test_result).permit(:percentage, :grade, :outcome, :remarks, :subject_id, :student_id, :class_test_id, :class_room_id, :year)
     end
 
     def get_arrays_for_select_options

@@ -37,6 +37,10 @@
 
   <div class="field">
     <div class="inline-div">
+      <%= f.label :year, "Year(In the format 2013-2014)" %><br>
+      <%= f.text_field :year %>
+    </div>
+    <div class="inline-div">
       <%= f.label :outcome, "Passed?" %>
       <%= f.check_box :outcome, class: "clear_fields" %>
     </div>
