@@ -60,3 +60,6 @@ gem 'will_paginate'
 # For admin management
 gem 'activeadmin' , github: 'gregbell/active_admin'
 
+
+# Others
+gem 'select2-rails'

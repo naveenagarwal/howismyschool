@@ -3,6 +3,8 @@ $(document).on('page:load', function() {
   showAjaxCompleteNotification();
   ajaxLoaderDisplay();
   fadeOutFlashMessages();
+  initializeSelectOptions();
+  initializeSelectOptionsForAjax();
 
 });
 
@@ -11,6 +13,8 @@ $(document).ready(function() {
   showAjaxCompleteNotification();
   ajaxLoaderDisplay();
   fadeOutFlashMessages();
+  initializeSelectOptions();
+  initializeSelectOptionsForAjax();
 
 });
 
@@ -59,4 +63,17 @@ var fadeOutFlashMessages = function(){
     $("div.alert").removeClass("in");
     $("div.alert button.close").trigger("click");
   }, 2000);
+};
+
+var initializeSelectOptions = function(){
+  if($(".select2").length > 0){
+    $(".select2").select2("destroy")
+    $(".select2").select2();
+  }
+};
+
+var initializeSelectOptionsForAjax = function(){
+  $(document).ajaxComplete(function(event, request) {
+    initializeSelectOptions();
+  });
 };

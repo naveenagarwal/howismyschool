@@ -151,3 +151,7 @@ div.inline-div textarea.test-result-textarea {
 body {
   font-family: "Comic Sans MS", cursive, sans-serif;
 }
+
+.select2 {
+  width:  220px;
+}
