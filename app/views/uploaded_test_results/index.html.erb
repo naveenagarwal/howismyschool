@@ -1,0 +1,32 @@
+<h3>Listing Uploaded Test Results</h3>
+
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th>File Name</th>
+      <th>Status</th>
+      <th>Status Message</th>
+      <th>Total Test Results Added</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @test_results_from_files.each do |test_results_from_file| %>
+      <tr>
+        <td><%= link_to test_results_from_file.name.file.original_filename, test_results_from_file.name.url %></td>
+        <td><%= test_results_from_file.status_name %></td>
+        <td><%= test_results_from_file.status_message %></td>
+        <td><%= test_results_from_file.test_result_ids.size %></td>
+
+        <td><%= link_to 'Show', uploaded_test_result_path(test_results_from_file) %></td>
+        <td><%= link_to 'Destroy', uploaded_test_result_path(test_results_from_file), method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Upload', new_uploaded_test_result_path %>

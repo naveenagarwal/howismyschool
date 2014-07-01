@@ -1,0 +1,22 @@
+<%= form_for(@test_results_from_file, url: uploaded_test_results_path) do |f| %>
+  <div id="form_errors">
+    <% render partial: "/shared/form_errors", locals: { obj: @test_results_from_file, name: "Document" } %>
+  </div>
+
+  <div class="field">
+    <div class="inline-div">
+      <%= f.label :name, "Select Document (Must be in .csv, .xls or .xlsx format)" %>
+      <%= f.file_field :name %>
+
+      <% if @test_results_from_file.name.url %>
+        <br>
+        Current Uploaded Document : <%= @test_results_from_file.name.url %>
+      <% end %>
+    </div>
+
+  </div>
+
+  <div class="actions inline-div">
+    <%= f.submit "Upload" %>
+  </div>
+<% end %>

@@ -1,0 +1,8 @@
+<div class="center-block">
+  <p id="notice"><%= notice %></p>
+  <h3>Uploaded Document</h3>
+  <p><%= link_to @test_results_from_file.name.file.original_filename, @test_results_from_file.name.url %></p>
+  <%= link_to 'Destroy', uploaded_test_result_path(@test_results_from_file), method: :delete, data: { confirm: 'Are you sure?' } %>
+  &nbsp;|&nbsp;
+  <%= link_to 'Back', uploaded_test_results_path %>
+</div>
