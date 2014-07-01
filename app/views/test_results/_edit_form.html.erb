@@ -1,0 +1,25 @@
+<%= form_tag(for_edit_test_results_path, { data: { remote: true } }) do %>
+
+  <div class="field">
+    <div class="inline-div">
+      <%= label_tag "Class Room" %>
+      <%= select_tag "class_room_id", options_for_select(@class_rooms_array), { class: "select2" } %>
+    </div>
+    <div class="inline-div">
+      <%= label_tag "Student" %>
+      <%= select_tag "student_id", options_for_select(@students_array), { class: "select2" } %>
+    </div>
+    <div class="inline-div">
+      <%= label_tag "Class Test" %>
+      <%= select_tag "class_test_id", options_for_select(@class_tests_array), { class: "select2" } %>
+    </div>
+    <div class="inline-div">
+      <%= label_tag "Subject" %>
+      <%= select_tag "subject_id", options_for_select(@subjects_array), { class: "select2" } %>
+    </div>
+  </div>
+
+  <div class="actions inline-div">
+    <%= submit_tag "Get Test Result", data: { disable_with: "Please wait..." } %>
+  </div>
+<% end %>

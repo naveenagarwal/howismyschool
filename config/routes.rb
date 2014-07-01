@@ -34,7 +34,13 @@ Rails.application.routes.draw do
   resources :teachers
   resources :subjects
   resources :students
-  resources :test_results
+
+  resources :test_results, except: [ :edit ] do
+    collection do
+      get 'edit'
+      post 'for_edit'
+    end
+  end
 
   resources :draw_chart, only: [] do
     collection do

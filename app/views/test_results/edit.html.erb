@@ -1,8 +1,8 @@
 <div class="center-block">
-  <h1>Editing Test Result</h1>
+  <%= render 'edit_form' %>
 
-  <%= render 'form' %>
+  <div id="edit_test_result_data">
+  </div>
 
-  <%= link_to 'Show', @test_result %> |
   <%= link_to 'Back', test_results_path %>
 </div>
