@@ -62,6 +62,8 @@ gem 'activeadmin' , github: 'gregbell/active_admin'
 
 # Uploader
 gem 'carrierwave'
+gem 'remotipart', '~> 1.0'
+
 
 # Others
 gem 'select2-rails'
