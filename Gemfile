@@ -60,6 +60,8 @@ gem 'will_paginate'
 # For admin management
 gem 'activeadmin' , github: 'gregbell/active_admin'
 
+# Uploader
+gem 'carrierwave'
 
 # Others
 gem 'select2-rails'
