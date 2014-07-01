@@ -1,5 +1,5 @@
 <% if @test_result %>
-  $("#edit_test_result_data").html(' <h1>Editing Test Result</h1> <%= j render(partial: "form") %>');
+  $("#edit_test_result_data").html(' <h3>Editing Test Result</h3> <%= j render(partial: "form") %>');
   initializeSelectOptions();
 <% else %>
   $(window).scrollTop(0);

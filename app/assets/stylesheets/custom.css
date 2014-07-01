@@ -116,8 +116,8 @@ div.inline-div {
 }
 
 div.inline-div textarea.test-result-textarea {
-  width: 210%;
-  height: 130px;
+  width: calc(100% + 33em);
+  height: 200px;
 }
 
 
@@ -135,7 +135,7 @@ div.inline-div textarea.test-result-textarea {
   display: none;
 }
 
-#inline-div div {
+#inline-div div, #inline-div-textarea div {
   display: inline-table;
 }
 
@@ -154,4 +154,17 @@ body {
 
 .select2 {
   width:  220px;
+}
+
+.navbar .nav > li > a {
+  color: #000000;
+}
+
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
+  color: #F58220;
+}
+
+#edit_test_result_data div.inline-div textarea.test-result-textarea {
+  width: calc(100% + 37em);
+  height: 200px;
 }
