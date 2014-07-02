@@ -75,9 +75,6 @@ class TestResultParser
       remarks: row["remarks"]
     }
 
-    puts "*" * 50
-    puts attributes.inspect
-
     test_result = TestResult.new attributes
 
     if test_result.valid? && test_result.save
