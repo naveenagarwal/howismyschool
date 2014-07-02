@@ -1,6 +1,13 @@
 class TestResultsFromFile < ActiveRecord::Base
   mount_uploader :name, TestResultUploader
 
+  serialize :parsing_errors, Array
+
+  STATUS = {
+    error_parsing:  2,
+    complete:       3
+  }
+
   belongs_to :school_branch
   belongs_to :creator, polymorphic: true
 

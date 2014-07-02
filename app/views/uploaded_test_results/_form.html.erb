@@ -5,7 +5,7 @@
 
   <div class="field">
     <div class="inline-div">
-      <%= f.label :name, "Select Document (Must be in .csv, .xls or .xlsx format)" %>
+      <%= f.label :name, "Select Document (Must be in .csv format)" %>
       <%= f.file_field :name %>
 
       <% if @test_results_from_file.name.url %>
@@ -17,6 +17,6 @@
   </div>
 
   <div class="actions inline-div width-70-percent">
-    <%= f.submit "Upload" %> / <%= link_to "Download Sample File", "/sample_downloads/test_result_sample.xlsx" %>
+    <%= f.submit "Upload" %> / <%= link_to "Download Sample File", "/sample_downloads/test_result_sample.csv" %>
   </div>
 <% end %>

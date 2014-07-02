@@ -23,7 +23,7 @@ class TestResult < ActiveRecord::Base
   private
 
   def check_student_belongs_to_right_class
-    if class_room.students.where(id: student_id).exists?
+    if !class_room.students.where(id: student_id).exists?
       self.errors.add(:student, "The selected Student does not belongs to this class room")
       false
     end

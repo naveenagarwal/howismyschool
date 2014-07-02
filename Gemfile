@@ -64,6 +64,8 @@ gem 'activeadmin' , github: 'gregbell/active_admin'
 gem 'carrierwave'
 gem 'remotipart', '~> 1.0'
 
+# xlsx, xls, csv parser
+gem 'roo'
 
 # Others
 gem 'select2-rails'
