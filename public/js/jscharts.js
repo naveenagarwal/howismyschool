@@ -4516,8 +4516,9 @@ function JSChart(name, type, code, lG, resize) {
             return
         }
         if (ml.bi.length !== mn.length && ml.ec !== 'line') {
-            ml.eC('_colorLength');
-            return
+            mn.length = ml.bi.length;
+            // ml.eC('_colorLength');
+            // return
         }
         ml.be = mn
     };

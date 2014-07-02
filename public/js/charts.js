@@ -8,7 +8,7 @@ Charts.drawLatestTestResultsChart = function(container){
   myChart.setDataJSON('/draw_chart/chart_for_latest_test_results.json?chart_type=bar');
   myChart.setAxisNameX('Tests');
   myChart.setAxisNameY('Percentage(%)', true);
-  myChart.colorizeBars([ colors[0], colors[1] ]);
+  myChart.colorizeBars(colors);
   myChart.setFontFamily('"Comic Sans MS", cursive, sans-serif');
   myChart.setLabelFontFamily('"Comic Sans MS", cursive, sans-serif');
   myChart.draw();
