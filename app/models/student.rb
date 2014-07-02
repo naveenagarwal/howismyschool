@@ -4,7 +4,7 @@ class Student < ActiveRecord::Base
   belongs_to :class_room
 
   validates :name, :roll_number, :class_room_id, :year, presence: true
-  validates :name, :roll_number,
+  validates :name,
     uniqueness: {
       scope: [ :class_room_id, :roll_number, :school_branch_id, :year ],
       message: " - This student already exists with same name and roll number"
