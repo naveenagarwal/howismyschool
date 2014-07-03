@@ -14,8 +14,13 @@ class TestResultParser
     @filepath           = filepath          || raise("parse_with argument required")
     @school_branch_id   = school_branch_id  || raise("school_branch_id argument required")
     @status_message     = PARSE_BEGIN_STATUS_MESSSAGE
+
     @test_result_ids    = []
     @errors             = []
+    @class_room_ids     = {}
+    @subject_ids        = {}
+    @student_ids        = {}
+    @class_test_ids     = {}
   end
 
   class << self
@@ -30,9 +35,9 @@ class TestResultParser
   end
 
   def parse(test_result_from_file)
-    send("parse_#{file_extention}")
-
     @test_result_from_file = test_result_from_file
+
+    send("parse_#{file_extention}")
 
     @test_result_from_file.update(
       status_msg: @status_message,
@@ -76,8 +81,9 @@ class TestResultParser
       outcome:                    row["outcome"].downcase == "pass" ? true : false,
       year:                       row["year"],
       remarks:                    row["remarks"],
-      creator:                    @test_result_from_file.creator,
-      test_result_from_file_id:   @test_result_from_file.id
+      creator_id:                 @test_result_from_file.creator_id,
+      creator_type:               @test_result_from_file.creator_type,
+      test_results_from_file_id:  @test_result_from_file.id
     }
 
     test_result = TestResult.new attributes
@@ -90,38 +96,72 @@ class TestResultParser
   end
 
   def get_class_room_id(row)
-    ClassRoom.where(:school_branch_id => @school_branch_id).where([
-        "
-          LOWER(name)   = LOWER(?) AND \
-          LOWER(grade)  = LOWER(?) \
-        ", row["class_room"].to_s, row["section"].to_s
-      ]).first.try(:id)
+    @class_room_ids["#{@school_branch_id}-#{row["class_room"]}-#{row["section"]}"] ||= {}
+
+    if @class_room_ids["#{@school_branch_id}-#{row["class_room"]}-#{row["section"]}"]["is_set"]
+      @class_room_ids["#{@school_branch_id}-#{row["class_room"]}-#{row["section"]}"]["id"]
+    else
+      @class_room_ids["#{@school_branch_id}-#{row["class_room"]}-#{row["section"]}"]["is_set"] = true
+
+      @class_room_ids["#{@school_branch_id}-#{row["class_room"]}-#{row["section"]}"]["id"] =
+          ClassRoom.where(:school_branch_id => @school_branch_id).where([
+          "
+            LOWER(name)   = LOWER(?) AND \
+            LOWER(grade)  = LOWER(?) \
+          ", row["class_room"].to_s, row["section"].to_s
+        ]).first.try(:id)
+    end
+
   end
 
   def get_student_id(row)
-    Student.where(:school_branch_id => @school_branch_id).where([
-        "
-          LOWER(name)   = LOWER(?) AND \
-          LOWER(roll_number)  = LOWER(?) AND\
-          LOWER(year) = LOWER(?) \
-        ", row["student_name"].to_s, row["roll_no"].to_s, row["year"]
-      ]).first.try(:id)
+    @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"] ||= {}
+
+    if @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"]["is_set"]
+      @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"]["id"]
+    else
+      @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"]["is_set"] = true
+      @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"]["id"] =
+        Student.where(:school_branch_id => @school_branch_id).where([
+          "
+            LOWER(name)   = LOWER(?) AND \
+            LOWER(roll_number)  = LOWER(?) AND\
+            LOWER(year) = LOWER(?) \
+          ", row["student_name"].to_s, row["roll_no"].to_s, row["year"]
+        ]).first.try(:id)
+    end
   end
 
   def get_class_test_id(row)
-    ClassTest.where(:school_branch_id => @school_branch_id).where([
-        "
-          LOWER(name)   = LOWER(?) \
-        ", row["test_name"].to_s
-      ]).first.try(:id)
+    @class_test_ids["#{@school_branch_id}-#{row["test_name"]}"] ||= {}
+
+    if @class_test_ids["#{@school_branch_id}-#{row["test_name"]}"]["is_set"]
+      @class_test_ids["#{@school_branch_id}-#{row["test_name"]}"]["id"]
+    else
+      @class_test_ids["#{@school_branch_id}-#{row["test_name"]}"]["is_set"] = true
+      @class_test_ids["#{@school_branch_id}-#{row["test_name"]}"]["id"] =
+        ClassTest.where(:school_branch_id => @school_branch_id).where([
+            "
+              LOWER(name)   = LOWER(?) \
+            ", row["test_name"].to_s
+          ]).first.try(:id)
+    end
   end
 
   def get_subject_id(row)
-    Subject.where(:school_branch_id => @school_branch_id).where([
-        "
-          LOWER(name)   = LOWER(?) \
-        ", row["subject"].to_s
-      ]).first.try(:id)
+    @subject_ids["#{@school_branch_id}-#{row["subject"]}"] ||= {}
+
+    if @subject_ids["#{@school_branch_id}-#{row["subject"]}"]["is_set"]
+      @subject_ids["#{@school_branch_id}-#{row["subject"]}"]["id"]
+    else
+      @subject_ids["#{@school_branch_id}-#{row["subject"]}"]["is_set"] = true
+      @subject_ids["#{@school_branch_id}-#{row["subject"]}"]["id"] =
+        Subject.where(:school_branch_id => @school_branch_id).where([
+            "
+              LOWER(name)   = LOWER(?) \
+            ", row["subject"].to_s
+          ]).first.try(:id)
+    end
   end
 
   def set_status
