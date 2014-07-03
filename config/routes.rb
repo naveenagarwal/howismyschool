@@ -36,8 +36,12 @@ Rails.application.routes.draw do
   resources :students
 
   resources :test_results, except: [ :edit ] do
+    member do
+      get 'for_edit'
+    end
     collection do
       get 'edit'
+      get 'list'
       post 'for_edit'
     end
   end

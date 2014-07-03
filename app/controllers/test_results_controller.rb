@@ -8,6 +8,10 @@ class TestResultsController < ApplicationController
     @class_room = current_school_branch.test_results.last.class_room
   end
 
+  def list
+    @test_results = current_school_branch.test_results.includes(:student, :subject, :class_test, :class_room)
+  end
+
   # GET /test_results/1
   # GET /test_results/1.json
   def show
@@ -25,17 +29,26 @@ class TestResultsController < ApplicationController
   end
 
   def for_edit
-    @test_result = TestResult.where(
-        class_room_id:  params[:class_room_id],
-        student_id:     params[:student_id],
-        class_test_id:  params[:class_test_id],
-        subject_id:     params[:subject_id]
-      ).first
+    respond_to do |format|
+      format.html {
+        set_test_result
+        get_arrays_for_select_options
+      }
+      format.js {
+        @test_result = TestResult.where(
+            class_room_id:  params[:class_room_id],
+            student_id:     params[:student_id],
+            class_test_id:  params[:class_test_id],
+            subject_id:     params[:subject_id]
+          ).first
 
-    if @test_result.blank?
-      set_flash_messages type: 'error', message: 'Record Not Exist!'
-    else
-      get_arrays_for_select_options
+        if @test_result.blank?
+          set_flash_messages type: 'error', message: 'Record Not Exist!'
+        else
+          get_arrays_for_select_options
+        end
+      }
+
     end
 
   end
@@ -89,7 +102,7 @@ class TestResultsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_test_result
-      @test_result = current_school_branch.test_results.find(params[:id]) unless params[:id] == "0"
+      @test_result = current_school_branch.test_results.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

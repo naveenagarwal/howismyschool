@@ -1,0 +1,39 @@
+<%= render partial: 'action_links' %>
+<br>
+<h3>Listing Test Results</h3>
+
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Class Room</th>
+      <th>StudentName-RollNumber</th>
+      <th>Class Test</th>
+      <th>Subject</th>
+      <th>Percentage</th>
+      <th>Grade</th>
+      <th>Pass/Fail</th>
+      <th>Year</th>
+      <th>Remarks</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @test_results.each do |test_result| %>
+      <% @test_result = test_result %>
+      <tr>
+        <td><%= test_result.class_room.full_name %></td>
+        <td><%= test_result.student.name_with_rno %></td>
+        <td><%= test_result.class_test.name %></td>
+        <td><%= test_result.subject.name %></td>
+        <td><%= test_result.percentage %></td>
+        <td><%= test_result.grade %></td>
+        <td><%= test_result.pass_or_fail %></td>
+        <td><%= test_result.year %></td>
+        <td><%= test_result.remarks %></td>
+        <td><%= link_to "Edit", for_edit_test_result_path(test_result) %></td>
+        <td><%= render partial: "destroy_link" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
