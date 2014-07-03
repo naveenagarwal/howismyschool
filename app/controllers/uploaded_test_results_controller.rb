@@ -11,6 +11,7 @@ class UploadedTestResultsController < ApplicationController
   # GET /uploaded_test_results/1
   # GET /uploaded_test_results/1.json
   def show
+    @test_results = @test_results_from_file.all_test_results
   end
 
   # GET /uploaded_test_results/new

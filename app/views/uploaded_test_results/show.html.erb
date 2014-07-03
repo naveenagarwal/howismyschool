@@ -1,8 +1,36 @@
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th>File Name</th>
+      <th>Status</th>
+      <th>Status Message</th>
+      <th>Errors</th>
+      <th>Total Test Results Added</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><%= link_to @test_results_from_file.name.file.original_filename, @test_results_from_file.name.url %></td>
+      <td><%= @test_results_from_file.status_name %></td>
+      <td><%= @test_results_from_file.status_msg %></td>
+      <td><%= @test_results_from_file.errors_html.html_safe %></td>
+      <td><%= @test_results_from_file.test_result_ids.size %></td>
+
+      <td><%= link_to 'Destroy', uploaded_test_result_path(@test_results_from_file), method: :delete, data: { confirm: 'It would destroy the associated test results as well, if any. Are you sure?' } %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="6" class="text-center"><h5>Test results list</h5></td>
+    </tr>
+    <tr>
+      <td colspan="6" ><%= render partial: "list_test_results" %></td>
+    </tr>
+  </tbody>
+</table>
+
+
 <div class="center-block">
-  <p id="notice"><%= notice %></p>
-  <h3>Uploaded Document</h3>
-  <p><%= link_to @test_results_from_file.name.file.original_filename, @test_results_from_file.name.url %></p>
-  <%= link_to 'Destroy', uploaded_test_result_path(@test_results_from_file), method: :delete, data: { confirm: 'Are you sure?' } %>
-  &nbsp;|&nbsp;
   <%= link_to 'Back', uploaded_test_results_path %>
 </div>

@@ -5,6 +5,7 @@ class TestResultParser
   PARSE_BEGIN_STATUS_MESSSAGE = "Started reading test result"
   PARSE_SUCCESSFULL_STATUS_MESSSAGE = "Successfully fed test result into the system"
   PARSE_PARTIAL_SUCCESSFULL_STATUS_MESSSAGE = "Partial test results fed into the system due to errors in the document."
+  PARSE_COMPLETE_WITH_NO_RECORDS = "No test result added from the document"
 
   attr_accessor :parser, :filepath, :errors, :status_message, :test_result_ids
 
@@ -35,7 +36,7 @@ class TestResultParser
 
     @test_result_from_file.update(
       status_msg: @status_message,
-      status: TestResultsFromFile::STATUS[:complete],
+      status: @errors.blank? ? TestResultsFromFile::STATUS[:complete] : TestResultsFromFile::STATUS[:error_parsing],
       parsing_errors: @errors,
       test_result_ids: @test_result_ids
     )
@@ -126,8 +127,10 @@ class TestResultParser
   def set_status
     if @errors.blank?
       @status_message = PARSE_SUCCESSFULL_STATUS_MESSSAGE
-    else
+    elsif @errors.present? && @test_result_ids.present?
       @status_message = PARSE_PARTIAL_SUCCESSFULL_STATUS_MESSSAGE
+    elsif @errors.present? && @test_result_ids.blank?
+      @status_message = PARSE_COMPLETE_WITH_NO_RECORDS
     end
   end
 

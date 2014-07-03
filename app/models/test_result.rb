@@ -6,6 +6,7 @@ class TestResult < ActiveRecord::Base
   belongs_to :class_test
   belongs_to :school_branch
   belongs_to :class_room
+  belongs_to :test_results_from_file
   belongs_to :creator, polymorphic: true
 
   validates :subject, :student, :class_test, :class_room, :percentage, :year, presence: true
@@ -19,6 +20,11 @@ class TestResult < ActiveRecord::Base
     }
 
   before_save :check_student_belongs_to_right_class
+
+
+  def pass_or_fail
+    outcome? ? "Passed" : "Failed"
+  end
 
   private
 
