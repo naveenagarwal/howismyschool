@@ -1,5 +1,7 @@
 <h3>Listing Students</h3>
 
+<%= render partial: '/shared/paginate_collection', locals: { records: @students } %>
+
 <table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>

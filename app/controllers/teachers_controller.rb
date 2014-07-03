@@ -6,7 +6,11 @@ class TeachersController < ApplicationController
   # GET /teachers
   # GET /teachers.json
   def index
-    @teachers = current_school.teachers
+    @teachers = Paginate.get_records(
+        relation_object: current_school.teachers,
+        page: params[:page],
+        per_page: params[:per_page]
+      )
   end
 
   # GET /teachers/1

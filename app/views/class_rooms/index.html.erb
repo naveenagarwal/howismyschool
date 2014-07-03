@@ -1,5 +1,7 @@
 <h3>Listing Class Rooms</h3>
 
+<%= render partial: '/shared/paginate_collection', locals: { records: @class_rooms } %>
+
 <table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>

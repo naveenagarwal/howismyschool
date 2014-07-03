@@ -5,7 +5,11 @@ class ClassTestsController < ApplicationController
   # GET /class_tests
   # GET /class_tests.json
   def index
-    @class_tests = current_school_branch.class_tests.all
+    @class_tests = Paginate.get_records(
+        relation_object: current_school_branch.class_tests,
+        page: params[:page],
+        per_page: params[:per_page]
+      )
   end
 
   # GET /class_tests/1

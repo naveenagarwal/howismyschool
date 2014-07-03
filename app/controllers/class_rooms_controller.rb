@@ -5,7 +5,11 @@ class ClassRoomsController < ApplicationController
   # GET /class_rooms
   # GET /class_rooms.json
   def index
-    @class_rooms = ClassRoom.all
+    @class_rooms = Paginate.get_records(
+        relation_object: current_school_branch.class_rooms,
+        page: params[:page],
+        per_page: params[:per_page]
+      )
   end
 
   # GET /class_rooms/1
@@ -67,7 +71,7 @@ class ClassRoomsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_class_room
-      @class_room = ClassRoom.find(params[:id])
+      @class_room = current_school_branch.class_rooms.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

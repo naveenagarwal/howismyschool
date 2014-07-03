@@ -5,7 +5,11 @@ class StudentsController < ApplicationController
   # GET /students
   # GET /students.json
   def index
-    @students = current_school_branch.students.all
+    @students = Paginate.get_records(
+        relation_object: current_school_branch.students,
+        page: params[:page],
+        per_page: params[:per_page]
+      )
   end
 
   # GET /students/1

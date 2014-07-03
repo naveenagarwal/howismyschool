@@ -1,5 +1,7 @@
 <h3>Listing Subjects</h3>
 
+<%= render partial: '/shared/paginate_collection', locals: { records: @subjects } %>
+
 <table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>

@@ -5,13 +5,21 @@ class UploadedTestResultsController < ApplicationController
   # GET /uploaded_test_results
   # GET /uploaded_test_results.json
   def index
-    @test_results_from_files = current_teacher.test_results_from_files
+    @test_results_from_files = Paginate.get_records(
+        relation_object: current_teacher.test_results_from_files,
+        page: params[:page],
+        per_page: params[:per_page]
+      )
   end
 
   # GET /uploaded_test_results/1
   # GET /uploaded_test_results/1.json
   def show
-    @test_results = @test_results_from_file.all_test_results
+    @test_results = Paginate.get_records(
+        relation_object: @test_results_from_file.all_test_results,
+        page: params[:page],
+        per_page: params[:per_page]
+      )
   end
 
   # GET /uploaded_test_results/new

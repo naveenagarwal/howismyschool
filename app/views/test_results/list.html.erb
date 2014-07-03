@@ -2,6 +2,8 @@
 <br>
 <h3>Listing Test Results</h3>
 
+<%= render partial: '/shared/paginate_collection', locals: { records: @test_results } %>
+
 <table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>

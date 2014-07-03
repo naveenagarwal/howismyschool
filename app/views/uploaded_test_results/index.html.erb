@@ -1,5 +1,7 @@
 <h3>Listing Uploaded Test Results</h3>
 
+<%= render partial: '/shared/paginate_collection', locals: { records: @test_results_from_files } %>
+
 <table class="table table-bordered table-striped table-hover">
   <thead>
     <tr>

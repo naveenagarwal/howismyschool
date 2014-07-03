@@ -5,7 +5,11 @@ class SchoolControllersController < ApplicationController
   # GET /school_controllers
   # GET /school_controllers.json
   def index
-    @school_controllers = current_manager.school_controllers.includes(:school_branch)
+    @school_controllers = Paginate.get_records(
+        relation_object: current_manager.school_controllers.includes(:school_branch),
+        page: params[:page],
+        per_page: params[:per_page]
+      )
   end
 
   # GET /school_controllers/1

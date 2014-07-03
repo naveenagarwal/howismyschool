@@ -6,7 +6,11 @@ class SubjectsController < ApplicationController
   # GET /subjects
   # GET /subjects.json
   def index
-    @subjects = current_school_branch.subjects.all
+    @subjects = Paginate.get_records(
+        relation_object: current_school_branch.subjects,
+        page: params[:page],
+        per_page: params[:per_page]
+      )
   end
 
   # GET /subjects/1
