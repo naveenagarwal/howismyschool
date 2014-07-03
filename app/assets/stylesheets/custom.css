@@ -158,6 +158,6 @@ body {
   color: #F58220;
 }
 
-div.inline-div.width-70-percent {
-  width: 70%;
+div.inline-div.width-100-percent {
+  width: 100%;
 }
