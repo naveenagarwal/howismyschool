@@ -211,7 +211,7 @@ div.inline-div.width-100-percent {
 .pagination :first-child {
   margin-left: 0;
 }
-.pagination > a {
+.pagination > a, .pagination > span {
   text-decoration: none;
   text-shadow: 0 1px black;
   background-clip: padding-box;
@@ -227,7 +227,7 @@ div.inline-div.width-100-percent {
   -o-transition: 0.1s ease-out;
   transition: 0.1s ease-out;
 }
-.pagination > a:hover {
+.pagination > a:hover{
   background-color: #333;
   background-color: rgba(255, 255, 255, 0.05);
 }
@@ -245,12 +245,11 @@ div.inline-div.width-100-percent {
   font-size: 14px;
 }
 
-.pagination-blue {
-  background-color: rgba(0, 5, 50, 0.1);
+.pagination .disabled {
+  display: none;
 }
-.pagination-blue > a {
-  background-color: rgba(170, 170, 255, 0.01);
-}
-.pagination-blue > a.hover {
-  background-color: rgba(120, 130, 255, 0.08);
+
+body {
+  background-image: url("/assets/background.jpg");
+  background-repeat: repeat-x;
 }
