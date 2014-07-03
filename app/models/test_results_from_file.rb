@@ -3,6 +3,8 @@ class TestResultsFromFile < ActiveRecord::Base
 
   serialize :parsing_errors, Array
 
+  has_many :test_results
+
   STATUS = {
     error_parsing:  2,
     complete:       3
@@ -19,10 +21,6 @@ class TestResultsFromFile < ActiveRecord::Base
 
   def status_message
     "Set status message"
-  end
-
-  def test_results
-    TestResult.where(id: test_result_ids)
   end
 
 end

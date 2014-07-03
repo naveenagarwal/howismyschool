@@ -31,7 +31,9 @@ class TestResultParser
   def parse(test_result_from_file)
     send("parse_#{file_extention}")
 
-    test_result_from_file.update(
+    @test_result_from_file = test_result_from_file
+
+    @test_result_from_file.update(
       status_msg: @status_message,
       status: TestResultsFromFile::STATUS[:complete],
       parsing_errors: @errors,
@@ -64,15 +66,17 @@ class TestResultParser
 
   def create_test_result_with(row, index)
     attributes = {
-      school_branch_id: @school_branch_id,
-      class_room_id: get_class_room_id(row),
-      student_id: get_student_id(row),
-      class_test_id: get_class_test_id(row),
-      subject_id: get_subject_id(row),
-      percentage: row["percentage"],
-      outcome: row["outcome"].downcase == "pass" ? true : false,
-      year: row["year"],
-      remarks: row["remarks"]
+      school_branch_id:           @school_branch_id,
+      class_room_id:              get_class_room_id(row),
+      student_id:                 get_student_id(row),
+      class_test_id:              get_class_test_id(row),
+      subject_id:                 get_subject_id(row),
+      percentage:                 row["percentage"],
+      outcome:                    row["outcome"].downcase == "pass" ? true : false,
+      year:                       row["year"],
+      remarks:                    row["remarks"],
+      creator:                    @test_result_from_file.creator,
+      test_result_from_file_id:   @test_result_from_file.id
     }
 
     test_result = TestResult.new attributes
