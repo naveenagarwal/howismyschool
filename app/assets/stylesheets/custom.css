@@ -1,3 +1,8 @@
+.navbar-inner {
+  background-color: #C57A63;
+  background-image: linear-gradient(to bottom, #A23516, #C57A63);
+}
+
 body div.github-fork-ribbon-wrapper.left {
   left: auto;
   right: 0;
@@ -18,7 +23,7 @@ body div.github-fork-ribbon-wrapper.left {
     color: #666;
     padding-top: auto;
     font-size: 40px;
-    font-family: "trebuchet ms", sans-serif;
+    /*font-family: "trebuchet ms", sans-serif;*/
 }
 .item{
     background: #333;
@@ -42,7 +47,7 @@ body div.github-fork-ribbon-wrapper.left {
 }
 
 .navbar .brand {
-  color: #F58220;
+  color: #FFFFFF;
 }
 
 .btn-navbar-custom {
@@ -63,7 +68,7 @@ body div.github-fork-ribbon-wrapper.left {
 body {
     background-color: #FFFFFF;
     color: #333333;
-    font-family: verdana,arial,helvetica,sans-serif;
+    /*font-family: verdana,arial,helvetica,sans-serif;*/
     font-size: 13px;
     line-height: 18px;
 }
@@ -151,13 +156,17 @@ body {
 }
 
 .navbar .nav > li > a {
-  color: #000000;
+  color: #FFFFFF;
 }
 
 .navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
-  color: #F58220;
+  color: #180301;
 }
 
 div.inline-div.width-100-percent {
   width: 100%;
+}
+
+.table-striped tbody > tr:nth-child(2n+1) > td, .table-striped tbody > tr:nth-child(2n+1) > th {
+    background-color: #D3D3D3;
 }
