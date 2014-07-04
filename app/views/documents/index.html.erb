@@ -1,0 +1,30 @@
+<h1>Listing Documents</h1>
+
+<%= render partial: '/shared/paginate_collection', locals: { records: @documents } %>
+
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Document Uploaded For</th>
+      <th>Rcords Entered Into the System</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @documents.each do |document| %>
+      <tr>
+        <td><%= link_to document.name.file.original_filename, document.name.url %></td>
+        <td><%= document.document_type.humanize %></td>
+        <td><%= document.recorded_ids.size %></td>
+        <td><%= link_to 'Show', document %></td>
+        <td><%= link_to 'Destroy', document, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Document', new_document_path %>

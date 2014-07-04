@@ -7,11 +7,6 @@
     <div class="inline-div">
       <%= f.label :name, "Select Document (Must be in .csv format)" %>
       <%= f.file_field :name %>
-
-      <% if @test_results_from_file.name.url %>
-        <br>
-        Current Uploaded Document : <%= @test_results_from_file.name.url %>
-      <% end %>
     </div>
 
   </div>

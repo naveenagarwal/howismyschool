@@ -53,6 +53,7 @@ Rails.application.routes.draw do
   end
 
   resources :uploaded_test_results, except: [:edit, :update]
+  resources :documents, except: [:edit, :update]
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

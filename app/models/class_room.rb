@@ -5,6 +5,7 @@ class ClassRoom < ActiveRecord::Base
   belongs_to :creator, polymorphic: true
   belongs_to :school
   belongs_to :school_branch
+  belongs_to :document
 
   has_many :test_results
   has_many :subjects

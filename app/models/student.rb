@@ -2,6 +2,7 @@ class Student < ActiveRecord::Base
   belongs_to :creator, polymorphic: true
   belongs_to :school_branch
   belongs_to :class_room
+  belongs_to :document
 
   validates :name, :roll_number, :class_room_id, :year, presence: true
   validates :name,

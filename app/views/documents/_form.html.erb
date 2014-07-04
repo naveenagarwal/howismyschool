@@ -1,0 +1,26 @@
+<div id="form_errors">
+  <% render partial: "/shared/form_errors", locals: { obj: @document, name: "document" } %>
+</div>
+
+<%= form_for(@document) do |f| %>
+
+  <div class="field">
+    <div class="inline-div">
+      <%= f.label :name, "Select Document (Must be in .csv format)" %>
+      <%= f.file_field :name, class: "form-control" %>
+    </div>
+  </div>
+  <div class="field">
+    <div class="inline-div">
+      <%= f.label :document_type %>
+      <%= f.select :document_type, Document.document_types_array_for_select_option, {}, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="inline-div">
+      <%= f.submit "Upload" %>
+    </div>
+  </div>
+
+<% end %>

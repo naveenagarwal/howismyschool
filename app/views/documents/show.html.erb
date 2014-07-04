@@ -1,0 +1,33 @@
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th>File Name</th>
+      <th>Document Uploaded For</th>
+      <th>Rcords Entered Into the System</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><%= link_to @document.name.file.original_filename, @document.name.url %></td>
+      <% document_type = @document.document_type.humanize %>
+      <td><%= document_type %></td>
+      <td><%= @document.recorded_ids.size %></td>
+
+      <td><%= link_to 'Destroy', document_path(@document), method: :delete, data: { confirm: 'It would destroy the associated records as well, if any. Are you sure?' } %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="6" class="text-center"><h5><%= document_type %> list</h5></td>
+    </tr>
+    <tr>
+      <td colspan="6" ><%#= render partial: "list_test_results" %></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<div class="center-block">
+  <%= link_to 'Back', documents_path %>
+</div>

@@ -1,15 +1,7 @@
 <%= form_for(@school_controller) do |f| %>
-  <% if @school_controller.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@school_controller.errors.count, "error") %> prohibited this school controller from being saved:</h2>
-
-      <ul>
-      <% @school_controller.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <div id="form_errors">
+    <% render partial: "/shared/form_errors", locals: { obj: @school_controller, name: "school controller" } %>
+  </div>
 
   <div class="field">
     <%= f.label :email %><br>

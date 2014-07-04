@@ -7,4 +7,5 @@ class SchoolBranch < ActiveRecord::Base
   has_many :class_rooms
   has_many :class_tests
   has_many :test_results
+  has_many :documents
 end
