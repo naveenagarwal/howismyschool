@@ -1,3 +1,7 @@
+<%= render partial: 'sample_download_links' %>
+<br />
+<br />
+
 <h1>Listing Documents</h1>
 
 <%= render partial: '/shared/paginate_collection', locals: { records: @documents } %>
@@ -19,7 +23,7 @@
         <td><%= document.document_type.humanize %></td>
         <td><%= document.recorded_ids.size %></td>
         <td><%= link_to 'Show', document %></td>
-        <td><%= link_to 'Destroy', document, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Destroy', document, method: :delete, data: { confirm: 'It would destroy the associated records as well, if any. Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
