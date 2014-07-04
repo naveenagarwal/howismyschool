@@ -3,6 +3,12 @@ class Subject < ActiveRecord::Base
   belongs_to :creator, polymorphic: true
   belongs_to :document
 
+  validates :name,
+    presence: true,
+    uniqueness: {
+      scope: [:school_branch_id]
+    }
+
   class << self
     def get_subjects_array_for_select_option(school_branch_id: nil)
       select(:id, :name).

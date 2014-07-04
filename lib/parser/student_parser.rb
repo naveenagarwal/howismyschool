@@ -9,7 +9,8 @@ module Parser
       @association_attributes = {
         school_branch_id:  @document.school_branch_id,
         creator_type:  @document.creator_type,
-        creator_id:  @document.creator_id
+        creator_id:  @document.creator_id,
+        document_id: @document.id
       }
       @class_rooms = {}
     end

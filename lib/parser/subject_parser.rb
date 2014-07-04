@@ -1,6 +1,6 @@
 module Parser
 
-  class ClassRoomParser < BaseParser
+  class SubjectParser < BaseParser
 
     def initialize(document)
       @document = document
@@ -22,15 +22,15 @@ module Parser
 
     def parse_csv(path)
       CSV.foreach(path, headers: true) do |row|
-        create_class_room row.to_h
+        create_subject row.to_h
       end
     end
 
-    def create_class_room(row)
-      class_room = ClassRoom.new row.merge(@association_attributes)
+    def create_subject(row)
+      subject = Subject.new row.merge(@association_attributes)
 
-      if class_room.save
-        @ids << class_room.id
+      if subject.save
+        @ids << subject.id
       else
         false
       end
