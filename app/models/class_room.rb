@@ -30,7 +30,7 @@ class ClassRoom < ActiveRecord::Base
   end
 
   def current_students
-    students.where(year: current_year)
+    students.where(year: TimeExt.current_year)
   end
 
   private
