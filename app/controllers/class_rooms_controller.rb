@@ -6,7 +6,7 @@ class ClassRoomsController < ApplicationController
   # GET /class_rooms.json
   def index
     @class_rooms = Paginate.get_records(
-        relation_object: current_school_branch.class_rooms,
+        relation_object: current_school_branch.class_rooms.includes(:students),
         page: params[:page],
         per_page: params[:per_page]
       )
