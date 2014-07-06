@@ -12,8 +12,8 @@ class DocumentParserWorker
       school branch name and id- #{document.school_branch.name}-#{document.school_branch_id}"
 
     parser_type = document.document_type.gsub(/\s/, '_').camelize
-    parser = Kernel.const_get("Parser::#{parser_type}Parser.new")
-    parser.new(documnet).parse
+    parser = Kernel.const_get("Parser::#{parser_type}Parser")
+    parser.new(document).parse
 
     log("Parsing Complete")
   rescue Exception => e
