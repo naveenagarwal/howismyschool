@@ -31,6 +31,8 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.save
+        DocumentParserWorker.perform_async @document.id
+
         format.html { redirect_to @document, notice: 'Document was successfully created.' }
         format.json { render :show, status: :created, location: @document }
       else

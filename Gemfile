@@ -69,3 +69,6 @@ gem 'roo'
 
 # Others
 gem 'select2-rails'
+
+# background jobs
+gem 'sidekiq'
