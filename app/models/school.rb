@@ -28,7 +28,7 @@ class School < ActiveRecord::Base
     end
   end
 
-  def create_manager
+  def create_school_branch
     @school_branch = SchoolBranch.create(name: name)
     self.school_branches << @school_branch
   end
