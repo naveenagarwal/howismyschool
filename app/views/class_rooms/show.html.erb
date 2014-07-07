@@ -8,9 +8,9 @@
 <%= link_to 'Edit', edit_class_room_path(@class_room) %> |
 <%= link_to 'Back', class_rooms_path %>
 
-<div id="inline-div" class="center-block">
+<% if @class_room.has_test_results_for_current_year? %>
+  <div id="inline-div" class="center-block">
 
-  <% if @class_room.has_test_results_for_current_year? %>
     <div class="have-margin">
       <div class="absoulte-position">
         Class Room
@@ -67,6 +67,6 @@
       </div>
     </div>
 
-  <% end %>
 
-</div>
+  </div>
+<% end %>

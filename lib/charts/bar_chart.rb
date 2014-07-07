@@ -7,10 +7,17 @@ module Charts
     DEFAULT_CHART_TYPE = "bar"
 
     included do
-      before_action :set_common_chart_data, only: [
+      before_action :set_common_chart_data_for_class_room_charts, only: [
           :chart_for_class_room_toppers_testwise,
           :chart_for_class_room_lowest_scorers_testwise,
           :chart_for_class_room_toppers_subjectwise
+        ]
+
+      before_action :set_common_chart_data_for_class_test_charts, only: [
+          :class_test_toppers,
+          :class_test_lowest_scorers,
+          :class_test_subjectwise_toppers,
+          :class_test_subjectwise_lowest_scorers
         ]
     end
 
@@ -66,7 +73,9 @@ module Charts
       end
     end
 
-    private
+    include Charts::BarChartForClassTest
+
+    protected
 
     def default_chart_hash(chart_type)
       {
@@ -95,7 +104,7 @@ module Charts
       average_test_results
     end
 
-    def set_common_chart_data
+    def set_common_chart_data_for_class_room_charts
       chart_type = params[:chart_type] || DEFAULT_CHART_TYPE
       @js_chart   = default_chart_hash(chart_type)
       @class_room = ClassRoom.find params[:id]

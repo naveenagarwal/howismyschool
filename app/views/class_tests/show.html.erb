@@ -1,12 +1,72 @@
-<div class="center-block">
+<p id="notice"><%= notice %></p>
 
-  <p id="notice"><%= notice %></p>
+<p>
+  <strong>Name:</strong>
+  <%= @class_test.name %>
+</p>
 
-  <p>
-    <strong>Name:</strong>
-    <%= @class_test.name %>
-  </p>
+<%= link_to 'Edit', edit_class_test_path(@class_test) %> |
+<%= link_to 'Back', class_tests_path %>
 
-  <%= link_to 'Edit', edit_class_test_path(@class_test) %> |
-  <%= link_to 'Back', class_tests_path %>
-</div>
+<% if @class_test.has_test_results_for_current_year? %>
+
+  <div id="inline-div" class="center-block">
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Test
+        <strong>
+          <%= @class_test.name %> Toppers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer1">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_test_toppers @class_test.id, "chartcontainer1" %>
+      </div>
+    </div>
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Test
+        <strong>
+          <%= @class_test.name %> Lowest Scorers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer2">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_test_lowest_scorers @class_test.id, "chartcontainer2" %>
+      </div>
+    </div>
+    <br>
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Test
+        <strong>
+          <%= @class_test.name %> Subject Toppers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer3">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_test_toppers_subjectwise @class_test.id, "chartcontainer3" %>
+      </div>
+    </div>
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Room
+        <strong>
+          <%= @class_test.name %> Subject Lowest Scorers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer4">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_test_lowest_scorers_subjectwise @class_test.id, "chartcontainer4" %>
+      </div>
+    </div>
+
+  </div>
+<% end %>

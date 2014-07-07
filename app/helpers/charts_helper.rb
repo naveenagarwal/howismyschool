@@ -39,4 +39,36 @@ module ChartsHelper
     ".html_safe
   end
 
+  def barchart_for_class_test_toppers(class_test_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawClassTestToppersChart('#{class_test_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
+  def barchart_for_class_test_lowest_scorers(class_test_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawClassTestLowestScorersChart('#{class_test_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
+  def barchart_for_class_test_toppers_subjectwise(class_test_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawClassTestSubjectwiseToppersChart('#{class_test_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
+  def barchart_for_class_test_lowest_scorers_subjectwise(class_test_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawClassTestSubjectwiseLowestScorersChart('#{class_test_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
 end

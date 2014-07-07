@@ -52,6 +52,12 @@ Rails.application.routes.draw do
       get 'chart_for_class_room_toppers_subjectwise'
       get 'chart_for_class_room_toppers_testwise'
       get 'chart_for_class_room_lowest_scorers_testwise'
+
+      get 'class_test_toppers'
+      get 'class_test_lowest_scorers'
+      get 'class_test_subjectwise_toppers'
+      get 'class_test_subjectwise_lowest_scorers'
+
     end
     collection do
       get 'chart_for_latest_test_results'

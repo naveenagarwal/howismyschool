@@ -35,7 +35,7 @@ class ClassRoom < ActiveRecord::Base
   end
 
   def current_test_results
-    test_results.where(year: TimeExt.current_year)
+    test_results.where(year: TimeExt.current_year, school_branch_id: school_branch_id)
   end
 
   def has_test_results_for_current_year?
