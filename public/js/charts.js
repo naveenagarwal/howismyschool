@@ -54,3 +54,12 @@ Charts.drawClassRoomToppersTestwiseChart = function(class_room, container){
 
   Charts.drawChart(url, container, xlabel, ylabel);
 }
+
+Charts.drawClassRoomLowestScorersTestwiseChart = function(class_room, container){
+  var url       = '/draw_chart/' + class_room + '/chart_for_class_room_lowest_scorers_testwise.json?chart_type=bar',
+      container = container,
+      xlabel    = 'Student/Test',
+      ylabel    = 'Percentage(%)';
+
+  Charts.drawChart(url, container, xlabel, ylabel);
+}

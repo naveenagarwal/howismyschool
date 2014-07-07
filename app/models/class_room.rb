@@ -62,15 +62,25 @@ class ClassRoom < ActiveRecord::Base
   end
 
   def get_toppers_array_testwise_for_bar_chart
-    class_test_ids = current_test_results.order("id").pluck(:class_test_id).uniq
-    average_test_results = []
+    testwise_array_for_bar_chart(order: "DESC")
+  end
+
+  def get_lowest_scorers_array_testwise_for_bar_chart
+    testwise_array_for_bar_chart(order: "ASC")
+  end
+
+  private
+
+  def testwise_array_for_bar_chart(order: "DESC")
+    class_test_ids        = current_test_results.order("id").pluck(:class_test_id).uniq
+    average_test_results  = []
 
     class_test_ids.each do |class_test_id|
       test_result = current_test_results.select(
           "avg(percentage) as percent, student_id"
         ).where(
           class_test_id: class_test_id
-        ).group("student_id").order("percent DESC").first
+        ).group("student_id").order("percent #{order}").first
 
       class_test = ClassTest.find(class_test_id)
 

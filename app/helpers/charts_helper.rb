@@ -31,4 +31,12 @@ module ChartsHelper
     ".html_safe
   end
 
+  def barchart_for_class_room_lowest_scoreres_testwise(class_room_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawClassRoomLowestScorersTestwiseChart('#{class_room_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
 end

@@ -53,6 +53,20 @@
       </div>
     </div>
 
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Room
+        <strong>
+          Tests Lowest Scorers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer4">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_room_lowest_scoreres_testwise @class_room.id, "chartcontainer4" %>
+      </div>
+    </div>
+
   <% end %>
 
 </div>
