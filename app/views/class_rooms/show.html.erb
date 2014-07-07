@@ -1,15 +1,58 @@
-<div class="center-block">
-  <p id="notice"><%= notice %></p>
+<p id="notice"><%= notice %></p>
+<p>
+  <strong>Name:</strong>
+  <%= @class_room.name %>,
+  <strong>Grade:</strong>
+  <%= @class_room.grade %>
+</p>
+<%= link_to 'Edit', edit_class_room_path(@class_room) %> |
+<%= link_to 'Back', class_rooms_path %>
 
-  <p>
-    <strong>Name:</strong>
-    <%= @class_room.name %>
-  </p>
-  <p>
-    <strong>Grade:</strong>
-    <%= @class_room.grade %>
-  </p>
+<div id="inline-div" class="center-block">
 
-  <%= link_to 'Edit', edit_class_room_path(@class_room) %> |
-  <%= link_to 'Back', class_rooms_path %>
+  <% if @class_room.has_test_results_for_current_year? %>
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Room
+        <strong>
+          <%= @class_room.full_name %>
+        </strong>
+        Performance for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer1">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_room @class_room.id, "chartcontainer1" %>
+      </div>
+    </div>
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Room
+        <strong>
+          Subject Toppers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer2">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_room_toppers_subjectwise @class_room.id, "chartcontainer2" %>
+      </div>
+    </div>
+    <br>
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Room
+        <strong>
+          Tests Toppers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer3">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_room_toppers_testwise @class_room.id, "chartcontainer3" %>
+      </div>
+    </div>
+
+  <% end %>
+
 </div>

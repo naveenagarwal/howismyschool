@@ -34,4 +34,54 @@ class ClassRoom < ActiveRecord::Base
     students.where(year: TimeExt.current_year)
   end
 
+  def current_test_results
+    test_results.where(year: TimeExt.current_year)
+  end
+
+  def has_test_results_for_current_year?
+    test_results.where(year: TimeExt.current_year).count > 0
+  end
+
+  def get_toppers_array_subjectwise_for_bar_chart
+    class_test_ids = current_test_results.order("id").pluck(:class_test_id).uniq
+    average_test_results = []
+
+    class_test_ids.each do |class_test_id|
+      test_result = current_test_results.where(
+          class_test_id: class_test_id
+        ).order("percentage DESC").first
+
+      average_test_results << {
+            unit: " #{test_result.student.name}/#{test_result.subject.name}/#{test_result.class_test.name}",
+            value:  test_result.percentage
+          }
+
+    end
+
+    average_test_results
+  end
+
+  def get_toppers_array_testwise_for_bar_chart
+    class_test_ids = current_test_results.order("id").pluck(:class_test_id).uniq
+    average_test_results = []
+
+    class_test_ids.each do |class_test_id|
+      test_result = current_test_results.select(
+          "avg(percentage) as percent, student_id"
+        ).where(
+          class_test_id: class_test_id
+        ).group("student_id").order("percent DESC").first
+
+      class_test = ClassTest.find(class_test_id)
+
+      average_test_results << {
+            unit: " #{test_result.student.name}/#{class_test.name}",
+            value:  test_result.percent
+          }
+
+    end
+
+    average_test_results
+  end
+
 end

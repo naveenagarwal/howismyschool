@@ -47,6 +47,11 @@ Rails.application.routes.draw do
   end
 
   resources :draw_chart, only: [] do
+    member do
+      get 'chart_for_class_room'
+      get 'chart_for_class_room_toppers_subjectwise'
+      get 'chart_for_class_room_toppers_testwise'
+    end
     collection do
       get 'chart_for_latest_test_results'
     end
