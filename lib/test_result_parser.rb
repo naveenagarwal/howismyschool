@@ -115,19 +115,20 @@ class TestResultParser
   end
 
   def get_student_id(row)
-    @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"] ||= {}
+    @student_ids["#{@school_branch_id}-#{row["class_room"] + row["section"]}-#{row["student_name"]}-#{row["roll_no"]}"] ||= {}
 
-    if @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"]["is_set"]
-      @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"]["id"]
+    if @student_ids["#{@school_branch_id}-#{row["class_room"] + row["section"]}-#{row["student_name"]}-#{row["roll_no"]}"]["is_set"]
+      @student_ids["#{@school_branch_id}-#{row["class_room"] + row["section"]}-#{row["student_name"]}-#{row["roll_no"]}"]["id"]
     else
-      @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"]["is_set"] = true
-      @student_ids["#{@school_branch_id}-#{row["student_name"]}-#{row["roll_no"]}"]["id"] =
+      @student_ids["#{@school_branch_id}-#{row["class_room"] + row["section"]}-#{row["student_name"]}-#{row["roll_no"]}"]["is_set"] = true
+      @student_ids["#{@school_branch_id}-#{row["class_room"] + row["section"]}-#{row["student_name"]}-#{row["roll_no"]}"]["id"] =
         Student.where(:school_branch_id => @school_branch_id).where([
           "
             LOWER(name)   = LOWER(?) AND \
             LOWER(roll_number)  = LOWER(?) AND\
-            LOWER(year) = LOWER(?) \
-          ", row["student_name"].to_s, row["roll_no"].to_s, row["year"]
+            LOWER(year) = LOWER(?) AND\
+            class_room_id = ?
+          ", row["student_name"].to_s, row["roll_no"].to_s, row["year"], get_class_room_id(row)
         ]).first.try(:id)
     end
   end
