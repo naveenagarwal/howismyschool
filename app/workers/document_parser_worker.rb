@@ -1,5 +1,4 @@
-class DocumentParserWorker
-  include Sidekiq::Worker
+class DocumentParserWorker < BaseWorker
 
   def perform(document_id)
     unless document = Document.find_by_id(document_id)
@@ -21,7 +20,4 @@ class DocumentParserWorker
     log e.backtrace
   end
 
-  def log(msg)
-    Sidekiq.logger.info msg
-  end
 end

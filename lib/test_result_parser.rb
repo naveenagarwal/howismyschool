@@ -24,22 +24,22 @@ class TestResultParser
   end
 
   class << self
-    def parse(test_result_from_file: nil, parse_with: nil, school_branch_id: nil)
-      raise "test_result_from_file argument required" if test_result_from_file.blank?
+    def parse(test_results_from_file: nil, parse_with: nil, school_branch_id: nil)
+      raise "test_results_from_file argument required" if test_results_from_file.blank?
 
-      filepath            = Rails.root.to_s + "/public" + test_result_from_file.name.to_s
+      filepath            = Rails.root.to_s + "/public" + test_results_from_file.name.to_s
       test_result_parser  = new(filepath, parse_with, school_branch_id)
 
-      test_result_parser.parse(test_result_from_file)
+      test_result_parser.parse(test_results_from_file)
     end
   end
 
-  def parse(test_result_from_file)
-    @test_result_from_file = test_result_from_file
+  def parse(test_results_from_file)
+    @test_results_from_file = test_results_from_file
 
     send("parse_#{file_extention}")
 
-    @test_result_from_file.update(
+    @test_results_from_file.update(
       status_msg: @status_message,
       status: @errors.blank? ? TestResultsFromFile::STATUS[:complete] : TestResultsFromFile::STATUS[:error_parsing],
       parsing_errors: @errors,
@@ -81,9 +81,9 @@ class TestResultParser
       outcome:                    row["outcome"].downcase == "pass" ? true : false,
       year:                       row["year"],
       remarks:                    row["remarks"],
-      creator_id:                 @test_result_from_file.creator_id,
-      creator_type:               @test_result_from_file.creator_type,
-      test_results_from_file_id:  @test_result_from_file.id
+      creator_id:                 @test_results_from_file.creator_id,
+      creator_type:               @test_results_from_file.creator_type,
+      test_results_from_file_id:  @test_results_from_file.id
     }
 
     test_result = TestResult.new attributes

@@ -36,6 +36,8 @@ class UploadedTestResultsController < ApplicationController
 
     respond_to do |format|
       if @test_results_from_file.save
+        TestResultParserWorker.perform_async @test_results_from_file.id
+
         format.html { redirect_to uploaded_test_result_path(@test_results_from_file), notice: 'Document uploaded successfully.' }
         format.js { set_flash_messages type: 'notice', message: 'Document uploaded successfully..' }
         format.json { render :show, status: :created, location: @test_results_from_file }
