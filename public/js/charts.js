@@ -11,6 +11,7 @@ Charts.drawChart = function(url, container, xlabel, ylabel){
   myChart.setAxisNameColor("#000000");
   myChart.setAxisValuesColor("#000000");
   myChart.setBarValuesColor("#000000");
+  myChart.setBarValuesDecimals(2);
   myChart.colorizeBars(colors);
   myChart.draw();
   myChart.resize(500, 350)
