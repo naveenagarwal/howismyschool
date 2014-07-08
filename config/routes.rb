@@ -73,6 +73,8 @@ Rails.application.routes.draw do
   resources :uploaded_test_results, except: [:edit, :update]
   resources :documents, except: [:edit, :update]
 
+  resources :search, only: [ :index, :create, :show ]
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

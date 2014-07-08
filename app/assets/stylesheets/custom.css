@@ -253,3 +253,10 @@ body {
   background-image: url("/assets/background.jpg");
   background-repeat: repeat-x;
 }
+
+.searchbar-custom {
+  cursor: pointer;
+  position: absolute;
+  right: 5%;
+  top: 30%;
+}

@@ -5,6 +5,7 @@ $(document).on('page:load', function() {
   fadeOutFlashMessages();
   initializeSelectOptions();
   initializeSelectOptionsForAjax();
+  initializeSubmitNavBarSearchForm();
 
 });
 
@@ -15,6 +16,7 @@ $(document).ready(function() {
   fadeOutFlashMessages();
   initializeSelectOptions();
   initializeSelectOptionsForAjax();
+  initializeSubmitNavBarSearchForm();
 
 });
 
@@ -77,3 +79,14 @@ var initializeSelectOptionsForAjax = function(){
     initializeSelectOptions();
   });
 };
+
+var initializeSubmitNavBarSearchForm = function(){
+  $(".searchbar-custom").click(function(){
+    $("form#navigation_searchbar").trigger("submit");
+  });
+
+  $("form#navigation_searchbar").submit(function(e){
+    e.preventDefault();
+  });
+
+}
