@@ -60,6 +60,10 @@ Rails.application.routes.draw do
 
       get 'subject_toppers'
       get 'subject_lowest_scorers'
+
+      get 'student_toppers'
+      get 'student_lowest_scorers'
+      get 'student_overall_performance'
     end
     collection do
       get 'chart_for_latest_test_results'

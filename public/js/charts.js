@@ -124,6 +124,33 @@ Charts.drawSubjectLowestScorersChart = function(subject, container){
   Charts.drawChart(url, container, xlabel, ylabel).resize(600, 350);
 };
 
+Charts.drawStudentToppersChart = function(student, container){
+  var url       = '/draw_chart/' + student + '/student_toppers.json?chart_type=bar',
+      container = container,
+      xlabel    = 'Subject/Test',
+      ylabel    = 'Percentage(%)';
+
+  Charts.drawChart(url, container, xlabel, ylabel).resize(600, 350);
+};
+
+Charts.drawStudentLowestScorersChart = function(student, container){
+  var url       = '/draw_chart/' + student + '/student_lowest_scorers.json?chart_type=bar',
+      container = container,
+      xlabel    = 'Subject/Test',
+      ylabel    = 'Percentage(%)';
+
+  Charts.drawChart(url, container, xlabel, ylabel).resize(600, 350);
+};
+
+Charts.drawStudentOverallChart = function(student, container){
+  var url       = '/draw_chart/' + student + '/student_overall_performance.json?chart_type=bar',
+      container = container,
+      xlabel    = 'Test',
+      ylabel    = 'Percentage(%)';
+
+  Charts.drawChart(url, container, xlabel, ylabel).resize(600, 350);
+};
+
 
 
 

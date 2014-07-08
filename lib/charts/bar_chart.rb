@@ -22,8 +22,15 @@ module Charts
 
       before_action :set_common_chart_data_for_subjects_charts, only: [
           :subject_toppers,
-          :subject_lowest_scorers,
+          :subject_lowest_scorers
         ]
+
+      before_action :set_common_chart_data_for_students_charts, only: [
+          :student_toppers,
+          :student_lowest_scorers,
+          :student_overall_performance
+        ]
+
     end
 
     module ClassMethods
@@ -80,6 +87,7 @@ module Charts
 
     include Charts::BarChartForClassTest
     include Charts::BarChartForSubjects
+    include Charts::BarChartForStudents
 
     protected
 

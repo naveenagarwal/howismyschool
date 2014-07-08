@@ -1,26 +1,61 @@
-<div class="center-block">
-  <p id="notice"><%= notice %></p>
+<p id="notice"><%= notice %></p>
 
-  <p>
-    <strong>Name:</strong>
-    <%= @student.name %>
-  </p>
+<p>
+  <strong>Name:</strong>
+  <%= @student.name %> |
+  <strong>Roll number:</strong>
+  <%= @student.roll_number %> |
+  <strong>Class room:</strong>
+  <%= @student.class_room.full_name %> |
+  <strong>Creator:</strong>
+  <%= @student.creator.email %>, <%= @student.creator_type.titleize %>
+</p>
 
-  <p>
-    <strong>Roll number:</strong>
-    <%= @student.roll_number %>
-  </p>
+<%= link_to 'Edit', edit_student_path(@student) %> |
+<%= link_to 'Back', students_path %>
 
-  <p>
-    <strong>Class room:</strong>
-    <%= @student.class_room.full_name %>
-  </p>
+<% if @student.has_test_results_for_current_year? %>
 
-  <p>
-    <strong>Creator:</strong>
-    <%= @student.creator.email %>, <%= @student.creator_type.titleize %>
-  </p>
+  <div id="inline-div" class="center-block">
 
-  <%= link_to 'Edit', edit_student_path(@student) %> |
-  <%= link_to 'Back', students_path %>
-</div>
+    <div class="have-margin">
+      <div class="absoulte-position">
+        <strong>
+          Top Scores
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer1">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_student_toppers @student.id, "chartcontainer1" %>
+      </div>
+    </div>
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        <strong>
+          Lowest Scores
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer2">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_student_lowest_scorers @student.id, "chartcontainer2" %>
+      </div>
+    </div>
+    <br>
+    <div class="have-margin">
+      <div class="absoulte-position">
+        <strong>
+          Overall Scores
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer3">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_student_overall @student.id, "chartcontainer3" %>
+      </div>
+    </div>
+
+  </div>
+<% end %>

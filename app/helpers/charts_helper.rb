@@ -79,10 +79,34 @@ module ChartsHelper
     ".html_safe
   end
 
-  def barchart_for_suibject_lowest_scorers(subject_id, container)
+  def barchart_for_subject_lowest_scorers(subject_id, container)
     "
       <script type='text/javascript'>
         Charts.drawSubjectLowestScorersChart('#{subject_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
+  def barchart_for_student_toppers(student_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawStudentToppersChart('#{student_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
+  def barchart_for_student_lowest_scorers(student_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawStudentLowestScorersChart('#{student_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
+  def barchart_for_student_overall(student_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawStudentOverallChart('#{student_id}','#{container}');
       </script>
     ".html_safe
   end
