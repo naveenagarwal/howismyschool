@@ -72,10 +72,10 @@
                 </ul>
               </div>
             <% else %>
-              <ul class="nav">
+              <ul class="nav pull-left">
                 <%= render partial: "/layouts/#{current_entity_type}_sign_in_links" %>
-                <li><%= link_to "Singn Out", send("destroy_#{current_entity_type}_session_path"), method: :delete %></li>
               </ul>
+              <ul class="nav pull-right"><li><%= link_to "Singn Out", send("destroy_#{current_entity_type}_session_path"), method: :delete %></li></ul>
             <% end %>
 
           </div><!--/.nav-collapse -->
