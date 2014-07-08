@@ -189,7 +189,7 @@ div.inline-div.width-100-percent {
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0));
   -webkit-box-shadow: 0 1px rgba(255, 255, 255, 0.05);
   box-shadow: 0 1px rgba(255, 255, 255, 0.05);
-  font: 13px/20px 'Lucida Grande', Tahoma, Verdana, sans-serif;
+  font: 13px/20px; /*'Lucida Grande', Tahoma, Verdana, sans-serif;*/
   color: #404040;
   background: #26272c;
 }
@@ -199,7 +199,7 @@ div.inline-div.width-100-percent {
   padding: 0 6px;
   min-width: 17px;
   line-height: 27px;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
   font-size: 12px;
   font-weight: 500;
   color: #d4d4d4;
@@ -249,6 +249,13 @@ div.inline-div.width-100-percent {
   display: none;
 }
 
+.pagination > span.gap {
+  background-image: none;
+  box-shadow: none;
+  text-shadow: 0 0;
+  float: left;
+  margin-left: 5px;
+}
 body {
   background-image: url("/assets/background.jpg");
   background-repeat: repeat;
