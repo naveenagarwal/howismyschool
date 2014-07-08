@@ -251,7 +251,7 @@ div.inline-div.width-100-percent {
 
 body {
   background-image: url("/assets/background.jpg");
-  background-repeat: repeat-x;
+  background-repeat: repeat;
 }
 
 .searchbar-custom {
