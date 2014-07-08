@@ -19,6 +19,11 @@ module Charts
           :class_test_subjectwise_toppers,
           :class_test_subjectwise_lowest_scorers
         ]
+
+      before_action :set_common_chart_data_for_subjects_charts, only: [
+          :subject_toppers,
+          :subject_lowest_scorers,
+        ]
     end
 
     module ClassMethods
@@ -74,6 +79,7 @@ module Charts
     end
 
     include Charts::BarChartForClassTest
+    include Charts::BarChartForSubjects
 
     protected
 

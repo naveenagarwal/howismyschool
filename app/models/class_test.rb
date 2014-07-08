@@ -7,7 +7,7 @@ class ClassTest < ActiveRecord::Base
   belongs_to :creator, polymorphic: true
   belongs_to :document
 
-  has_many :test_results
+  has_many :test_results, dependent: :destroy
 
   validates :name, presence: true, uniqueness: { scope: :school_branch_id }
 

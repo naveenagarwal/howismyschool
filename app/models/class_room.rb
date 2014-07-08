@@ -7,7 +7,7 @@ class ClassRoom < ActiveRecord::Base
   belongs_to :school_branch
   belongs_to :document
 
-  has_many :test_results
+  has_many :test_results, dependent: :destroy
   has_many :subjects
   has_many :class_tests
   has_many :students

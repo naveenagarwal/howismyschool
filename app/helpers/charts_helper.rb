@@ -71,4 +71,20 @@ module ChartsHelper
     ".html_safe
   end
 
+  def barchart_for_subject_toppers(subject_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawSubjectToppersChart('#{subject_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
+  def barchart_for_suibject_lowest_scorers(subject_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawSubjectLowestScorersChart('#{subject_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
 end

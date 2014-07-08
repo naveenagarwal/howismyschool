@@ -106,6 +106,24 @@ Charts.drawClassTestSubjectwiseLowestScorersChart = function(class_test, contain
   Charts.drawChart(url, container, xlabel, ylabel).resize(600, 350);
 };
 
+Charts.drawSubjectToppersChart = function(subject, container){
+  var url       = '/draw_chart/' + subject + '/subject_toppers.json?chart_type=bar',
+      container = container,
+      xlabel    = 'Student-RollNo/Class Room/Test',
+      ylabel    = 'Percentage(%)';
+
+  Charts.drawChart(url, container, xlabel, ylabel).resize(600, 350);
+};
+
+Charts.drawSubjectLowestScorersChart = function(subject, container){
+  var url       = '/draw_chart/' + subject + '/subject_lowest_scorers.json?chart_type=bar',
+      container = container,
+      xlabel    = 'Student-RollNo/Class Room/Test',
+      ylabel    = 'Percentage(%)';
+
+  Charts.drawChart(url, container, xlabel, ylabel).resize(600, 350);
+};
+
 
 
 

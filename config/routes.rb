@@ -58,6 +58,8 @@ Rails.application.routes.draw do
       get 'class_test_subjectwise_toppers'
       get 'class_test_subjectwise_lowest_scorers'
 
+      get 'subject_toppers'
+      get 'subject_lowest_scorers'
     end
     collection do
       get 'chart_for_latest_test_results'

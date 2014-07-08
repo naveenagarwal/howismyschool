@@ -1,21 +1,46 @@
-<div class="center-block">
-  <p id="notice"><%= notice %></p>
+<p id="notice"><%= notice %></p>
 
-  <p>
-    <strong>Name:</strong>
-    <%= @subject.name %>
-  </p>
+<p>
+  <strong>Name:</strong>
+  <%= @subject.name %> |
+  <strong>School branch:</strong>
+  <%= @subject.school_branch.name %> |
+  <strong>Creator:</strong>
+  <%= @subject.creator.email %>, <%= @subject.creator_type.titleize %>
+</p>
 
-  <p>
-    <strong>School branch:</strong>
-    <%= @subject.school_branch.name %>
-  </p>
+<%= link_to 'Edit', edit_subject_path(@subject) %> |
+<%= link_to 'Back', subjects_path %>
 
-  <p>
-    <strong>Creator:</strong>
-    <%= @subject.creator.email %>, <%= @subject.creator_type.titleize %>
-  </p>
+<% if @subject.has_test_results_for_current_year? %>
 
-  <%= link_to 'Edit', edit_subject_path(@subject) %> |
-  <%= link_to 'Back', subjects_path %>
-</div>
+  <div id="inline-div" class="center-block">
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Subject:
+        <strong>
+          <%= @subject.name %> Toppers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer1">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_subject_toppers @subject.id, "chartcontainer1" %>
+      </div>
+    </div>
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Subject:
+        <strong>
+          <%= @subject.name %> Lowest Scorers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer2">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_suibject_lowest_scorers @subject.id, "chartcontainer2" %>
+      </div>
+    </div>
+  </div>
+<% end %>
