@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   helper_method :current_session_nil?, :current_entity_type, :current_entity,
-    :current_school_branch, :current_school
+    :current_school_branch, :current_school, :entity_root_url
 
 
   protected

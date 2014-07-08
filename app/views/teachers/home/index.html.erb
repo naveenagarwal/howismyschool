@@ -1,2 +1,106 @@
-<h3>Teachers::Home#index</h3>
-<p>Find me in app/views/teachers/home/index.html.erb</p>
+<h4>Dashboard</h4>
+<span> - Place where you see all the latest <strong>Class Room's, Subject's, Class Test's Highest</strong> and <strong>Lowest scorers</strong>. A place from where you can quickly have the glimpse of the students performance and do their analysis for further improvements.</span>
+<br />
+<br />
+<div class="center-block", id="inline-div">
+  <% if @show_charts %>
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Room:
+        <strong>
+          <%= @class_room.full_name %>
+        </strong>
+        Performance
+      </div>
+      <div id="chartcontainer1">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_room @class_room.id, "chartcontainer1" %>
+      </div>
+    </div>
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Class Test:
+        <strong>
+          <%= @class_test.name %> Toppers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer2">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_class_test_toppers @class_test.id, "chartcontainer2" %>
+      </div>
+    </div>
+
+    <br />
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Subject:
+        <strong>
+          <%= @subject.name %> Toppers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer3">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_subject_toppers @subject.id, "chartcontainer3" %>
+      </div>
+    </div>
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Subject:
+        <strong>
+          <%= @subject.name %> Lowest Scorers
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer4">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_subject_lowest_scorers @subject.id, "chartcontainer4" %>
+      </div>
+    </div>
+
+    <br />
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Student:
+        <strong>
+          Name: <%= @student.name %>, Roll No. <%= @student.roll_number %> Top Scores
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer5">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_student_toppers @student.id, "chartcontainer5" %>
+      </div>
+    </div>
+
+    <div class="have-margin">
+      <div class="absoulte-position">
+        Student:
+        <strong>
+          Name: <%= @student.name %>, Roll No. <%= @student.roll_number %> Lowest Scores
+        </strong>
+        for the year: <strong><%= TimeExt.current_year %></strong>
+      </div>
+      <div id="chartcontainer6">
+        Hey, howdy!. Is every thing all right with you?
+        <%= barchart_for_student_lowest_scorers @student.id, "chartcontainer6" %>
+      </div>
+    </div>
+
+  <% else %>
+
+    <div class="text-center">
+      <h5>Please enter some test reulsts into the system to see performance evaluation here.</h5>
+      <%= link_to "Upload Test Result Document", new_uploaded_test_result_path %> / <%= link_to "Manually Feed The Test Results", new_test_result_path  %>
+    </div>
+
+  <% end %>
+
+</div>
+

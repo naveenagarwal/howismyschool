@@ -9,6 +9,7 @@ class Teacher < ActiveRecord::Base
 
   has_many :subjects, as: :creator
   has_many :students, as: :creator
+  has_many :test_results, as: :creator
   has_many :test_results_from_files, as: :creator
   has_many :documents, as: :creator
 end
