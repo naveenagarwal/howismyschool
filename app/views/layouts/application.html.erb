@@ -77,7 +77,7 @@
               </ul>
               <ul class="nav pull-right">
                 <li><%= render partial: "/layouts/search_form" %></li>
-                <li><%= link_to "Singn Out", send("destroy_#{current_entity_type}_session_path"), method: :delete %></li>
+                <li><%= link_to "Sign Out", send("destroy_#{current_entity_type}_session_path"), method: :delete %></li>
               </ul>
             <% end %>
 
