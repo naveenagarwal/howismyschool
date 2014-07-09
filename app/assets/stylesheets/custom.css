@@ -276,3 +276,20 @@ body {
 .search-highlight {
   color: #FB59AA;
 }
+
+div#header_container {
+  position: fixed;
+  top: 0;
+  height: 50px;
+  width: 100%;
+  z-index: 1;
+}
+
+div#main_container{
+  padding-top: 50px;
+    padding-bottom: 50px;
+    top:0px;
+    bottom:0px;
+    width:100%;
+}
+
