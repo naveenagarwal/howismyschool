@@ -32,9 +32,10 @@ class SearchController < ApplicationController
           search.school_branch_id = current_school_branch.id
           search.save
 
-          @query = Sunspot.search [Student, ClassTest] do
+          @query = Sunspot.search [Student, ClassTest, Subject, ClassRoom] do
             data_accessor_for(Student).include = [:class_room]
             data_accessor_for(ClassTest).include = [:test_results]
+            data_accessor_for(Subject).include = [:test_results]
 
             fulltext params[:q] do
               minimum_match 1

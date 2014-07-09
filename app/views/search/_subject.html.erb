@@ -1,0 +1,21 @@
+<div class="list-group">
+  <a href="<%= subject_path(object.id) %>" class="list-group-item active" target="_blank">
+    <h5 class="list-group-item-heading"><%= object.name %></h5>
+  </a>
+  <p class="list-group-item-text">
+
+    <strong><%= object.name %></strong>
+    subject has total
+    <strong><%= object.test_results.count %> test results for the year <%= TimeExt.current_year %></strong>
+
+    <% if  object.test_results.count > 0 %>
+      Last test result entered into the system on
+      <strong><%= object.latest_test_result.created_at.strftime("%b-%d-%Y, %H:%M") %></strong>
+    <% end %>
+
+    <br >
+    Need full description here what else can be put in the search result data so that it occupies the full
+    space on the screen. and does not look like empty page. This can be filled easy once we have more class test details.
+  </p>
+
+</div>

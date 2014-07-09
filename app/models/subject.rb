@@ -11,6 +11,11 @@ class Subject < ActiveRecord::Base
       scope: [:school_branch_id]
     }
 
+  searchable do
+    text :name
+    integer :school_branch_id
+  end
+
   class << self
     def get_subjects_array_for_select_option(school_branch_id: nil)
       select(:id, :name).
@@ -35,6 +40,10 @@ class Subject < ActiveRecord::Base
 
   def get_lowest_scorers_array_for_bar_chart
     get_array_for_bar_chart(aggregate_method: "min", order: "ASC")
+  end
+
+  def latest_test_result
+    current_test_results.order("created_at DESC").first
   end
 
   private
