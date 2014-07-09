@@ -1,0 +1,10 @@
+<div class="search-container">
+  <h4>Search Results for "<strong><%= params[:q] %></strong>" </h4>
+
+  <%#= render partial: '/shared/paginate_collection', locals: { records: @teachers } %>
+
+  <% @results.each do |result| %>
+    <%= render partial: "#{result.class.name.downcase}", locals: { student: result } %>
+  <% end %>
+
+</div>

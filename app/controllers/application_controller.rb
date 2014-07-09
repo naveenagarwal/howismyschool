@@ -56,18 +56,18 @@ class ApplicationController < ActionController::Base
   end
 
   def current_entity_type
-    session[:current_entity_type] ||= case
-      when current_admin_user
-        "admin"
-      when current_teacher
-        "teacher"
-      when current_school_controller
-        "school_controller"
-      when current_manager
-        "manager"
-      else
-        "guest"
-      end
+    case
+    when current_admin_user
+      "admin"
+    when current_teacher
+      "teacher"
+    when current_school_controller
+      "school_controller"
+    when current_manager
+      "manager"
+    else
+      "guest"
+    end
   end
 
   def after_sign_in_path_for(resource_or_scope)

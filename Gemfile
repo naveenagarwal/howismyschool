@@ -35,6 +35,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # Use debugger
 group :development, :test do
 	# gem 'debugger'
+  gem 'byebug'
   gem 'rspec-rails'
   gem 'factory_girl_rails', '4.2.1'
   gem 'nifty-generators'
@@ -72,3 +73,8 @@ gem 'select2-rails'
 
 # background jobs
 gem 'sidekiq'
+
+# Full text search
+gem 'sunspot_rails'
+gem 'sunspot_solr'
+gem 'progress_bar'

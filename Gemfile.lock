@@ -55,6 +55,9 @@ GEM
       sass (~> 3.2)
       thor
     builder (3.2.2)
+    byebug (3.1.2)
+      columnize (~> 0.8)
+      debugger-linecache (~> 1.2)
     cancancan (1.8.2)
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
@@ -70,8 +73,10 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    columnize (0.8.9)
     commonjs (0.2.7)
     connection_pool (2.0.0)
+    debugger-linecache (1.2.0)
     devise (3.2.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -91,6 +96,7 @@ GEM
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
+    highline (1.6.21)
     hike (1.2.3)
     i18n (0.6.9)
     inherited_resources (1.4.1)
@@ -127,11 +133,16 @@ GEM
     nifty-generators (0.4.6)
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
+    options (2.3.2)
     orm_adapter (0.5.0)
     pg (0.17.1)
     polyamorous (1.0.0)
       activerecord (>= 3.0)
     polyglot (0.3.5)
+    pr_geohash (1.0.0)
+    progress_bar (1.0.2)
+      highline (~> 1.6.1)
+      options (~> 2.3.0)
     rack (1.5.2)
     rack-dev-mark (0.4.3)
       rack (>= 1.1)
@@ -172,6 +183,8 @@ GEM
       nokogiri
       rubyzip
       spreadsheet (> 0.6.4)
+    rsolr (1.0.10)
+      builder (>= 2.1.2)
     rspec-core (3.0.2)
       rspec-support (~> 3.0.0)
     rspec-expectations (3.0.2)
@@ -219,6 +232,14 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    sunspot (2.1.1)
+      pr_geohash (~> 1.0)
+      rsolr (~> 1.0.7)
+    sunspot_rails (2.1.1)
+      nokogiri
+      rails (>= 3)
+      sunspot (= 2.1.1)
+    sunspot_solr (2.1.1)
     therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
       ref
@@ -251,6 +272,7 @@ PLATFORMS
 DEPENDENCIES
   activeadmin!
   annotate (>= 2.6.0)
+  byebug
   cancancan (~> 1.8)
   carrierwave
   coffee-rails (~> 4.0.0)
@@ -262,6 +284,7 @@ DEPENDENCIES
   mocha
   nifty-generators
   pg
+  progress_bar
   rack-dev-mark
   rails (= 4.1.4)
   remotipart (~> 1.0)
@@ -272,6 +295,8 @@ DEPENDENCIES
   select2-rails
   sidekiq
   spring
+  sunspot_rails
+  sunspot_solr
   therubyracer
   turbolinks
   twitter-bootstrap-rails

@@ -13,6 +13,12 @@ class Student < ActiveRecord::Base
       message: " - This student already exists with same name and roll number"
     }
 
+
+  searchable do
+    text :name
+    integer :school_branch_id
+  end
+
   class << self
     def get_students_array_for_select_option(school_branch_id: nil)
       select(:id, :name, :roll_number).

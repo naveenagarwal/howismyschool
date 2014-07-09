@@ -1,6 +1,6 @@
 <%= form_tag(search_index_path, data: { remote: true }, class: "navbar-search", id: "navigation_searchbar" ) do -%>
   <div>
     <em class="icon-search searchbar-custom"></em>
-    <input type="text" class="search-query span2" placeholder="Search">
+    <input name="q" type="text" class="search-query span2" placeholder="Search">
   </div>
 <% end -%>
