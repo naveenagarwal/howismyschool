@@ -1,13 +1,13 @@
 <div class="list-group">
-  <a href="<%= student_path(student.id) %>" class="list-group-item active" target="_blank">
-    <h5 class="list-group-item-heading"><%= student.name %></h5>
+  <a href="<%= student_path(object.id) %>" class="list-group-item active" target="_blank">
+    <h5 class="list-group-item-heading"><%= object.name %></h5>
   </a>
   <p class="list-group-item-text">
-    <strong><%= student.name %></strong>
+    <strong><%= object.name %></strong>
     is in class room
-    <strong><%= student.class_room.full_name %></strong>
+    <strong><%= object.class_room.full_name %></strong>
     has roll number
-    <strong><%= student.roll_number %></strong>
+    <strong><%= object.roll_number %></strong>
     <br >
     Need full description here what else can be put in the search result data so that it occupies the full
     space on the screen. and does not look like empty page. This can be filled easy once we have more student details.

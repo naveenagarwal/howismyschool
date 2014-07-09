@@ -11,6 +11,11 @@ class ClassTest < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: { scope: :school_branch_id }
 
+  searchable do
+    text :name
+    integer :school_branch_id
+  end
+
   class << self
     def get_class_tests_array_for_select_option(school_branch_id: nil)
       select(:id, :name).
@@ -43,6 +48,10 @@ class ClassTest < ActiveRecord::Base
 
   def get_subjectwise_lowest_scorers_array_for_bar_chart
     get_subject_array_for_bar_chart(order: "ASC", aggregate_method: "min")
+  end
+
+  def latest_test_result
+    current_test_results.order("created_at DESC").first
   end
 
   private

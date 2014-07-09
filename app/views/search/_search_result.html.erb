@@ -12,7 +12,7 @@
     <%= render partial: '/shared/paginate_solr_collection' %>
 
     <% @results.each do |result| %>
-      <%= render partial: "#{result.class.name.downcase}", locals: { student: result } %>
+      <%= render partial: "#{result.class.name.underscore}", locals: { object: result } %>
     <% end %>
 
   <% end %>

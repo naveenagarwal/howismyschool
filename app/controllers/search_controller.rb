@@ -31,8 +31,10 @@ class SearchController < ApplicationController
           # search.searcher = current_teacher
           # search.text = params[:q]
 
-          @query = Sunspot.search [Student] do
+          @query = Sunspot.search [Student, ClassTest] do
             data_accessor_for(Student).include = [:class_room]
+            data_accessor_for(ClassTest).include = [:test_results]
+
             fulltext params[:q]
             order_by :score, :desc
             with :school_branch_id, current_school_branch.id
@@ -44,6 +46,7 @@ class SearchController < ApplicationController
           # search.save
 
         rescue Exception => e
+          byebug
           @results = []
           set_flash_messages type: "error", message: "Error in Searching... Please try after some time"
         end
