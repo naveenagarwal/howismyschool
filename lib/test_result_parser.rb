@@ -81,6 +81,7 @@ class TestResultParser
       outcome:                    row["outcome"].downcase == "pass" ? true : false,
       year:                       row["year"],
       remarks:                    row["remarks"],
+      grade:                      row["grade"],
       creator_id:                 @test_results_from_file.creator_id,
       creator_type:               @test_results_from_file.creator_type,
       test_results_from_file_id:  @test_results_from_file.id
