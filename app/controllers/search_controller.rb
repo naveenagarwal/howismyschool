@@ -26,21 +26,27 @@ class SearchController < ApplicationController
   def create
     respond_to do |format|
       format.js {
+        begin
+          # search = current_teacher.searches.where(text: params[:q]).first || current_teacher.searches.new
+          # search.searcher = current_teacher
+          # search.text = params[:q]
 
-        search = current_teacher.searches.new
-        search.searcher = current_teacher
-        search.text = params[:q]
+          @query = Sunspot.search [Student] do
+            data_accessor_for(Student).include = [:class_room]
+            fulltext params[:q]
+            order_by :score, :desc
+            with :school_branch_id, current_school_branch.id
+          end
 
-        query = Sunspot.search [Student] do
-          fulltext params[:q]
-          order_by :score, :desc
-          with :school_branch_id, current_school_branch.id
-          paginate page: params[:page] || DEFAULT_PAGE, per_page: params[:per_page] || DEFAULT_PER_PAGE
+          @results = @query.results
+          # search.result << @results
+          # search.result.uniq!
+          # search.save
+
+        rescue Exception => e
+          @results = []
+          set_flash_messages type: "error", message: "Error in Searching... Please try after some time"
         end
-
-        @results = query.results
-        search.result = @results
-        search.save
       }
     end
   end

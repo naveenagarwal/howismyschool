@@ -1,10 +1,19 @@
 <div class="search-container">
-  <h4>Search Results for "<strong><%= params[:q] %></strong>" </h4>
+  <% if @results.count == 0 %>
 
-  <%#= render partial: '/shared/paginate_collection', locals: { records: @teachers } %>
+    <div class="list-group">
+      <h6>Nothing to match the search term "<strong><%= params[:q] %></strong>", try something different!</h6>
+    </div>
 
-  <% @results.each do |result| %>
-    <%= render partial: "#{result.class.name.downcase}", locals: { student: result } %>
+  <% else %>
+
+    <h4>Search Results for "<strong><%= params[:q] %></strong>" </h4>
+
+    <%= render partial: '/shared/paginate_solr_collection' %>
+
+    <% @results.each do |result| %>
+      <%= render partial: "#{result.class.name.downcase}", locals: { student: result } %>
+    <% end %>
+
   <% end %>
-
 </div>
