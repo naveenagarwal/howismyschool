@@ -6,6 +6,7 @@ $(document).on('page:load', function() {
   initializeSelectOptions();
   initializeSelectOptionsForAjax();
   initializeSubmitNavBarSearchForm();
+  highlightText();
 
 });
 
@@ -17,6 +18,7 @@ $(document).ready(function() {
   initializeSelectOptions();
   initializeSelectOptionsForAjax();
   initializeSubmitNavBarSearchForm();
+  highlightText();
 
 });
 
@@ -90,3 +92,38 @@ var initializeSubmitNavBarSearchForm = function(){
   });
 
 }
+
+var highlightText = function(){
+  $(document).ajaxComplete(function(event, request) {
+    var searhQuery = request.getResponseHeader('x-search-term');
+    if(searhQuery){
+      searchHighlightText(searhQuery);
+    }
+  });
+};
+
+var searchHighlightText = function(text){
+  var html  = $("search-container list-group-item-text").html();
+  var matchedText = "";
+  var regex = "";
+
+  text      = text.split(/\s+/);
+
+  $("p.list-group-item-text").each(function(){
+    var html = $(this).html();
+    for(var i=0; i < text.length; i++){
+      regex = new RegExp(text[i], "ig");
+      matchedText = html.match(regex);
+
+      if(matchedText){
+        for(var j=0; j < matchedText.length; j++){
+          regex = new RegExp(matchedText[j], "g");
+          html = html.replace(regex, '<span class="search-highlight">' + matchedText[j] + '</span>');
+        }
+      }
+    }
+
+    $(this).html(html);
+  });
+
+};

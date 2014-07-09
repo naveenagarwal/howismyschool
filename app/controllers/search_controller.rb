@@ -45,6 +45,8 @@ class SearchController < ApplicationController
           end
 
           @results = @query.results
+
+          response.headers["x-search-term"] = params[:q]
         rescue Exception => e
           byebug
           @results = []

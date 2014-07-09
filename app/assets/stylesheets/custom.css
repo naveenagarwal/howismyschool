@@ -272,3 +272,7 @@ body {
   margin-left: 5%;
   margin-right: 25%;
 }
+
+.search-highlight {
+  color: #FB59AA;
+}
