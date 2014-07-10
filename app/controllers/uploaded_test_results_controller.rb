@@ -16,7 +16,7 @@ class UploadedTestResultsController < ApplicationController
   # GET /uploaded_test_results/1.json
   def show
     @test_results = Paginate.get_records(
-        relation_object: @test_results_from_file.all_test_results,
+        relation_object: @test_results_from_file.test_results,
         page: params[:page],
         per_page: params[:per_page]
       )

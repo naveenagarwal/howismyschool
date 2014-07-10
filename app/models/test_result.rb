@@ -27,6 +27,15 @@ class TestResult < ActiveRecord::Base
     outcome? ? "Passed" : "Failed"
   end
 
+  def student_name_only
+    byebug
+    student_name.split("-").first.squish
+  end
+
+  def student_rno_only
+    student_name.split("-").last.squish
+  end
+
   private
 
   def check_student_belongs_to_right_class

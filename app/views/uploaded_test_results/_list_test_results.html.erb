@@ -18,10 +18,10 @@
   <tbody>
     <% @test_results.each do |test_result| %>
       <tr>
-        <td><%= test_result.class_room.full_name %></td>
-        <td><%= test_result.student.name_with_rno %></td>
-        <td><%= test_result.class_test.name %></td>
-        <td><%= test_result.subject.name %></td>
+        <td><%= test_result.class_room_name %></td>
+        <td><%= test_result.student_name %></td>
+        <td><%= test_result.class_test_name %></td>
+        <td><%= test_result.subject_name %></td>
         <td><%= test_result.percentage %></td>
         <td><%= test_result.grade %></td>
         <td><%= test_result.pass_or_fail %></td>

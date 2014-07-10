@@ -10,7 +10,7 @@ class TestResultsController < ApplicationController
 
   def list
     @test_results = Paginate.get_records(
-        relation_object: current_school_branch.test_results.includes(:student, :subject, :class_test, :class_room),
+        relation_object: current_school_branch.test_results,
         page: params[:page],
         per_page: params[:per_page]
       )
