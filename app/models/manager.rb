@@ -7,4 +7,6 @@ class Manager < ActiveRecord::Base
   has_many :school_branches, through: :schools
   has_many :school_controllers
 
+  has_one :my_detail, as: :whoami
+
 end

@@ -20,6 +20,7 @@ class TestResult < ActiveRecord::Base
     }
 
   before_save :check_student_belongs_to_right_class
+  before_save :associate_details
 
 
   def pass_or_fail
@@ -33,5 +34,12 @@ class TestResult < ActiveRecord::Base
       self.errors.add(:student, "The selected Student does not belongs to this class room - #{class_room.full_name}/#{class_room.id}/#{student_id}")
       false
     end
+  end
+
+  def associate_details
+    self.class_room_name  = class_room.full_name
+    self.class_test_name  = class_test.name
+    self.student_name     = student.name_with_rno
+    self.subject_name     = subject.name
   end
 end

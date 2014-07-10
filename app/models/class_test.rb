@@ -11,6 +11,8 @@ class ClassTest < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: { scope: :school_branch_id }
 
+  before_update :update_test_results
+
   searchable do
     text :name
     integer :school_branch_id
@@ -90,6 +92,10 @@ class ClassTest < ActiveRecord::Base
         }
     end
     test_results
+  end
+
+  def update_test_results
+    test_results.update_all(class_test_name: name)  if changes.keys.include?("name")
   end
 
 end

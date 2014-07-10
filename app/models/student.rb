@@ -13,6 +13,7 @@ class Student < ActiveRecord::Base
       message: " - This student already exists with same name and roll number"
     }
 
+  before_update :update_test_results
 
   searchable do
     text :name
@@ -89,6 +90,10 @@ class Student < ActiveRecord::Base
         }
     end
     test_results_array
+  end
+
+  def update_test_results
+    test_results.update_all(student_name: name_with_rno)  if (changes.keys & ["name", "roll_number"]).present?
   end
 
 end

@@ -1,0 +1,50 @@
+<div class="center-block">
+  <h3>Add/Update Details</h3>
+
+  <%= form_for(@details, url: my_account_update_path, html: { method: "PUT" }) do |f| %>
+
+    <div id="form_errors">
+      <%= render partial: "/shared/form_errors", locals: { obj: @details, name: "details" } %>
+    </div>
+
+    <div class="field">
+      <div class="inline-div">
+        <%= f.label :first_name %>
+        <%= f.text_field :first_name %>
+      </div>
+      <div class="inline-div">
+        <%= f.label :middle_name %>
+        <%= f.text_field :middle_name %>
+      </div>
+      <div class="inline-div">
+        <%= f.label :last_name %>
+        <%= f.text_field :last_name %>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="inline-div">
+        <%= f.label :phone %>
+        <%= f.text_field :phone %>
+      </div>
+      <div class="inline-div">
+        <%= f.label :emergency_contact %>
+        <%= f.text_field :emergency_contact %>
+      </div>
+      <div class="inline-div">
+        <%= f.label :address_temporary %>
+        <%= f.text_field :address_temporary %>
+      </div>
+    <div class="field">
+      <div class="inline-div">
+        <%= f.label :address_permamnent %>
+        <%= f.text_field :address_permamnent %>
+      </div>
+    </div>
+
+    <div class="actions inline-div">
+      <%= f.submit "Update" %> / <%= link_to("Back", my_account_path ) %>
+    </div>
+  <% end %>
+
+</div>

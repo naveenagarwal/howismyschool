@@ -1,0 +1,29 @@
+<% if @details %>
+  <p>
+    First Name : <strong> <%= @details.first_name %> </strong>
+  </p>
+  <p>
+    Middle Name : <strong> <%= @details.middle_name %> </strong>
+  </p>
+  <p>
+    Last Name : <strong> <%= @details.last_name %> </strong>
+  </p>
+  <p>
+    Phone : <strong> <%= @details.phone %> </strong>
+  </p>
+  <p>
+    Emergency Contact : <strong> <%= @details.emergency_contact %> </strong>
+  </p>
+  <p>
+    Address Temporary : <strong> <%= @details.address_temporary %> </strong>
+  </p>
+  <p>
+    Address Permamnent : <strong> <%= @details.address_permamnent %> </strong>
+  </p>
+  <p><%= link_to("Edit", my_account_edit_path ) %></p>
+<% else %>
+  <h5>
+    You have not enetered any of your details it is recommended that you provide your basic and contact details.
+    <%= link_to("Enter details now", my_account_edit_path ) %>
+  </h5>
+<% end %>

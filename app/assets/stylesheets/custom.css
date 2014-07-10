@@ -268,7 +268,7 @@ body {
   top: 30%;
 }
 
-.search-container {
+.align-from-left, .search-container {
   margin-left: 5%;
   margin-right: 25%;
 }
@@ -294,3 +294,6 @@ div#main_container{
     width:100%;
 }
 
+.margin-left-20 {
+  margin-left: 20px
+}

@@ -14,6 +14,8 @@ class ClassRoom < ActiveRecord::Base
             presence: true,
             uniqueness: { scope: [ :school_id, :school_branch_id, :grade ], case_sensitive: false }
 
+  before_update :update_test_results
+
   searchable do
     text :full_name
     integer :school_branch_id
@@ -99,6 +101,10 @@ class ClassRoom < ActiveRecord::Base
     end
 
     average_test_results
+  end
+
+  def update_test_results
+    test_results.update_all(class_room_name: full_name)  if (changes.keys & ["name", "garde"]).present?
   end
 
 end

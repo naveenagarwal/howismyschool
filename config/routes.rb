@@ -77,6 +77,13 @@ Rails.application.routes.draw do
 
   resources :search, only: [ :index, :create, :show ]
 
+  get 'my_account' => 'my_accounts#index'
+  get 'my_account/more_details' => 'my_accounts#more_details'
+  get 'my_account/edit' => 'my_accounts#edit'
+  patch 'my_account/update' => 'my_accounts#update'
+  put 'my_account/update' => 'my_accounts#update'
+
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

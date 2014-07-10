@@ -1,0 +1,13 @@
+<h4>MY Details</h4>
+<div class="align-from-left">
+  <p>
+    Email: <strong><%= current_entity.email %></strong>
+  </p>
+
+  <%= render partial: "my_details" %>
+
+  <br />
+
+  <div id="more_info"><%= link_to "more about me...", my_account_more_details_path, data: { remote: true } %></div>
+
+</div>

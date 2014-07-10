@@ -1,0 +1,26 @@
+<p>For the Year: <strong><%= TimeExt.current_year %></strong></p>
+<p>
+  Classes Teaches In : <strong> <%= current_teacher.class_rooms_list.join(", ") %> </strong>
+</p>
+<p>
+  Tests conducted so far : <strong> <%= current_teacher.class_tests_list.join(", ") %> </strong>
+</p>
+<div>
+  Tests results you Entered so far :
+  <br />
+    <% current_teacher.current_test_results_count_test_and_subjectwise.each do | k, v | %>
+      Class Room : <%= k %><br />
+        <div class="margin-left-20">
+          <% v.each do |test, subject_hash| %>
+            Class Test : <%= test %><br />
+              Subject(s) : <br />
+              <% subject_hash.each do |subject, count | %>
+                <div class="margin-left-20">
+                  <%= subject %> : <%= count %> Test Results <br />
+                </div>
+              <% end %>
+          <% end %>
+        <br /><br />
+      </div>
+    <% end %>
+</div>
