@@ -301,3 +301,28 @@ div#main_container{
 .required {
   color: #B01313;
 }
+
+.modal {
+  width: 700px;
+}
+
+.modal .modal-body {
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.modal-header .close {
+  display: none;
+}
+
+.red {
+  color: #B01313;
+}
+
+.green {
+  color: #006404;
+}
+
+.blue {
+  color: #2EA5CD;
+}

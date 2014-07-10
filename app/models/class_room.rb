@@ -78,6 +78,16 @@ class ClassRoom < ActiveRecord::Base
     current_test_results.order("created_at DESC").first
   end
 
+  def students_with_test_results(outcome)
+    as_name = (outcome == true ? "passed" : "failed")
+
+    current_test_results.select(
+        "distinct on(class_test_id) class_test_id, count(student_id) as #{as_name}, class_test_name"
+      ).where(
+        outcome: outcome
+      ).group("class_test_name, class_test_id")
+  end
+
   private
 
   def testwise_array_for_bar_chart(order: "DESC")

@@ -1,12 +1,17 @@
 
 <p>
   <strong>Name:</strong>
-  <%= @class_room.name %>,
+  <%= @class_room.name %> |
   <strong>Grade:</strong>
-  <%= @class_room.grade %>
+  <%= @class_room.grade %> |
+  <%= link_to "Pass/Fail Details", "javascript:void(0);", data:{ toggle: "modal", target: "#pass_fail_details_modalboxdal" } %>
 </p>
+
+<%= render partial: 'pass_fail_details_modalbox' %>
+
 <%= link_to 'Edit', edit_class_room_path(@class_room) %> |
 <%= link_to 'Back', class_rooms_path %>
+
 
 <% if @class_room.has_test_results_for_current_year? %>
   <div id="inline-div" class="center-block">
