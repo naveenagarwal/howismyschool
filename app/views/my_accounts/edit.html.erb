@@ -9,7 +9,7 @@
 
     <div class="field">
       <div class="inline-div">
-        <%= f.label :first_name %>
+        <%= f.label :first_name, required_span_with("First name") %>
         <%= f.text_field :first_name %>
       </div>
       <div class="inline-div">
@@ -24,11 +24,11 @@
 
     <div class="field">
       <div class="inline-div">
-        <%= f.label :phone %>
+        <%= f.label :phone, required_span_with("Phone") %>
         <%= f.text_field :phone %>
       </div>
       <div class="inline-div">
-        <%= f.label :emergency_contact %>
+        <%= f.label :emergency_contact, required_span_with("Emergency contact") %>
         <%= f.text_field :emergency_contact %>
       </div>
       <div class="inline-div">

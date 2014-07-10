@@ -297,3 +297,7 @@ div#main_container{
 .margin-left-20 {
   margin-left: 20px
 }
+
+.required {
+  color: #B01313;
+}

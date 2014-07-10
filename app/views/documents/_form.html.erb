@@ -6,7 +6,7 @@
 
   <div class="field">
     <div class="inline-div">
-      <%= f.label :name, "Select Document (Must be in .csv format)" %>
+      <%= f.label :name, required_span_with("Select Document (Must be in .csv format)") %>
       <%= f.file_field :name, class: "form-control" %>
     </div>
   </div>

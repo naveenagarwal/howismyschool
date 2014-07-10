@@ -3,7 +3,7 @@
     <% render partial: "/shared/form_errors", locals: { obj: @subject, name: "subject" } %>
   </div>
   <div class="field">
-    <%= f.label :name %><br>
+    <%= f.label :name, required_span_with("Name") %><br>
     <%= f.text_field :name %>
   </div>
 

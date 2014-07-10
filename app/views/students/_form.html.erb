@@ -5,22 +5,22 @@
 
   <div class="field">
     <div class="inline-div">
-      <%= f.label :name %>
+      <%= f.label :name, required_span_with("Name") %>
       <%= f.text_field :name %>
     </div>
     <div class="inline-div">
-      <%= f.label :roll_number %>
+      <%= f.label :roll_number, required_span_with("Roll number") %>
       <%= f.text_field :roll_number %>
     </div>
     <div class="inline-div">
-      <%= f.label :class_room %>
+      <%= f.label :class_room, required_span_with("Class Room") %>
       <%= f.select :class_room_id, current_school_branch.class_rooms.collect { |p| [ p.full_name, p.id ] }, { include_blank: true }, class: "select2" %>
     </div>
   </div>
 
   <div class="field">
     <div class="inline-div">
-      <%= f.label :year, "Year(In the format 2013-2014)" %>
+      <%= f.label :year, required_span_with("Year(In the format 2013-2014)") %>
       <%= f.text_field :year %>
     </div>
     <div class="inline-div">

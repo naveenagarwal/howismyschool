@@ -7,26 +7,26 @@
 
   <div class="field">
     <div class="inline-div">
-      <%= f.label :class_room %>
+      <%= f.label :class_room, required_span_with("Class room") %>
       <%= f.select :class_room_id, @class_rooms_array, { include_blank: true }, class: "select2" %>
     </div>
     <div class="inline-div">
-      <%= f.label :student %>
+      <%= f.label :student, required_span_with("Student") %>
       <%= f.select :student_id, @students_array, { include_blank: true }, class: "select2" %>
     </div>
     <div class="inline-div">
-      <%= f.label :class_test %>
+      <%= f.label :class_test, required_span_with("Class test") %>
       <%= f.select :class_test_id, @class_tests_array, { include_blank: true }, class: "select2" %>
     </div>
   </div>
 
   <div class="field">
     <div class="inline-div">
-      <%= f.label :subject %>
+      <%= f.label :subject, required_span_with("Subject") %>
       <%= f.select :subject_id, @subjects_array, { include_blank: true }, class: "select2 clear_fields" %>
     </div>
     <div class="inline-div">
-      <%= f.label :percentage %>
+      <%= f.label :percentage, required_span_with("Percentage") %>
       <%= f.text_field :percentage, class: "clear_fields" %>
     </div>
     <div class="inline-div">
@@ -37,7 +37,7 @@
 
   <div class="field">
     <div class="inline-div">
-      <%= f.label :year, "Year(In the format 2013-2014)" %><br>
+      <%= f.label :year, required_span_with("Year(In the format 2013-2014)") %><br>
       <%= f.text_field :year %>
     </div>
     <div class="inline-div">
