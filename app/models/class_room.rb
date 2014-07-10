@@ -88,6 +88,31 @@ class ClassRoom < ActiveRecord::Base
       ).group("class_test_name, class_test_id")
   end
 
+  def get_pass_fail_tests_details_for_pie_chart(class_test_id)
+    pass_fail_result = []
+
+    [PASSED, FAILED].each do |outcome|
+      as_name = (outcome == true ? "passed" : "failed")
+      test_result = current_test_results.select(
+              "class_test_id, count(student_id) as #{as_name}, class_test_name"
+            ).where(
+              outcome: outcome, class_test_id: class_test_id
+            ).group("class_test_name, class_test_id").first
+
+      pass_fail_result << {
+          unit: (outcome == true ? "#{test_result.class_test_name} Passed" : "#{test_result.class_test_name} Failed" ),
+          value: test_result.respond_to?(:passed) ? test_result.passed : test_result.failed
+        }
+    end
+    pass_fail_result
+  end
+
+  def current_test_results_class_tests
+    current_test_results.select(
+        "distinct on(class_test_id) class_test_id, class_test_name"
+      ).group("class_test_name, class_test_id")
+  end
+
   private
 
   def testwise_array_for_bar_chart(order: "DESC")

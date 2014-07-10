@@ -10,7 +10,8 @@ module Charts
       before_action :set_common_chart_data_for_class_room_charts, only: [
           :chart_for_class_room_toppers_testwise,
           :chart_for_class_room_lowest_scorers_testwise,
-          :chart_for_class_room_toppers_subjectwise
+          :chart_for_class_room_toppers_subjectwise,
+          :class_room_tests_pass_fail_details
         ]
 
       before_action :set_common_chart_data_for_class_test_charts, only: [
@@ -79,6 +80,15 @@ module Charts
     def chart_for_class_room_lowest_scorers_testwise
       @js_chart["JSChart"]["datasets"][0]["data"]  =
         @class_room.get_lowest_scorers_array_testwise_for_bar_chart
+
+      respond_to do |format|
+        format.json { render json: @js_chart }
+      end
+    end
+
+    def class_room_tests_pass_fail_details
+      @js_chart["JSChart"]["datasets"][0]["data"]  =
+        @class_room.get_pass_fail_tests_details_for_pie_chart(params[:class_test_id])
 
       respond_to do |format|
         format.json { render json: @js_chart }

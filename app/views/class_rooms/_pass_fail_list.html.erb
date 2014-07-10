@@ -1,0 +1,37 @@
+<h5 class="green">Passed Studnets</h5>
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Class Test Name</th>
+      <th>Number of Students</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @class_room.students_with_test_results(PASSED).each do |test_result| %>
+      <tr>
+        <td><%= test_result.class_test_name %></td>
+        <td><%= test_result.passed %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h5 class="red">Failed Studnets</h5>
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Class Test Name</th>
+      <th>Number of Students</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @class_room.students_with_test_results(FAILED).each do |test_result| %>
+      <tr>
+        <td><%= test_result.class_test_name %></td>
+        <td><%= test_result.failed %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

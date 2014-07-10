@@ -1,0 +1,20 @@
+<div id="inline-div" class="center-block">
+
+  <% @class_room.current_test_results_class_tests.each.with_index do |test_result, index| %>
+
+    <div class="have-margin">
+      <div class="absoulte-position blue">
+        Class Test
+        <strong>
+          <%=  test_result.class_test_name %>
+        </strong>
+      </div>
+      <div id="piechartcontainer<%= index %>">
+        Hey, howdy!. Is every thing all right with you?
+        <%= piechart_for_class_room_test @class_room.id, test_result.class_test_id, "piechartcontainer#{index}" %>
+      </div>
+    </div>
+    <br />
+
+  <% end %>
+</div>

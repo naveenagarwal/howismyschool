@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div class="modal fade" id="pass_fail_details_modalboxdal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="pass_fail_details_modalboxdal_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -7,44 +7,24 @@
         <h4 class="modal-title blue" id="myModalLabel">Class Room:<%= @class_room.full_name %>, Pass/Fail Details for the year <%= TimeExt.current_year %></h4>
       </div>
       <div class="modal-body">
-        <h5 class="green">Passed Studnets</h5>
-        <table class="table table-bordered table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Class Test Name</th>
-              <th>Number of Students</th>
-            </tr>
-          </thead>
+        <%= render partial: 'pass_fail_list' %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-          <tbody>
-            <% @class_room.students_with_test_results(PASSED).each do |test_result| %>
-              <tr>
-                <td><%= test_result.class_test_name %></td>
-                <td><%= test_result.passed %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-
-        <h5 class="red">Failed Studnets</h5>
-        <table class="table table-bordered table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Class Test Name</th>
-              <th>Number of Students</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <% @class_room.students_with_test_results(FAILED).each do |test_result| %>
-              <tr>
-                <td><%= test_result.class_test_name %></td>
-                <td><%= test_result.failed %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-
+<div class="modal fade" id="pass_fail_details_modalboxdal_charts" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title blue" id="myModalLabel">Class Room:<%= @class_room.full_name %>, Pass/Fail Details for the year <%= TimeExt.current_year %></h4>
+      </div>
+      <div class="modal-body">
+        <%= render partial: 'pass_fail_pie_chart' %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

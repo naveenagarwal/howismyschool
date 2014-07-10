@@ -19,7 +19,6 @@ Charts.drawChart = function(url, container, xlabel, ylabel){
   }
 
   myChart.colorizeBars(newClorsArray);
-  // console.log(myChart.ml.bi.length);
   myChart.draw();
   myChart.resize(500, 350)
   return myChart;
@@ -154,4 +153,29 @@ Charts.drawStudentOverallChart = function(student, container){
 
 
 
+// Pie Charts
+
+Charts.drawPieChart = function(url, container){
+  var myChart = new JSChart(container, 'pie');
+  myChart.setDataJSON(url);
+  myChart.setPieRadius(100);
+  myChart.setPieUnitsFontSize(8);
+
+  var newClorsArray = [];
+  for(var i=0; i<myChart.ml.bi.length; i++){
+    newClorsArray.push(colors[i]);
+  }
+
+  myChart.colorizePie(newClorsArray);
+  myChart.draw();
+  // myChart.resize(500, 350)
+  return myChart;
+};
+
+Charts.drawClassRoomPieChart = function(class_room, class_test, container){
+  var url       = '/draw_chart/' + class_room + '/class_room_tests_pass_fail_details/' + class_test + '.json?chart_type=pie',
+      container = container;
+
+  Charts.drawPieChart(url, container);
+};
 

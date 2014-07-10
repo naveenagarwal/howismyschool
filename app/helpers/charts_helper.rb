@@ -111,4 +111,12 @@ module ChartsHelper
     ".html_safe
   end
 
+  def piechart_for_class_room_test(class_room_id, class_test_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawClassRoomPieChart('#{class_room_id}', '#{class_test_id}','#{container}');
+      </script>
+    ".html_safe
+  end
+
 end

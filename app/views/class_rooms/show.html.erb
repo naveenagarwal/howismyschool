@@ -3,17 +3,24 @@
   <strong>Name:</strong>
   <%= @class_room.name %> |
   <strong>Grade:</strong>
-  <%= @class_room.grade %> |
-  <%= link_to "Pass/Fail Details", "javascript:void(0);", data:{ toggle: "modal", target: "#pass_fail_details_modalboxdal" } %>
+  <%= @class_room.grade %>
 </p>
-
-<%= render partial: 'pass_fail_details_modalbox' %>
+<div class="">
+  <%= link_to "Pass/Fail Details(list)", "javascript:void(0);", data:{ toggle: "modal", target: "#pass_fail_details_modalboxdal_list" } %> |
+  <%= link_to "Pass/Fail Details(Charts)", "javascript:void(0);", data:{ toggle: "modal", target: "#pass_fail_details_modalboxdal_charts" } %>
+</div>
+<br />
 
 <%= link_to 'Edit', edit_class_room_path(@class_room) %> |
 <%= link_to 'Back', class_rooms_path %>
 
 
+<%= render partial: 'pass_fail_details_modalbox' %>
+
+
+
 <% if @class_room.has_test_results_for_current_year? %>
+
   <div id="inline-div" class="center-block">
 
     <div class="have-margin">
