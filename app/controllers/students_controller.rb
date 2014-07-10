@@ -6,7 +6,7 @@ class StudentsController < ApplicationController
   # GET /students.json
   def index
     @students = Paginate.get_records(
-        relation_object: current_school_branch.students,
+        relation_object: current_school_branch.students.order("updated_at DESC"),
         page: params[:page],
         per_page: params[:per_page]
       )
@@ -76,6 +76,10 @@ class StudentsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def student_params
-      params.require(:student).permit(:name, :roll_number, :class_room_id, :year)
+      params.require(:student).permit(
+          :name, :roll_number, :class_room_id, :year, :email, :mother_name,
+          :father_name, :mother_phone, :father_phone, :address, :previous_school,
+          :other_info
+        )
     end
 end

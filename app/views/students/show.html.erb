@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <strong>Name:</strong>
   <%= @student.name %> |
@@ -9,6 +7,25 @@
   <%= @student.class_room.full_name %> |
   <strong>Creator:</strong>
   <%= @student.creator.email %>, <%= @student.creator_type.titleize %>
+
+  <br />
+
+  <strong>Mother Name:</strong>
+  <%= @student.mother_name %> |
+  <strong>Father Name:</strong>
+  <%= @student.father_name %> |
+  <strong>Mother Phone:</strong>
+  <%= @student.mother_phone %> |
+  <strong>Father Phone:</strong>
+  <%= @student.father_phone %> |
+  <strong>Email:</strong>
+  <%= @student.email %> |
+  <strong>Address:</strong>
+  <%= @student.address %> |
+
+  <br />
+  <strong>Additional Information:</strong>
+  <%= @student.other_info %>
 </p>
 
 <%= link_to 'Edit', edit_student_path(@student) %> |

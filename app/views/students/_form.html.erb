@@ -4,23 +4,68 @@
   </div>
 
   <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :roll_number %><br>
-    <%= f.text_field :roll_number %>
-  </div>
-  <div class="field">
-    <%= f.label :class_room %><br>
-    <%= f.select :class_room_id, current_school_branch.class_rooms.collect { |p| [ p.full_name, p.id ] }, { include_blank: true }, class: "select2" %>
+    <div class="inline-div">
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :roll_number %>
+      <%= f.text_field :roll_number %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :class_room %>
+      <%= f.select :class_room_id, current_school_branch.class_rooms.collect { |p| [ p.full_name, p.id ] }, { include_blank: true }, class: "select2" %>
+    </div>
   </div>
 
   <div class="field">
-    <%= f.label :year, "Year(In the format 2013-2014)" %><br>
-    <%= f.text_field :year %>
+    <div class="inline-div">
+      <%= f.label :year, "Year(In the format 2013-2014)" %>
+      <%= f.text_field :year %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :email %>
+      <%= f.text_field :email %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :previous_school, "Previous school(if any)" %>
+      <%= f.text_field :previous_school %>
+    </div>
   </div>
-  <div class="actions">
+
+  <div class="field">
+    <div class="inline-div">
+      <%= f.label :mother_name, "Mother's name" %>
+      <%= f.text_field :mother_name %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :father_name, "Father's name" %>
+      <%= f.text_field :father_name %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :address, "Address - present residence" %>
+      <%= f.text_field :address %>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="inline-div">
+      <%= f.label :mother_phone, "Mother's phone" %>
+      <%= f.text_field :mother_phone %>
+    </div>
+    <div class="inline-div">
+      <%= f.label :father_phone, "Father's phone" %>
+      <%= f.text_field :father_phone %>
+    </div>
+  </div>
+  <div class="field">
+    <div class="inline-div">
+      <%= f.label :other_info, "Any other informaton ?" %>
+      <%= f.text_area :other_info %>
+    </div>
+  </div>
+
+  <div class="actions inline-div">
     <%= f.submit %>
   </div>
 <% end %>
