@@ -306,6 +306,10 @@ div#main_container{
   width: 700px;
 }
 
+.modal.fade {
+  top: 25%;
+}
+
 .modal .modal-body {
     max-height: 420px;
     overflow-y: auto;
