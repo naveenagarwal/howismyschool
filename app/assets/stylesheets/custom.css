@@ -337,6 +337,10 @@ div#student_more_modalboxdal.modal {
   color: #2EA5CD;
 }
 
+.my-orange{
+  color: #BB8900;
+}
+
 table.blue-text-last-td.table-bordered th, table.blue-text-last-td.table-bordered td:last-child {
   color: #B21515;
 }
