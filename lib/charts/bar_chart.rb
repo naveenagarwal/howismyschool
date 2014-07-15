@@ -4,8 +4,6 @@ module Charts
   module BarChart
     extend ActiveSupport::Concern
 
-    DEFAULT_CHART_TYPE = "bar"
-
     included do
       before_action :set_common_chart_data_for_class_room_charts, only: [
           :chart_for_class_room_toppers_testwise,
@@ -29,7 +27,10 @@ module Charts
       before_action :set_common_chart_data_for_students_charts, only: [
           :student_toppers,
           :student_lowest_scorers,
-          :student_overall_performance
+          :student_overall_performance,
+          :tests_score,
+          :subjects_score,
+          :subjects_yearwise_score
         ]
 
     end

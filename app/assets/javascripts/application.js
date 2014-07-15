@@ -16,4 +16,5 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require select2
+//= require home
 //= require_tree .

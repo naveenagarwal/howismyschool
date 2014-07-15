@@ -1,4 +1,4 @@
-var colors = new Array('#AF0202', '#EC7A00', '#FCD200', '#81C714', '#0F0F0F', '#F77777');
+var colors = new Array('#AF0202', '#EC7A00', '#FCD200', '#81C714', '#0F0F0F', '#F77777', '#2ea5cd', '#150937', '#E2D2B0');
 
 function Charts(){
 }
@@ -15,6 +15,28 @@ Charts.drawChart = function(url, container, xlabel, ylabel){
 
   var newClorsArray = [];
   for(var i=0; i<myChart.ml.bi.length; i++){
+    newClorsArray.push(colors[i]);
+  }
+
+  myChart.colorizeBars(newClorsArray);
+  myChart.draw();
+  myChart.resize(500, 350)
+  return myChart;
+};
+
+Charts.drawChartFromArray = function(data, container, xlabel, ylabel){
+  var myChart = new JSChart(container, 'bar');
+  myChart.setDataArray(data);
+  myChart.setAxisNameX(xlabel);
+  myChart.setAxisNameY(ylabel, true);
+  myChart.setAxisNameColor("#000000");
+  myChart.setAxisValuesColor("#000000");
+  myChart.setBarValuesColor("#000000");
+  myChart.setBarValuesDecimals(2);
+  myChart.setLabelAlignX(true);
+
+  var newClorsArray = [];
+  for(var i=0; i<data.length; i++){
     newClorsArray.push(colors[i]);
   }
 
@@ -150,7 +172,51 @@ Charts.drawStudentOverallChart = function(student, container){
   Charts.drawChart(url, container, xlabel, ylabel).resize(600, 350);
 };
 
+Charts.drawStudentScore = function(dataURL, student, container, labelX, labelY){
+  if(typeof(labelX) === "undefiend"){
+    var labelX = null;
+  }
+  if(typeof(labelY) === "undefiend"){
+    var labelY = null;
+  }
 
+  var url       = dataURL,
+      container = container,
+      xlabel    = labelX || 'Subject/Test/Class Room',
+      ylabel    = labelY || 'Percentage(%)';
+
+  $.ajax({
+    url: url,
+    dataType: 'script',
+    type: "GET"
+  }).complete(function(response){
+    var data = JSON.parse(response.responseText).JSChart.datasets,
+        i = 0;
+
+    $("#" + container).html("");
+
+    for(dataset in data){
+      $("#" + container).append(Charts.createChartBlock(i));
+      Charts.drawChartFromArray(data[dataset].data, "student_chart_container" + i, xlabel, ylabel).resize(700, 350);
+      i++;
+    }
+
+  });
+}
+
+Charts.createChartBlock = function(sequence){
+  var html = '\
+    <div class="center-block inline-div2">\
+        <div class="have-margin">\
+          <div id="student_chart_container' + sequence + '">\
+          </div>\
+        </div>\
+    </div>\
+    <br>\
+  ';
+
+  return html;
+}
 
 
 // Pie Charts

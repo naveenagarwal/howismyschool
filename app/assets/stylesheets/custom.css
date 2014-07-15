@@ -134,7 +134,7 @@ div.inline-div {
   display: none;
 }
 
-#inline-div div, #inline-div-textarea div {
+#inline-div div, #inline-div-textarea div, .inline-div2 div {
   display: inline-table;
 }
 
@@ -302,6 +302,12 @@ div#main_container{
   color: #B01313;
 }
 
+div#student_more_modalboxdal.modal {
+  width: 900px;
+  margin-left: -28%;
+  margin-right: auto;
+}
+
 .modal {
   width: 700px;
 }
@@ -329,4 +335,8 @@ div#main_container{
 
 .blue {
   color: #2EA5CD;
+}
+
+table.blue-text-last-td.table-bordered th, table.blue-text-last-td.table-bordered td:last-child {
+  color: #B21515;
 }

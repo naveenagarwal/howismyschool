@@ -43,9 +43,13 @@ class SearchController < ApplicationController
 
             order_by :score, :desc
             with :school_branch_id, current_school_branch.id
-          end
+          end unless params[:q].blank?
 
-          @results = @query.results
+          if params[:q].blank?
+            @results = []
+          else
+            @results = @query.results
+          end
 
           response.headers["x-search-term"] = params[:q]
         rescue Exception => e

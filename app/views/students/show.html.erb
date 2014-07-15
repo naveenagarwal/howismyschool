@@ -1,35 +1,7 @@
-<p>
-  <strong>Name:</strong>
-  <%= @student.name %> |
-  <strong>Roll number:</strong>
-  <%= @student.roll_number %> |
-  <strong>Class room:</strong>
-  <%= @student.class_room.full_name %> |
-  <strong>Creator:</strong>
-  <%= @student.creator.email %>, <%= @student.creator_type.titleize %>
-
-  <br />
-
-  <strong>Mother Name:</strong>
-  <%= @student.mother_name %> |
-  <strong>Father Name:</strong>
-  <%= @student.father_name %> |
-  <strong>Mother Phone:</strong>
-  <%= @student.mother_phone %> |
-  <strong>Father Phone:</strong>
-  <%= @student.father_phone %> |
-  <strong>Email:</strong>
-  <%= @student.email %> |
-  <strong>Address:</strong>
-  <%= @student.address %> |
-
-  <br />
-  <strong>Additional Information:</strong>
-  <%= @student.other_info %>
-</p>
-
+<%= link_to 'General Details', "javascript:void(0);", data: { toggle: "modal", target: "#student_generic_modalboxdal" } %> |
 <%= link_to 'Edit', edit_student_path(@student) %> |
-<%= link_to 'Back', students_path %>
+<%= link_to 'Back', students_path %> |
+<%= link_to 'More', "javascript:void(0);", data: { toggle: "modal", target: "#student_more_modalboxdal" } %>
 
 <% if @student.has_test_results_for_current_year? %>
 
@@ -76,3 +48,6 @@
 
   </div>
 <% end %>
+
+<%= render partial: 'extended_details' %>
+<%= render partial: 'generic_details' %>

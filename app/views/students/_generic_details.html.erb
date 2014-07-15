@@ -1,0 +1,70 @@
+<div class="modal fade" id="student_generic_modalboxdal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title blue" id="myModalLabel">Student: <%= @student.name %>, Roll No. <%= @student.roll_number %>, Details for the year <%= TimeExt.current_year %></h4>
+      </div>
+      <div class="modal-body">
+
+        <table class="blue-text-last-td table table-bordered table-striped table-hover">
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Name</td>
+              <td><%= @student.name %></td>
+            </tr>
+            <tr>
+              <td>Roll Number</td>
+              <td><%= @student.roll_number %></td>
+            </tr>
+            <tr>
+              <td>Class Room</td>
+              <td><%= @student.class_room.full_name %></td>
+            </tr>
+            <tr>
+              <td>Creator</td>
+              <td><%= @student.creator.email %>, <%= @student.creator_type.titleize %></td>
+            </tr>
+            <tr>
+              <td>Mother's Name</td>
+              <td><%= @student.mother_name %></td>
+            </tr>
+            <tr>
+              <td>Mother's Phone</td>
+              <td><%= @student.mother_phone %></td>
+            </tr>
+            <tr>
+              <td>Father's Name</td>
+              <td><%= @student.father_name %> </td>
+            </tr>
+            <tr>
+              <td>Father's Phone</td>
+              <td><%= @student.father_phone %></td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td><%= @student.email %></td>
+            </tr>
+            <tr>
+              <td>Address</td>
+              <td><%= @student.address %></td>
+            </tr>
+            <tr>
+              <td>Additional Information</td>
+              <td><%= @student.other_info %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

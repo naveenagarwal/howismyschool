@@ -7,6 +7,7 @@ $(document).on('page:load', function() {
   initializeSelectOptionsForAjax();
   initializeSubmitNavBarSearchForm();
   highlightText();
+  Student.initializeStudentScoreCharts();
 
 });
 
@@ -19,6 +20,7 @@ $(document).ready(function() {
   initializeSelectOptionsForAjax();
   initializeSubmitNavBarSearchForm();
   highlightText();
+  Student.initializeStudentScoreCharts();
 
 });
 
