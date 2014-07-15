@@ -3,14 +3,14 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <button type="button" class="close" data-dismiss="modal"><span class="sr-only">Close</span></button>
         <h4 class="modal-title blue" id="myModalLabel">Class Room:<%= @class_room.full_name %>, Pass/Fail Details for the year <%= TimeExt.current_year %></h4>
       </div>
       <div class="modal-body">
         <%= render partial: 'pass_fail_list' %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
       </div>
     </div>
   </div>
@@ -20,14 +20,14 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <button type="button" class="close" data-dismiss="modal"><span class="sr-only">Close</span></button>
         <h4 class="modal-title blue" id="myModalLabel">Class Room:<%= @class_room.full_name %>, Pass/Fail Details for the year <%= TimeExt.current_year %></h4>
       </div>
       <div class="modal-body">
         <%= render partial: 'pass_fail_pie_chart' %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
       </div>
     </div>
   </div>

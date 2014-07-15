@@ -322,7 +322,7 @@ div#student_more_modalboxdal.modal {
 }
 
 .modal-header .close {
-  display: none;
+  /*display: none;*/
 }
 
 .red {
