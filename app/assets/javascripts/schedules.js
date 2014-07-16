@@ -7,7 +7,6 @@ Schedules.getCalenderEvents = function(){
     ScheduleEvents = this;
   }
 
-  ScheduleEvents.clearAll();
 
   var url,
       year = $('span[data-head-year]').html(),
@@ -18,7 +17,7 @@ Schedules.getCalenderEvents = function(){
   $.ajax({
     url: url,
   }).done(function(response){
-    ScheduleEvents.options.events = response.events;
+    ScheduleEvents.setEvents(response.events);
   }).fail(function(response){
     alert("Error Loading schedules. Please try after sometime!");
   });

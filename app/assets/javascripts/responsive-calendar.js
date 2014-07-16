@@ -118,6 +118,15 @@
         }
         return _results;
       },
+      setEvents: function(eventsList) {
+        if(typeof(eventsList) === "undefined"){
+          var eventsList = {};
+        }
+        this.options.events = eventsList;
+        this.drawDays(this.currentYear, this.currentMonth);
+
+        return null;
+      },
       setMonth: function(dateString) {
         var time;
         time = this.splitDateString(dateString);
