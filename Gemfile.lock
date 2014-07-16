@@ -44,6 +44,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    american_date (1.1.0)
     annotate (2.6.5)
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
@@ -125,6 +126,7 @@ GEM
       treetop (~> 1.4.8)
     metaclass (0.0.4)
     mime-types (1.25.1)
+    min_max_validator (0.0.3)
     mini_portile (0.6.0)
     minitest (5.3.5)
     mocha (1.1.0)
@@ -271,6 +273,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin!
+  american_date (~> 1.1.0)
   annotate (>= 2.6.0)
   byebug
   cancancan (~> 1.8)
@@ -281,6 +284,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   less-rails
+  min_max_validator (~> 0.0.3)
   mocha
   nifty-generators
   pg

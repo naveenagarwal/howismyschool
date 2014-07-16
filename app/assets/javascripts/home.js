@@ -8,6 +8,7 @@ $(document).on('page:load', function() {
   initializeSubmitNavBarSearchForm();
   highlightText();
   Student.initializeStudentScoreCharts();
+  initializeDateTimePicker();
 
 });
 
@@ -21,6 +22,7 @@ $(document).ready(function() {
   initializeSubmitNavBarSearchForm();
   highlightText();
   Student.initializeStudentScoreCharts();
+  initializeDateTimePicker();
 
 });
 
@@ -128,4 +130,13 @@ var searchHighlightText = function(text){
     $(this).html(html);
   });
 
+};
+
+var initializeDateTimePicker = function(){
+  if($(".datetimepicker-initialize").length > 0){
+    $(".datetimepicker-initialize").datetimepicker({
+      language: 'en',
+      pick12HourFormat: true
+    });
+  }
 };

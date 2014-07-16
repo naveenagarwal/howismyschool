@@ -8,4 +8,5 @@ class SchoolBranch < ActiveRecord::Base
   has_many :class_tests
   has_many :test_results
   has_many :documents
+  has_many :schedules
 end

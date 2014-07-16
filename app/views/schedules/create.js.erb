@@ -1,0 +1,8 @@
+$("#form_errors").html('');
+
+<% if @schedule.errors.present? %>
+  $("#form_errors").html('<%= j render(partial: "/shared/form_errors", locals: { obj: @schedule, name: "schedule" }) %>');
+<% else %>
+  $("#new_schedule").modal('hide');
+  ScheduleEvents.options.onMonthChange();
+<% end %>

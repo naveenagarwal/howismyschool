@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   # devise_for :admins
@@ -87,6 +88,11 @@ Rails.application.routes.draw do
   patch 'my_account/update' => 'my_accounts#update'
   put 'my_account/update' => 'my_accounts#update'
 
+  resources :schedules do
+    collection do
+      get 'list'
+    end
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

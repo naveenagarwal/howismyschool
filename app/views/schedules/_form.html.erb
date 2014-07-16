@@ -1,0 +1,40 @@
+<%= form_for(@schedule, html: { data: { remote:  true } }) do |f| %>
+  <div id="form_errors">
+    <%= render partial: "/shared/form_errors", locals: { obj: @schedule, name: "schedule" } %>
+  </div>
+
+  <%= hidden_field_tag "schedule[event_for][type]", "ClassRoom" %>
+
+  <div class="field ">
+    <div class="inline-div datetimepicker-initialize input-append date">
+      <%= f.label :start_time %><br>
+      <%= f.text_field :start_time, data: { format: "MM/dd/yyyy HH:mm:ss PP" } %>
+      <span class="add-on">
+        <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+        </i>
+      </span>
+    </div>
+  </div>
+  <div class="field">
+    <div class="inline-div datetimepicker-initialize input-append date">
+      <%= f.label :end_time %><br>
+      <%= f.text_field :end_time, data: { format: "MM/dd/yyyy HH:mm:ss PP" } %>
+      <span class="add-on">
+        <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+        </i>
+      </span>
+    </div>
+  </div>
+  <div class="field inline-div">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div><br/>
+  <div class="field inline-div">
+    <%= f.label :event_for, "Select class rooms" %>
+    <%= f.select :event_for, @class_rooms, { }, class: "select2", multiple: true, name: "schedule[event_for][ids][]" %>
+  </div><br />
+
+  <div class="actions inline-div">
+    <%= f.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

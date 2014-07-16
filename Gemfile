@@ -78,3 +78,6 @@ gem 'sidekiq'
 gem 'sunspot_rails'
 gem 'sunspot_solr'
 gem 'progress_bar'
+
+gem 'min_max_validator', '~> 0.0.3'
+gem 'american_date', '~> 1.1.0'

@@ -51,67 +51,69 @@ body div.github-fork-ribbon-wrapper.left {
 }
 
 .btn-navbar-custom {
-    background-color: ##666666;
-    background-image: linear-gradient(to bottom, #666660, #666666);
-    background-repeat: repeat-x;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    color: #FFFFFF;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: ##666666;
+  background-image: linear-gradient(to bottom, #666660, #666666);
+  background-repeat: repeat-x;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  color: #FFFFFF;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 .btn-navbar-custom:hover {
-    background-color: #666666;
-    color: #FFFFFF;
+  background-color: #666666;
+  color: #FFFFFF;
 }
 
 
 body {
-    background-color: #FFFFFF;
-    color: #333333;
-    /*font-family: verdana,arial,helvetica,sans-serif;*/
-    font-size: 13px;
-    line-height: 18px;
+  background-color: #FFFFFF;
+  color: #333333;
+  /*font-family: verdana,arial,helvetica,sans-serif;*/
+  font-size: 13px;
+  line-height: 18px;
+  width: 97%;
+
 }
 p, ol, ul, td {
-    /*font-family: verdana,arial,helvetica,sans-serif;*/
-    font-size: 13px;
-    line-height: 18px;
+  /*font-family: verdana,arial,helvetica,sans-serif;*/
+  font-size: 13px;
+  line-height: 18px;
 }
 pre {
-    background-color: #EEEEEE;
-    font-size: 11px;
-    padding: 10px;
+  background-color: #EEEEEE;
+  font-size: 11px;
+  padding: 10px;
 }
 div.field, div.actions {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 #notice {
-    color: #008000;
+  color: #008000;
 }
 .field_with_errors {
-    background-color: #FF0000;
-    display: table;
-    padding: 2px;
+  background-color: #FF0000;
+  display: table;
+  padding: 2px;
 }
 #error_explanation {
-    background-color: #F0F0F0;
-    border: 2px solid #FF0000;
-    margin-bottom: 20px;
-    padding: 7px 7px 0;
-    width: 450px;
+  background-color: #F0F0F0;
+  border: 2px solid #FF0000;
+  margin-bottom: 20px;
+  padding: 7px 7px 0;
+  width: 450px;
 }
 #error_explanation h2 {
-    background-color: #CC0000;
-    color: #FFFFFF;
-    font-size: 12px;
-    font-weight: bold;
-    margin: -7px -7px 0;
-    padding: 5px 5px 5px 15px;
-    text-align: left;
+  background-color: #CC0000;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: bold;
+  margin: -7px -7px 0;
+  padding: 5px 5px 5px 15px;
+  text-align: left;
 }
 #error_explanation ul li {
-    font-size: 12px;
-    list-style: square outside none;
+  font-size: 12px;
+  list-style: square outside none;
 }
 
 div.inline-div {
@@ -157,6 +159,7 @@ body {
 
 .navbar .nav > li > a {
   color: #FFFFFF;
+  padding: 10px 5px;
 }
 
 .navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
@@ -343,4 +346,25 @@ div#student_more_modalboxdal.modal {
 
 table.blue-text-last-td.table-bordered th, table.blue-text-last-td.table-bordered td:last-child {
   color: #B21515;
+}
+
+.responsive-calendar .day.header {
+  border-bottom: none;
+}
+
+.responsive-calendar {
+   background-color: #ffffff;
+}
+
+.responsive-calendar .day a {
+  border: 1px solid gray;
+}
+
+.responsive-calendar .controls {
+  color: #ffa500;
+}
+
+.responsive-calendar .controls .btn {
+  border-radius: 10px;
+  margin: 5px 5px 0;
 }
