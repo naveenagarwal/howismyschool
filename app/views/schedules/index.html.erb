@@ -31,8 +31,8 @@
   $(document).ready(function () {
     $(".responsive-calendar").responsiveCalendar({
       time: "<%= Time.now.strftime('%Y-%m') %>",
-      events: {},
-      onInit: Schedules.getCalenderEvents,
+      events: JSON.parse('<%= @events %>'),
+      //onInit: Schedules.getCalenderEvents,
       onMonthChange: Schedules.getCalenderEvents
     });
   });

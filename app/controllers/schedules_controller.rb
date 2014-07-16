@@ -5,6 +5,11 @@ class SchedulesController < ApplicationController
   # GET /schedules
   # GET /schedules.json
   def index
+    @events = Schedule.events(
+        month: Time.now.year,
+        year: Time.now.month,
+        current_school_branch_id: current_school_branch.id
+      ).to_json.to_s.html_safe
   end
 
   def list
