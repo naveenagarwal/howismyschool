@@ -22,6 +22,15 @@ class SchedulesController < ApplicationController
     render json: { events: events }
   end
 
+  def day_events
+    @events = Schedule.day_events(
+        month: params[:month],
+        year: params[:year],
+        day: params[:day],
+        current_school_branch_id: current_school_branch.id
+      )
+  end
+
   # GET /schedules/1
   # GET /schedules/1.json
   def show
@@ -42,6 +51,7 @@ class SchedulesController < ApplicationController
   def create
     @schedule = Schedule.new(schedule_params)
     @schedule.event_for["ids"] = params[:schedule][:event_for][:ids].reject(&:blank?).join(",")
+    @schedule.event_for["names"] = ClassRoom.where(id: params[:schedule][:event_for][:ids].reject(&:blank?)).map(&:full_name)
     @schedule.creator = current_teacher
     @schedule.school_branch_id = current_school_branch.id
 
@@ -85,7 +95,7 @@ class SchedulesController < ApplicationController
   private
 
   def set_schedule
-    @schedule = current_school_branch,schedules.find(params[:id])
+    @schedule = current_school_branch.schedules.find(params[:id])
   end
 
   def schedule_params

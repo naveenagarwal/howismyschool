@@ -21,4 +21,29 @@ Schedules.getCalenderEvents = function(){
   }).fail(function(response){
     alert("Error Loading schedules. Please try after sometime!");
   });
-}
+};
+
+Schedules.getDayEvents = function(){
+  var day = $(this).data('day'),
+      month = $(this).data('month'),
+      year = $(this).data('year');
+
+  var url = "/schedules/day_events?year=" + year + "&month=" + month + "&day=" + day;
+
+  $.ajax({
+    url: url,
+    dataType: 'script'
+  });
+
+};
+
+Schedule.noDayEventClick = function(){
+  if($("#no_day_events_links").length > 0){
+
+    $("#no_day_events_links").click(function(){
+      $("#list_day_schedules").modal("hide");
+      $("#new_schedule_link").trigger("click");
+    });
+
+  }
+};

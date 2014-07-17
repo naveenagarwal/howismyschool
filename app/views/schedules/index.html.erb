@@ -1,5 +1,5 @@
 <h1>Schedules Calendar</h1>
-<%= link_to 'New Schedule', new_schedule_path, data: { remote: true } %>
+<%= link_to 'Add Schedule', new_schedule_path, data: { remote: true }, id: "new_schedule_link" %>
 <br>
 
 
@@ -27,12 +27,14 @@
 <!-- Responsive calendar - END -->
 
 <div id="schedules_modalboxes"></div>
+<div id="schedules_dayevent_modalbox"></div>
 <script type="text/javascript">
   $(document).ready(function () {
     $(".responsive-calendar").responsiveCalendar({
       time: "<%= Time.now.strftime('%Y-%m') %>",
       events: JSON.parse('<%= @events %>'),
-      //onInit: Schedules.getCalenderEvents,
+
+      onDayClick: Schedules.getDayEvents,
       onMonthChange: Schedules.getCalenderEvents
     });
   });

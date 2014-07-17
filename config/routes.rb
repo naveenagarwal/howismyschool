@@ -91,6 +91,7 @@ Rails.application.routes.draw do
   resources :schedules do
     collection do
       get 'list'
+      get 'day_events'
     end
   end
 

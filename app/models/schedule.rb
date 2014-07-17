@@ -38,6 +38,24 @@ class Schedule < ActiveRecord::Base
       events_hash
     end
 
+    def day_events(month: nil, year: nil, day: nil, current_school_branch_id: nil)
+      start_time = "#{month}/#{day}/#{year}".to_datetime.beginning_of_day
+      end_time = start_time.end_of_day
+
+      includes(:creator).where(
+        [
+          "school_branch_id = ? AND \
+          start_time >= ? ANd \
+          start_time <= ?",
+          current_school_branch_id, start_time, end_time
+        ]
+      )
+    end
+
+  end
+
+  def can_delete?
+    start_time.to_date > Time.now.to_date
   end
 
   private
