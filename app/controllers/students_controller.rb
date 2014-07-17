@@ -34,7 +34,7 @@ class StudentsController < ApplicationController
     @student.creator = current_teacher || current_entity
 
     respond_to do |format|
-      if @student.save
+      if @student.save && @student.create_class_room_student
         format.html { redirect_to @student, notice: 'Student was successfully created.' }
         format.json { render :show, status: :created, location: @student }
       else

@@ -5,11 +5,13 @@ class Student < ActiveRecord::Base
   belongs_to :document
 
   has_many :test_results, dependent: :destroy
+  has_many :class_room_students, dependent: :destroy
+
 
   validates :name, :roll_number, :class_room_id, :year, presence: true
   validates :name,
     uniqueness: {
-      scope: [ :class_room_id, :roll_number, :school_branch_id, :year ],
+      scope: [ :class_room_id, :roll_number, :school_branch_id ],
       message: " - This student already exists with same name and roll number"
     }
 
@@ -73,6 +75,21 @@ class Student < ActiveRecord::Base
       ).map(&:subject_id)
 
     scores_for_extended_yearly_bar_charts(ids, "subject_id")
+  end
+
+  def create_class_room_student
+    ClassRoomStudent.create(
+        student_id: id,
+        class_room_id: class_room_id,
+        school_branch_id: school_branch_id,
+        creator_id: creator_id,
+        creator_type: creator_type,
+        year: year
+      )
+  end
+
+  def current_class_room
+    class_room_students.where(year: TimeExt.current_year).first.class_room
   end
 
   private

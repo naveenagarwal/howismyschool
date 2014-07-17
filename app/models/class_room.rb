@@ -8,7 +8,8 @@ class ClassRoom < ActiveRecord::Base
   belongs_to :document
 
   has_many :test_results, dependent: :destroy
-  has_many :students
+  has_many :class_room_students, dependent: :destroy
+  has_many :students, through: :class_room_students
 
   validates :name,
             presence: true,
@@ -37,6 +38,10 @@ class ClassRoom < ActiveRecord::Base
 
   def current_students
     students.where(year: TimeExt.current_year)
+  end
+
+  def students_for_year(year)
+    students.where(year: year)
   end
 
   def current_test_results

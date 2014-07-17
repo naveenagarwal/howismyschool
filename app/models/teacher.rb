@@ -12,6 +12,7 @@ class Teacher < ActiveRecord::Base
   has_many :test_results, as: :creator
   has_many :test_results_from_files, as: :creator
   has_many :documents, as: :creator
+  has_many :schedules, as: :creator
   has_many :searches, as: :searcher
 
   has_one :my_detail, as: :whoami
