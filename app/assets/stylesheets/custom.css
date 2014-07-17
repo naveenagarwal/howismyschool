@@ -164,6 +164,7 @@ body {
 
 .navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
   color: #FFA500;
+  font-size: 20px;
 }
 
 div.inline-div.width-100-percent {
