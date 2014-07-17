@@ -57,7 +57,7 @@ class SchedulesController < ApplicationController
 
     respond_to do |format|
       if @schedule.save
-        format.html { redirect_to @schedule, notice: 'School controller was successfully created.' }
+        format.html { redirect_to @schedule, notice: 'Schedule was successfully created.' }
         format.js { set_flash_messages type: "notice", message: "Schedule saved sucessfully" }
         format.json { render :show, status: :created, location: @schedule }
       else
@@ -73,7 +73,7 @@ class SchedulesController < ApplicationController
   def update
     respond_to do |format|
       if @schedule.update(schedule_params)
-        format.html { redirect_to @schedule, notice: 'School controller was successfully updated.' }
+        format.html { redirect_to @schedule, notice: 'Schedule was successfully updated.' }
         format.json { render :show, status: :ok, location: @schedule }
       else
         format.html { render :edit }
@@ -87,7 +87,8 @@ class SchedulesController < ApplicationController
   def destroy
     @schedule.destroy
     respond_to do |format|
-      format.html { redirect_to schedules_url, notice: 'School controller was successfully destroyed.' }
+      format.html { redirect_to schedules_url, notice: 'Schedule was successfully destroyed.' }
+      format.js { }
       format.json { head :no_content }
     end
   end

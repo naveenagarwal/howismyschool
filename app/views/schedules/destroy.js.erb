@@ -1,0 +1,6 @@
+<% if @schedule.errors.any? %>
+  alert("Error deleting event. Please try after sometime");
+<% else %>
+  $("tr#event_row_<%= @schedule.id %>").remove();
+  ScheduleEvents.options.onMonthChange();
+<% end %>
