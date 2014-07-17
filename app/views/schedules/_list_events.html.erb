@@ -16,8 +16,8 @@
       <% @events.each do |event| %>
         <tr id="event_row_<%= event.id %>">
           <td><%= event.title %></td>
-          <td><%= event.start_time.strftime("%m-%d%Y %H:%M") %></td>
-          <td><%= event.end_time.strftime("%m-%d%Y %H:%M") %></td>
+          <td><%= event.start_time.strftime("%m-%d-%Y %H:%M") %></td>
+          <td><%= event.end_time.strftime("%m-%d-%Y %H:%M") %></td>
           <td><%= event.event_for["names"] %></td>
           <td><%= event.creator.email %>, <%= event.creator_type.humanize %></td>
           <td><%= link_to("Delete Event", schedule_path(event), method: :delete, data: { remote: true, confirm: "Are you sure you want to delete this event?" } ) if event.can_delete? %></td>
