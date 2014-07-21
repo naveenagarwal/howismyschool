@@ -160,6 +160,8 @@
       },
       addOthers: function(day, dayEvents) {
         var badge;
+        var eventNames = "";
+
         if (typeof dayEvents === "object") {
           if (dayEvents.number != null) {
             badge = $("<span></span>").html(dayEvents.number).addClass("badge");
@@ -170,6 +172,21 @@
           }
           if (dayEvents.url) {
             day.find("a").attr("href", dayEvents.url);
+          }
+          if(typeof(dayEvents.names) !== "undefined" ||  dayEvents.names != null || dayEvents.names.length > 0){
+            var element = $('<span class="left-badge"></span>');
+            for(var i=0; i< dayEvents.names.length; i++){
+              element.append(dayEvents.names[i] +'</br>');
+              if(i >= 3){
+                element.append('More...');
+                day.append(element);
+                break;
+              }
+
+              if((i+1) == dayEvents.names.length){
+                day.append(element);
+              }
+            }
           }
         }
         return day;
