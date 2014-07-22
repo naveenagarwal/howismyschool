@@ -177,16 +177,16 @@
             var element = $('<span class="left-badge"></span>');
             for(var i=0; i< dayEvents.names.length; i++){
               element.append(dayEvents.names[i] +'</br>');
-              if(i >= 3){
-                element.append('More...');
-                day.append(element);
-                break;
-              }
+              // if(i >= 3){
+              //   element.append('More...');
+              //   day.append(element);
+              //   break;
+              // }
 
-              if((i+1) == dayEvents.names.length){
-                day.append(element);
-              }
+              // if((i+1) == dayEvents.names.length){
+              // }
             }
+            day.append(element);
           }
         }
         return day;

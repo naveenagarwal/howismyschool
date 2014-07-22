@@ -375,3 +375,5 @@ table.blue-text-last-td.table-bordered th, table.blue-text-last-td.table-bordere
     position: absolute;
     top: 2px;
     z-index: 1;
+    text-align: left;
+}

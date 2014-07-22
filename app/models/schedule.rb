@@ -29,7 +29,7 @@ class Schedule < ActiveRecord::Base
           current_school_branch_id, start_time, end_time
         ]
       ).each do |schedule|
-        names = where(start_time: schedule.start_time.beginning_of_day..schedule.start_time.end_of_day).map(&:title)
+        names = where(start_time: schedule.start_time.beginning_of_day..schedule.start_time.end_of_day).first(3).map(&:title) + ["..."]
 
         events_hash.merge!({
           "#{schedule.start_time.strftime('%Y-%m-%d')}" => {
