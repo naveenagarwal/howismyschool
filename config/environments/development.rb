@@ -42,7 +42,7 @@ Rails.application.configure do
     port:                 587,
     domain:               'schoolbuilder.com',
     user_name:            'howismyschooldoing@gmail.com',
-    password:             'naveen@123agarwal',
+    password:             'schoolbuilder@12345',
     authentication:       'plain',
     enable_starttls_auto: true
   }
