@@ -57,6 +57,7 @@ class SchedulesController < ApplicationController
 
     respond_to do |format|
       if @schedule.save
+        MailerWorker.perform_async :schedule_added, [@schedule.id]
         format.html { redirect_to @schedule, notice: 'Schedule was successfully created.' }
         format.js { set_flash_messages type: "notice", message: "Schedule saved sucessfully" }
         format.json { render :show, status: :created, location: @schedule }
@@ -85,11 +86,20 @@ class SchedulesController < ApplicationController
   # DELETE /schedules/1
   # DELETE /schedules/1.json
   def destroy
-    @schedule.destroy
     respond_to do |format|
-      format.html { redirect_to schedules_url, notice: 'Schedule was successfully destroyed.' }
-      format.js { }
-      format.json { head :no_content }
+      if @schedule.destroy
+        MailerWorker.perform_async :schedule_destroyed, [ @schedule.title, @schedule.start_time,
+            @schedule.end_time, @schedule.notification_emails_list
+          ]
+
+        format.html { redirect_to schedules_url, notice: 'Schedule was successfully destroyed.' }
+        format.js { }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to schedules_url, notice: 'Schedule could not be destroyed.' }
+        format.js { }
+        format.json { head :no_content }
+      end
     end
   end
 

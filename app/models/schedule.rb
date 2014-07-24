@@ -61,6 +61,12 @@ class Schedule < ActiveRecord::Base
     start_time.to_date > Time.now.to_date
   end
 
+  def notification_emails_list
+    ClassRoom.includes(:students).where(id: event_for["ids"]).map do |class_room|
+      class_room.current_students.pluck(:email)
+    end.flatten.compact.uniq
+  end
+
   private
 
   def ensure_event_for_is_set

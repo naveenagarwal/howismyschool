@@ -37,6 +37,7 @@ class TeachersController < ApplicationController
 
     respond_to do |format|
       if @teacher.save
+        MailerWorker.perform_async :welcome, [@teacher]
         format.html { redirect_to @teacher, notice: 'Teacher was successfully created.' }
         format.json { render :show, status: :created, location: @teacher }
       else

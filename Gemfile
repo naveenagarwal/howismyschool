@@ -81,3 +81,6 @@ gem 'progress_bar'
 
 gem 'min_max_validator', '~> 0.0.3'
 gem 'american_date', '~> 1.1.0'
+
+# exception notification
+gem 'exception_notification', '~> 4.0.1'
