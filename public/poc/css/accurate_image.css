@@ -66,10 +66,16 @@ body{
   clear: both;
 }
 
-.full-wall {
+#wall {
   height: 500px;
+
+}
+
+.full-wall, #full-wall-copy {
+  height: auto;
   white-space: nowrap;
   overflow: hidden;
+  float: left;
 }
 
 .left-munu-item-list {
