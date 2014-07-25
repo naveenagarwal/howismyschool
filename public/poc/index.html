@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accurate Image</title>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+    <![endif]-->
+
+    <!--[if gte IE 9]>
+      <style type="text/css">
+        .gradient {
+           filter: none;
+        }
+      </style>
+    <![endif]-->
+
+    <link href="css/accurate_image.css" media="all" rel="stylesheet" />
+    <link href="css/jquery.contextMenu.css" media="all" rel="stylesheet" />
+
+
+  </head>
+  <body>
+      <h3 class="heading">Accurate Image</h3>
+      <br />
+      <div class="inline-div span2 set-border left">
+        <div>
+          <a href="javascript:void(0);" data-toggle="#products_list" id="products_toggle"> + </a>
+          Select Product
+        </div>
+        <div id="products_list" class="left-munu-item-list">
+        </div>
+        <div>
+          <a href="javascript:void(0);" data-toggle="#mortars_list" id="mortars_toggle"> + </a>
+          Select Mortar
+        </div>
+        <div id="mortars_list" class="left-munu-item-list">
+        </div>
+        <div>
+          <a href="javascript:void(0);" data-toggle="#bricks_type_list" id="bricks_type_toggle"> + </a>
+          Select Brick Size
+        </div>
+        <div id="bricks_type_list" class="left-munu-item-list">
+        </div>
+        <div>
+          <a href="javascript:void(0);" data-toggle="#bricks_list" id="bricks_toggle"> + </a>
+          Select Brick
+        </div>
+        <div id="bricks_list" class="left-munu-item-list">
+        </div>
+      </div>
+    </div>
+    <div class="span8 inline-div">
+      <div class="controls set-border" id="controlls">
+        <div class="inline-div">
+          <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="4x4">4x4</a>
+
+          | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="5x5">5x5</a>
+
+          | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="6x6">6x6</a>
+
+          | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="7x7">7x7</a>
+          | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="17x17">17x17</a>
+
+          | <a href="javascript:void(0);" class="save-as-image" id="save_as_image">Save as Image</a>
+        </div>
+        <div class="inline-div">
+          | Stagger
+          <a href="javascript:void(0);" class="select-stagger" data-stagger="0">None</a>
+
+          | <a href="javascript:void(0);" class="select-stagger" data-stagger="2">Half</a>
+
+          | <a href="javascript:void(0);" class="select-stagger" data-stagger="3">One Third</a>
+
+        </div>
+        <div class="inline-div">
+          | Zoom
+          <a href="javascript:void(0);" class="zoom" data-zoom="1">1x</a>
+          | <a href="javascript:void(0);" class="zoom" data-zoom="2">2x</a>
+          | <a href="javascript:void(0);" class="zoom" data-zoom="3">3x</a>
+        </div>
+        <div class="inline-div">
+          | Edit
+          <a href="javascript:void(0);" class="undo" id="undo">Undo</a>
+          | <a href="javascript:void(0);" class="redo" id="redo">Redo</a>
+        </div>
+      </div>
+      <div class="wall set-border wrapper" id="wall">
+        <div class="full-wall scale" id="full-wall">
+        </div>
+      </div>
+    </div>
+
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="js/jquery.contextMenu.js"></script>
+
+    <script src="js/json_data.js"></script>
+    <script src="js/accurate_image_events.js"></script>
+    <script src="js/accurate_image.js"></script>
+    <script src="js/initialize.js"></script>
+    <script src="js/html2canvas.js"></script>
+
+    <div class="scale hide" id="full-wall-copy">
+    </div>
+
+    <ul id="AIMenu" class="contextMenu">
+      <li><a href="#fillRow">Fill Row</a></li>
+      <li><a href="#fillEven">Fill Even</a></li>
+      <li><a href="#staggerRowNone" class="select-stagger-right-click" data-stagger="0">Stagger None</a></li>
+      <li><a href="#staggerRowHalf" class="select-stagger-right-click" data-stagger="2">Stagger Half</a></li>
+      <li><a href="#staggerRowOneThird" class="select-stagger-right-click" data-stagger="3">Stagger One Third</a></li>
+    </ul>
+  </body>
+</html>
