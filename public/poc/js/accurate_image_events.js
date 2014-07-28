@@ -70,6 +70,11 @@ $(document).ready(function(){
     }
   });
 
+  $(document).on("click", "a.coursing", function(){
+    var coursing = $(this).data("coursing");
+    AccurateImage.setSelectedCoursing(coursing);
+  });
+
   $(document).on("click", "a.select-wall-type", function(){
     var wallDimension = $(this).data("wall_type");
     AccurateImage.selectedWallDimesions = wallDimension;
@@ -81,8 +86,11 @@ $(document).ready(function(){
     if($("#AIMenu").is(":visible")){
       return;
     }
+
     AccurateImage.fillMortarItem($(this));
     AccurateImage.fillBrickItem($(this));
+    AccurateImage.fillCoursing($(this));
+    AccurateImage.enableContextMenu();
 
     AccurateImage.pushChangeToUndoRedoStack();
   });
@@ -109,17 +117,5 @@ $(document).ready(function(){
   $(document).on("click", "a#redo", function(){
     AccurateImage.redo();
   });
-
-  var changedString = function(str1,str2){
-    var changed = false;
-
-    for(var i=0; i< str1.length; i++){
-      if(str1[i] != str2[i]){
-        changed = true;
-        break;
-      }
-    }
-    return changed;
-  }
 
 });

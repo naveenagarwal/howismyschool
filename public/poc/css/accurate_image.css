@@ -51,9 +51,6 @@ body{
 }
 
 .item > span {
-  /*margin: 3px;
-  border: 1px solid gray;*/
-  height: 33px;
   display: inline-block;
 }
 

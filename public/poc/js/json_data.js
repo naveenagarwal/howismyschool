@@ -36,16 +36,42 @@ products = [
           {
             id: "Brick1",
             name: "Brick1",
-            height: 35,
-            width: 105,
-            imgUrl: "images/brick_1_1.jpg"
+            height: 40,
+            width: 100,
+            imgUrl: "images/brick_1_1.jpg",
+            running: {
+             imgUrl: "images/brick_r_1_1.jpg",
+             width: 40,
+             height: 100,
+             id: "Brick1",
+             name: "Brick1"
+            },
+            header: {
+              id: "Brick1",
+              name: "Brick1",
+              height: 35,
+              width: 105,
+              imgUrl: "images/brick_1_1.jpg"
+            }
           },
           {
             id: "Brick2",
             name: "Brick2",
             height: 35,
             width: 105,
-            imgUrl: "images/brick_1_2.jpg"
+            imgUrl: "images/brick_1_2.jpg",
+            running: {
+             imgUrl: "images/brick_r_1_2.jpg",
+             width: 35,
+             height: 105
+            },
+            header: {
+              id: "Brick1",
+              name: "Brick1",
+              height: 35,
+              width: 105,
+              imgUrl: "images/brick_1_1.jpg"
+            }
           }
         ]
       },

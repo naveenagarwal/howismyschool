@@ -1,6 +1,9 @@
 var HALF = 2,
     ONE_THIRD = 3,
-    NONE = 0;
+    NONE = 0,
+    STANDARD = 0,
+    RUNNING = 1,
+    HEADERS = 2;
 
 var staggerArray = [NONE, HALF, ONE_THIRD];
 
@@ -30,6 +33,8 @@ var AccurateImage = {
   undoRedoStackMaxLevel: 11,
   currentUndoRedoLevel: -1,
   undoRedoStack: [],
+  coursingTypes: ["standard", "running", "headers"], // order of array matters dont change it
+  selectedCoursing: 0, // 0 means standard, it is the index of coursingtypes array
 
   baseUnit: 1, // in pxels
   inchPixels: 32, // one inch is 32 pixles
@@ -51,7 +56,6 @@ var AccurateImage = {
       }
 
     }else if(this.undoRedoStack.length > 0  && this.undoRedoStack.length < this.undoRedoStackMaxLevel ){
-      console.log(html != this.undoRedoStack[this.currentUndoRedoLevel]);
       if(html != this.undoRedoStack[this.currentUndoRedoLevel]){
         this.currentUndoRedoLevel++;
         this.undoRedoStack[this.currentUndoRedoLevel] = html;
@@ -104,6 +108,20 @@ var AccurateImage = {
     this.clearSelectedBrick();
   },
 
+  getBrick: function(){
+    switch(this.selectedCoursing){
+      case STANDARD:
+        return this.selectedBrick;
+        break;
+      case RUNNING:
+        return this.selectedBrick.running;
+        break;
+      case HEADERS:
+        return this.selectedBrick.header;
+        break;
+    }
+  },
+
   productListHtml: function(){
     return  '\
               <div class="product">\
@@ -136,15 +154,17 @@ var AccurateImage = {
               </div>\
             ';
   },
-  innerDivstyleCalc: function(){
+  innerDivStyleCalc: function(){
     return this.selectedMortar.top + "px " + this.selectedMortar.right + "px " + this.selectedMortar.bottom + "px " + this.selectedMortar.left + "px;";
   },
   innerDivstyle: function(){
-    return "margin:" + this.innerDivstyleCalc();
+    return "margin:" + this.innerDivStyleCalc();
   },
   brickImgStyle: function(){
-    return "height:" + this.selectedBrick.height + "px; width:" + this.selectedBrick.width + "px;";
+    var brick = this.getBrick();
+    return "height:" + brick.height + "px; width:" + brick.width + "px;";
   },
+
   bricksListHtml: function(){
     return  '\
               <div class="brick">\
@@ -157,39 +177,198 @@ var AccurateImage = {
   },
 
   renderEvenWallHtml: function(elementPosition){
+    var brick = this.getBrick();
     return  '\
-              <span class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ this.selectedBrick.id +'">\
+              <span data-coursing="'+ this.selectedCoursing +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
                 <span style="'+ this.innerDivstyle() +'">\
-                  <img style="'+ this.brickImgStyle() +'" src="'+ this.selectedBrick.imgUrl +'">\
+                  <img style="'+ this.brickImgStyle() +'" src="'+ brick.imgUrl +'">\
                 </span>\
               </span>\
             ';
   },
 
-  staggeredFirstElementStyle: function(){
+  calcNumberOfBricksX: function(width){
+    var brick = this.getBrick();
+    var brickWithMortorSize = brick.width + this.selectedMortar.left + this.selectedMortar.right;
+
+    return parseInt((width / brickWithMortorSize));
+  },
+
+  calcNumberOfBricksY: function(width){
+    var brick = this.getBrick();
+    var brickWithMortorSize = brick.height + this.selectedMortar.left + this.selectedMortar.right;
+
+    return parseInt((width / brickWithMortorSize));
+  },
+
+  calcOccupiedWidth: function(row){
+    var width = 0;
+
+    row.find("span.item").each(function(){
+      width = width + $(this).width();
+    });
+
+    return width;
+  },
+  fillRunningCoursing: function(element){
+    console.log("Running coursing");
+    var elementCoursing = parseInt(element.data("coursing"));
+    var row = element.parent()
+    var rowCoursing = parseInt(element.parent().data("coursing"));
+    var performCoursing = false;
+    var margin = occupiedWidth = width = 0;
+    var stagger, rowWidth, numberOfBricksX, elementPosition, performRowCoursing;
+
+    row.find("span.item").each(function(){
+      if(parseInt($(this).data("coursing")) != RUNNING){
+        performCoursing = true;
+        return false;
+      }
+    });
+
+    if(!performCoursing){
+      return ;
+    }
+
+    this.rowNumber = parseInt(row.data("row"));
+
+    stagger = parseInt(row.data("stagger"));
+    rowWidth = row.width();
+    numberOfBricksX = this.calcNumberOfBricksX(rowWidth);
+    row.html("");
+
+    for(var j=0; j < numberOfBricksX; j++){
+      elementPosition = this.rowNumber + "-" + j
+      row.append(this.renderEvenWallHtml(elementPosition));
+    }
+
+    if(stagger != NONE){
+      margin = this.staggeredFirstElementLeftMarginStyle();
+      row.find("span.item:first").css("margin-left", "-" + margin + "px");
+    }
+
+    occupiedWidth = this.calcOccupiedWidth(row) - margin;
+    if(row.width() != occupiedWidth){
+      elementPosition = this.rowNumber + "-" + j;
+      row.append(this.renderEvenWallHtml(elementPosition));
+      width = row.width() - occupiedWidth;
+      maxWidth = this.getBrick().width + this.selectedMortar.left + this.selectedMortar.right;
+      if(width > maxWidth){
+        elementPosition = this.rowNumber + "-" + (j + 1);
+        row.append(this.renderEvenWallHtml(elementPosition));
+        width = width - maxWidth;
+      }
+      row.find("span.item:last").css("width", width + "px");
+    }
+    this.fillRowMortar();
+
+    // set row height
+    row.css("height", this.calulateRowHeight());
+  },
+
+  fillStandardCoursing: function(element){
+    console.log("Standard coursing");
+    var elementCoursing = parseInt(element.data("coursing"));
+    var row = element.parent()
+    var rowCoursing = parseInt(element.parent().data("coursing"));
+    var performCoursing = false;
+    var margin = occupiedWidth = width = 0;
+    var stagger, rowWidth, numberOfBricksX, elementPosition, performRowCoursing;
+
+    row.find("span.item").each(function(){
+      if(parseInt($(this).data("coursing")) != STANDARD){
+        performCoursing = true;
+        return false;
+      }
+    });
+
+    if(!performCoursing){
+      return ;
+    }
+
+    this.rowNumber = parseInt(row.data("row"));
+    performRowCoursing = (rowCoursing == RUNNING)
+
+
+    console.log("here");
+    stagger = parseInt(row.data("stagger"));
+    rowWidth = row.width();
+    numberOfBricksX = this.calcNumberOfBricksX(rowWidth);
+    row.html("");
+
+    for(var j=0; j < numberOfBricksX; j++){
+      elementPosition = this.rowNumber + "-" + j
+      row.append(this.renderEvenWallHtml(elementPosition));
+    }
+
+    if(stagger != NONE){
+      margin = this.staggeredFirstElementLeftMarginStyle();
+      row.find("span.item:first").css("margin-left", "-" + margin + "px");
+    }
+
+    occupiedWidth = this.calcOccupiedWidth(row) - margin;
+    if(row.width() != occupiedWidth){
+      elementPosition = this.rowNumber + "-" + j;
+      row.append(this.renderEvenWallHtml(elementPosition));
+      width = row.width() - occupiedWidth;
+      maxWidth = this.getBrick().width + this.selectedMortar.left + this.selectedMortar.right;
+      if(width > maxWidth){
+        elementPosition = this.rowNumber + "-" + (j + 1);
+        row.append(this.renderEvenWallHtml(elementPosition));
+        width = width - maxWidth;
+      }
+      row.find("span.item:last").css("width", width + "px");
+    }
+    this.fillRowMortar();
+
+    // set row height
+    row.css("height", this.calulateRowHeight());
+  },
+
+  fillCoursing: function(element){
+    switch(this.selectedCoursing){
+      case STANDARD:
+        this.fillStandardCoursing(element);
+        break;
+      case RUNNING:
+        this.fillRunningCoursing(element);
+        break;
+      case HEADERS:
+        this.fillStandardCoursing(element);
+        break;
+    }
+  },
+
+  staggeredFirstElementLeftMarginStyle: function(){
     var pixels = "",
+        brick = this.getBrick(),
         width ;
 
 
     if(this.selectedStagger == NONE){
       return "";
     }else{
-      width = this.selectedBrick.width + this.selectedMortar.left + this.selectedMortar.right;
+      width = brick.width + this.selectedMortar.left + this.selectedMortar.right;
       pixels = (width / this.selectedStagger);
     }
 
-    return "margin-left:-" + pixels + "px";
+    return pixels;
+  },
+
+  staggeredFirstElementStyle: function(){
+    return "margin-left:-" + this.staggeredFirstElementLeftMarginStyle() + "px";
   },
 
   staggeredLastElementStyle: function(){
     var pixels = "",
+        brick = this.getBrick(),
         width,
         difference;
 
     if(this.selectedStagger == NONE){
       return "";
     }else{
-      width = this.selectedBrick.width + this.selectedMortar.left + this.selectedMortar.right;
+      width = brick.width + this.selectedMortar.left + this.selectedMortar.right;
       pixels = (width / this.selectedStagger);
     }
 
@@ -218,11 +397,12 @@ var AccurateImage = {
       return this.renderEvenWallHtml(elementPosition);
     }else{
       var style = this.staggeredElementStyle(elementPosition);
+      var brick = this.getBrick();
     }
     return  '\
-              <span style="'+ style +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ this.selectedBrick.id +'">\
+              <span data-coursing="'+ this.selectedCoursing +'" style="'+ style +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
                 <span style="'+ this.innerDivstyle() +'">\
-                  <img style="'+ this.brickImgStyle() +'" src="'+ this.selectedBrick.imgUrl +'">\
+                  <img style="'+ this.brickImgStyle() +'" src="'+ brick.imgUrl +'">\
                 </span>\
               </span>\
             ';
@@ -249,15 +429,15 @@ var AccurateImage = {
   },
 
   fillBricksFull: function(){
-    $(".item > span > img").attr('src', this.selectedBrick.imgUrl);
+    $(".item > span > img").attr('src', this.getBrick().imgUrl);
   },
 
   fillRowBricks: function(){
-    $('.row-' + this.rowNumber + ' .item > span > img').attr('src', this.selectedBrick.imgUrl);
+    $('.row-' + this.rowNumber + ' .item > span > img').attr('src', this.getBrick().imgUrl);
   },
 
   fillRowEvenBricks: function(){
-    $('.row-' + this.rowNumber + ' .item:nth-child(odd) > span > img').attr('src', this.selectedBrick.imgUrl);
+    $('.row-' + this.rowNumber + ' .item:nth-child(odd) > span > img').attr('src', this.getBrick().imgUrl);
   },
 
   fillRowMortar: function(){
@@ -279,7 +459,7 @@ var AccurateImage = {
   },
 
   fillBrickItem: function(item){
-    item.find("img:first").attr('src', this.selectedBrick.imgUrl);
+    item.find("img:first").attr('src', this.getBrick().imgUrl);
   },
 
   fillRow: function(){
@@ -302,6 +482,7 @@ var AccurateImage = {
     }
 
     $(".row-" + this.rowNumber + " span.item:first").css("margin-left", "0");
+    $(".row-" + this.rowNumber).data("stagger", NONE);
   },
   staggerRow: function(){
     this.staggerRowNone();
@@ -321,6 +502,7 @@ var AccurateImage = {
     html += "</span>";
 
     rowContainer.prepend(html);
+    rowContainer.data("stagger", this.selectedStagger);
 
     // Change the last element style
     style = $(".row-" + this.rowNumber + " span.item:last").attr("style");
@@ -358,11 +540,13 @@ var AccurateImage = {
   },
 
   calulateRowWidth: function(){
-    return (this.dimensionX * (this.selectedBrick.width + this.selectedMortar.left + this.selectedMortar.right));
+    var brick = this.getBrick();
+    return (this.dimensionX * (brick.width + this.selectedMortar.left + this.selectedMortar.right));
   },
 
   calulateRowHeight: function(){
-    return this.selectedBrick.height + this.selectedMortar.top + this.selectedMortar.bottom;
+    var brick = this.getBrick();
+    return brick.height + this.selectedMortar.top + this.selectedMortar.bottom;
   },
 
   drawWall: function(){
@@ -379,7 +563,7 @@ var AccurateImage = {
     for(var i=0; i < this.dimensionY; i++){
       this.rowNumber  = i;
       evenRow         = i%2 == 0 ? true : false;
-      rowContainer    = $('<span style="width: '+ this.calulateRowWidth() +'px; height:'+ this.calulateRowHeight() +'px;" class="row row-'+ (i + 1) +'" data-row="'+ (i + 1) +'"></span>');
+      rowContainer    = $('<span data-stagger="'+ (evenRow ? NONE : this.selectedStagger) +'" data-coursing="'+ this.selectedCoursing +'" style="width: '+ this.calulateRowWidth() +'px; height:'+ this.calulateRowHeight() +'px;" class="row row-'+ (i + 1) +'" data-row="'+ (i + 1) +'"></span>');
 
       for(var j=0; j < this.dimensionX; j++){
         elementPosition = i + "-" + j;
@@ -446,6 +630,13 @@ var AccurateImage = {
   },
   setSelectedBrick: function(index){
     this.selectedBrick = this.selectedBrickType.bricks[index];
+  },
+
+  setSelectedCoursing: function(coursing){
+    this.selectedCoursing = this.coursingTypes.indexOf(coursing);
+    if(this.selectedCoursing == -1){
+      this.selectedCoursing = 0;
+    }
   },
 
   renderMortar: function(listContainer){
