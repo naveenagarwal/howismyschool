@@ -52,7 +52,6 @@ var AccurateImage = {
   },
 
   pushChangeToUndoRedoStack: function(){
-    // console.log(this.undoRedoStack.length);
     var html = $("#full-wall").html();
 
     if(this.undoRedoStack.length == 0){
@@ -264,19 +263,13 @@ var AccurateImage = {
     var elementCoursing = parseInt(element.data("coursing"));
     var row = element.parent()
     var rowCoursing = parseInt(element.parent().data("coursing"));
-    var performCoursing = false, lastBrickIndex, lastElWidth, lastElImgWidth;
-    var margin = occupiedWidth = width = 0;
-    var stagger, rowWidth, numberOfBricksX, elementPosition, brick, mortar, el;
+    var lastBrickIndex, lastElWidth, lastElImgWidth;
+    var margin = occupiedWidth = width = 0, brick = this.getBrick();
+    var stagger, rowWidth, numberOfBricksX, elementPosition, mortar, el;
 
-    row.find("span.item").each(function(){
-      if(parseInt($(this).data("coursing")) != coursingType){
-        performCoursing = true;
-        return false;
-      }
-    });
-
-    if(!performCoursing){
-      return ;
+    // if brick height is different we will perform row coursing
+    if(!(row.height() == (brick.height + this.selectedMortar.top + this.selectedMortar.bottom))){
+      performRowCoursing = true;
     }
 
     this.rowNumber = parseInt(row.data("row"));
