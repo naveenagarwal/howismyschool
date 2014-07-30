@@ -55,8 +55,6 @@ body{
 }
 
 .item > span > img {
-  /*height: 35px;
-  width: 105px;*/
   overflow: hidden;
 }
 .clear {

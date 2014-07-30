@@ -68,8 +68,8 @@ products = [
             header: {
               id: "Brick1",
               name: "Brick1",
-              height: 35,
-              width: 35,
+              height: 40,
+              width: 40,
               imgUrl: "images/brick_h_1_2.jpg"
             }
           }

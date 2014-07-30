@@ -929,5 +929,4 @@ var AccurateImage = {
     wallContainer.css("transform", "scale(" + scale + ")");
   }
 
-
 };
