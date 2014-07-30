@@ -651,6 +651,7 @@ var AccurateImage = {
         AccurateImage.rowNumber = parseInt(el.parent().data("row"));
         AccurateImage[action]();
         AccurateImage.pushChangeToUndoRedoStack();
+        AccurateImage.enableContextMenu();
     });
   },
 
