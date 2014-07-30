@@ -49,9 +49,9 @@ products = [
             header: {
               id: "Brick1",
               name: "Brick1",
-              height: 35,
-              width: 105,
-              imgUrl: "images/brick_1_1.jpg"
+              height: 40,
+              width: 40,
+              imgUrl: "images/brick_h_1_1.jpg"
             }
           },
           {
@@ -69,8 +69,8 @@ products = [
               id: "Brick1",
               name: "Brick1",
               height: 35,
-              width: 105,
-              imgUrl: "images/brick_1_1.jpg"
+              width: 35,
+              imgUrl: "images/brick_h_1_2.jpg"
             }
           }
         ]

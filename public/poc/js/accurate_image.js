@@ -16,6 +16,10 @@ var AccurateImage = {
   initialSelectedMortar: null,
   selectedBrick: null,
   initialSelectedBrick: null,
+  useInitiallySelectedBrick: false,
+  useInitiallySelectedMortar: false,
+  initialCoursing: null,
+  useInitiallySelectedCoursing: false,
   selectedBrickType: null,
   productIndex: null,
   currentMortar: null,
@@ -38,6 +42,14 @@ var AccurateImage = {
 
   baseUnit: 1, // in pxels
   inchPixels: 32, // one inch is 32 pixles
+
+  unsignedInt: function(value){
+    if(value >= 0){
+      return value;
+    }else{
+      return (value + (-2 * value));
+    }
+  },
 
   pushChangeToUndoRedoStack: function(){
     // console.log(this.undoRedoStack.length);
@@ -109,17 +121,42 @@ var AccurateImage = {
   },
 
   getBrick: function(){
-    switch(this.selectedCoursing){
+    var brick, coursing;
+
+    if(this.useInitiallySelectedBrick){
+      brick = this.initialSelectedBrick;
+    }else{
+      brick = this.selectedBrick;
+    }
+
+    if(this.useInitiallySelectedCoursing){
+      coursing = this.initialCoursing;
+    }else{
+      coursing = this.selectedCoursing
+    }
+
+    switch(coursing){
       case STANDARD:
-        return this.selectedBrick;
+        return brick;
         break;
       case RUNNING:
-        return this.selectedBrick.running;
+        return brick.running;
         break;
       case HEADERS:
-        return this.selectedBrick.header;
+        return brick.header;
         break;
     }
+  },
+
+  getMortar: function(){
+    var mortar;
+
+    if(this.useInitiallySelectedMortar){
+      mortar = this.initialSelectedMortar;
+    }else{
+      mortar = this.selectedMortar;
+    }
+    return mortar;
   },
 
   productListHtml: function(){
@@ -155,7 +192,8 @@ var AccurateImage = {
             ';
   },
   innerDivStyleCalc: function(){
-    return this.selectedMortar.top + "px " + this.selectedMortar.right + "px " + this.selectedMortar.bottom + "px " + this.selectedMortar.left + "px;";
+    var mortar = this.getMortar();
+    return mortar.top + "px " + mortar.right + "px " + mortar.bottom + "px " + mortar.left + "px;";
   },
   innerDivstyle: function(){
     return "margin:" + this.innerDivStyleCalc();
@@ -178,6 +216,7 @@ var AccurateImage = {
 
   renderEvenWallHtml: function(elementPosition){
     var brick = this.getBrick();
+    var mortar = this.getMortar();
     return  '\
               <span data-coursing="'+ this.selectedCoursing +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
                 <span style="'+ this.innerDivstyle() +'">\
@@ -189,14 +228,16 @@ var AccurateImage = {
 
   calcNumberOfBricksX: function(width){
     var brick = this.getBrick();
-    var brickWithMortorSize = brick.width + this.selectedMortar.left + this.selectedMortar.right;
+    var mortar = this.getMortar();
+    var brickWithMortorSize = brick.width + mortar.left + mortar.right;
 
     return parseInt((width / brickWithMortorSize));
   },
 
   calcNumberOfBricksY: function(width){
     var brick = this.getBrick();
-    var brickWithMortorSize = brick.height + this.selectedMortar.left + this.selectedMortar.right;
+    var mortar = this.getMortar();
+    var brickWithMortorSize = brick.height + mortar.left + mortar.right;
 
     return parseInt((width / brickWithMortorSize));
   },
@@ -210,17 +251,17 @@ var AccurateImage = {
 
     return width;
   },
-  fillRunningCoursing: function(element){
-    console.log("Running coursing");
+
+  fillCoursingFor: function(element, coursingType, performRowCoursing){
     var elementCoursing = parseInt(element.data("coursing"));
     var row = element.parent()
     var rowCoursing = parseInt(element.parent().data("coursing"));
-    var performCoursing = false;
+    var performCoursing = false, lastBrickIndex, lastElWidth, lastElImgWidth;
     var margin = occupiedWidth = width = 0;
-    var stagger, rowWidth, numberOfBricksX, elementPosition, performRowCoursing;
+    var stagger, rowWidth, numberOfBricksX, elementPosition, brick;
 
     row.find("span.item").each(function(){
-      if(parseInt($(this).data("coursing")) != RUNNING){
+      if(parseInt($(this).data("coursing")) != coursingType){
         performCoursing = true;
         return false;
       }
@@ -231,98 +272,162 @@ var AccurateImage = {
     }
 
     this.rowNumber = parseInt(row.data("row"));
-
     stagger = parseInt(row.data("stagger"));
-    rowWidth = row.width();
-    numberOfBricksX = this.calcNumberOfBricksX(rowWidth);
-    row.html("");
 
-    for(var j=0; j < numberOfBricksX; j++){
-      elementPosition = this.rowNumber + "-" + j
-      row.append(this.renderEvenWallHtml(elementPosition));
-    }
+    if(performRowCoursing){
+      rowWidth = row.width();
+      numberOfBricksX = this.calcNumberOfBricksX(rowWidth);
+      row.html("");
 
-    if(stagger != NONE){
-      margin = this.staggeredFirstElementLeftMarginStyle();
-      row.find("span.item:first").css("margin-left", "-" + margin + "px");
-    }
-
-    occupiedWidth = this.calcOccupiedWidth(row) - margin;
-    if(row.width() != occupiedWidth){
-      elementPosition = this.rowNumber + "-" + j;
-      row.append(this.renderEvenWallHtml(elementPosition));
-      width = row.width() - occupiedWidth;
-      maxWidth = this.getBrick().width + this.selectedMortar.left + this.selectedMortar.right;
-      if(width > maxWidth){
-        elementPosition = this.rowNumber + "-" + (j + 1);
+      for(var j=0; j < numberOfBricksX; j++){
+        elementPosition = this.rowNumber - 1 + "-" + j
         row.append(this.renderEvenWallHtml(elementPosition));
-        width = width - maxWidth;
+      }
+
+      if(stagger != NONE){
+        margin = this.staggeredFirstElementLeftMarginStyle();
+        row.find("span.item:first").css("margin-left", "-" + margin + "px");
+      }
+
+      occupiedWidth = this.calcOccupiedWidth(row) - margin;
+      if(row.width() != occupiedWidth){
+        elementPosition = this.rowNumber - 1 + "-" + j;
+        row.append(this.renderEvenWallHtml(elementPosition));
+        width = row.width() - occupiedWidth;
+        maxWidth = this.getBrick().width + this.selectedMortar.left + this.selectedMortar.right;
+        if(width > maxWidth){
+          elementPosition = this.rowNumber - 1 + "-" + (j + 1);
+          row.append(this.renderEvenWallHtml(elementPosition));
+          width = width - maxWidth;
+        }
+        row.find("span.item:last").css("width", width + "px");
+      }
+
+      row.css("height", this.calulateRowHeight());
+      row.data("coursing", coursingType);
+    } // End if for performRowCoursing
+    else{
+      brick = this.getBrick();
+
+      if(stagger != NONE){
+        if(element.data("brick_index").split("-")[1] == "0"){
+          marginFront = this.staggeredFirstElementLeftMarginStyle();
+        }else{
+          marginFront = parseInt(row.find("span.item:first").css("margin-left"));
+          marginFront = this.unsignedInt(marginFront);
+        }
+      }else{
+        marginFront = 0;
+      }
+
+      console.log("margin front is - " + marginFront);
+      element.find("img").attr("src", brick.imgUrl);
+      element.find("img").css({"height": brick.height, "width": brick.width});
+      element.css({"width": brick.width });
+      row.find("span.item:first").css({"margin-left": "-" + marginFront + "px"});
+
+      lastElWidth = row.find(".item:last").width();
+      lastElImgWidth = row.find(".item:last").find("img").width();
+
+      occupiedWidth = this.calcOccupiedWidth(row) - marginFront;
+      console.log("occupied width is " + occupiedWidth);
+
+      if(lastElWidth != lastElImgWidth && lastElWidth < lastElImgWidth && row.width() > occupiedWidth){
+        console.log("Last El width is " + lastElWidth);
+        row.find(".item:last").css("width", lastElImgWidth);
+        occupiedWidth = this.calcOccupiedWidth(row) - marginFront;
+      }
+
+      this.useInitiallySelectedCoursing  = this.useInitiallySelectedBrick = this.useInitiallySelectedMortar = true;
+
+      numberOfBricksX = this.calcNumberOfBricksX(width);
+      console.log("numberOfBricksX - " + numberOfBricksX);
+
+      for(var i=0; i < numberOfBricksX; i ++){
+        elementPosition = this.rowNumber - 1 + "-" + (i + 1 + parseInt(row.find(".item:last").data("brick_index").split("-")[1]));
+        row.append(this.renderEvenWallHtml(elementPosition));
+      }
+
+      occupiedWidth = this.calcOccupiedWidth(row) - marginFront;
+      console.log("occupied width after loop - " + occupiedWidth);
+      lastBrickIndex = parseInt(row.find(".item:last").data("brick_index").split("-")[1]);
+
+      brick = this.getBrick();
+
+      if(row.width() > occupiedWidth){
+        console.log("occupied width is less than row width, occupied width is - " + occupiedWidth);
+        elementPosition = this.rowNumber - 1 + "-" + (lastBrickIndex + 1);
+        row.append(this.renderEvenWallHtml(elementPosition));
+
+        width = row.width() - occupiedWidth;
+        maxWidth = brick.width + this.selectedMortar.left + this.selectedMortar.right;
+
+        if(width > maxWidth){
+          elementPosition = this.rowNumber - 1 + "-" + (lastBrickIndex + 2);
+          row.append(this.renderEvenWallHtml(elementPosition));
+          width = width - maxWidth;
+        }
+      }else if(row.width() < occupiedWidth){
+        width = row.width() - this.calcOccupiedWidth(row) + marginFront;
+        console.log("occupied width is greater - extra width is " + width);
+        width = row.find("span.item:last").width() + width;
+      }else if(row.width() == occupiedWidth){
+        console.log("occupied width is equal to row width");
+        width = row.find("span.item:last").width();
       }
       row.find("span.item:last").css("width", width + "px");
-    }
-    this.fillRowMortar();
+      //Incase ethe width becomes zero - it happens when width goes in negative
+      if(row.find("span.item:last").width() == 0){
+        var el;
+        while(true){
+          el = row.find("span.item:last");
+          row.find("span.item:last").remove()
+          width = this.calcOccupiedWidth(row) - marginFront;
+          if(row.width() > width){
+            row.append(el);
+            break;
+          }
+        }
+        console.log("width becomes zero");
+        // row.find("span.item:last").remove();
+        //recalculate the width for the last item to be set
+        console.log("function returns width is - " + this.calcOccupiedWidth(row));
+        width = row.width() - this.calcOccupiedWidth(row) + row.find("span.item:last").width() + marginFront;
+        console.log("last width to be set is - " + width);
+        row.find("span.item:last").css("width", width + "px");
+      }
 
-    // set row height
-    row.css("height", this.calulateRowHeight());
+      this.useInitiallySelectedCoursing  = this.useInitiallySelectedBrick = this.useInitiallySelectedMortar = false;
+    } // End of else part
+
+    this.fillRowMortar();
+  },
+
+  fillRunningCoursing: function(element){
+    var rowCoursing = parseInt(element.parent().data("coursing")),
+        performRowCoursing = true;
+
+    performRowCoursing = !(rowCoursing == RUNNING);
+
+    this.fillCoursingFor(element, RUNNING, performRowCoursing);
   },
 
   fillStandardCoursing: function(element){
-    console.log("Standard coursing");
-    var elementCoursing = parseInt(element.data("coursing"));
-    var row = element.parent()
-    var rowCoursing = parseInt(element.parent().data("coursing"));
-    var performCoursing = false;
-    var margin = occupiedWidth = width = 0;
-    var stagger, rowWidth, numberOfBricksX, elementPosition, performRowCoursing;
+    var rowCoursing = parseInt(element.parent().data("coursing")),
+        performRowCoursing = true;
 
-    row.find("span.item").each(function(){
-      if(parseInt($(this).data("coursing")) != STANDARD){
-        performCoursing = true;
-        return false;
-      }
-    });
+    performRowCoursing = !(rowCoursing == HEADERS || rowCoursing == STANDARD);
 
-    if(!performCoursing){
-      return ;
-    }
+    this.fillCoursingFor(element, STANDARD, performRowCoursing);
+  },
 
-    this.rowNumber = parseInt(row.data("row"));
-    performRowCoursing = (rowCoursing == RUNNING)
+  fillHeaderCoursing: function(element){
+    var rowCoursing = parseInt(element.parent().data("coursing")),
+        performRowCoursing = true;
 
+    performRowCoursing = !(rowCoursing == HEADERS || rowCoursing == STANDARD);
 
-    console.log("here");
-    stagger = parseInt(row.data("stagger"));
-    rowWidth = row.width();
-    numberOfBricksX = this.calcNumberOfBricksX(rowWidth);
-    row.html("");
-
-    for(var j=0; j < numberOfBricksX; j++){
-      elementPosition = this.rowNumber + "-" + j
-      row.append(this.renderEvenWallHtml(elementPosition));
-    }
-
-    if(stagger != NONE){
-      margin = this.staggeredFirstElementLeftMarginStyle();
-      row.find("span.item:first").css("margin-left", "-" + margin + "px");
-    }
-
-    occupiedWidth = this.calcOccupiedWidth(row) - margin;
-    if(row.width() != occupiedWidth){
-      elementPosition = this.rowNumber + "-" + j;
-      row.append(this.renderEvenWallHtml(elementPosition));
-      width = row.width() - occupiedWidth;
-      maxWidth = this.getBrick().width + this.selectedMortar.left + this.selectedMortar.right;
-      if(width > maxWidth){
-        elementPosition = this.rowNumber + "-" + (j + 1);
-        row.append(this.renderEvenWallHtml(elementPosition));
-        width = width - maxWidth;
-      }
-      row.find("span.item:last").css("width", width + "px");
-    }
-    this.fillRowMortar();
-
-    // set row height
-    row.css("height", this.calulateRowHeight());
+    this.fillCoursingFor(element, HEADERS, performRowCoursing);
   },
 
   fillCoursing: function(element){
@@ -334,7 +439,7 @@ var AccurateImage = {
         this.fillRunningCoursing(element);
         break;
       case HEADERS:
-        this.fillStandardCoursing(element);
+        this.fillHeaderCoursing(element);
         break;
     }
   },
@@ -342,13 +447,14 @@ var AccurateImage = {
   staggeredFirstElementLeftMarginStyle: function(){
     var pixels = "",
         brick = this.getBrick(),
+        mortar = this.getMortar(),
         width ;
 
 
     if(this.selectedStagger == NONE){
       return "";
     }else{
-      width = brick.width + this.selectedMortar.left + this.selectedMortar.right;
+      width = brick.width + mortar.left + mortar.right;
       pixels = (width / this.selectedStagger);
     }
 
@@ -362,13 +468,14 @@ var AccurateImage = {
   staggeredLastElementStyle: function(){
     var pixels = "",
         brick = this.getBrick(),
+        mortar = this.getMortar(),
         width,
         difference;
 
     if(this.selectedStagger == NONE){
       return "";
     }else{
-      width = brick.width + this.selectedMortar.left + this.selectedMortar.right;
+      width = brick.width + mortar.left + mortar.right;
       pixels = (width / this.selectedStagger);
     }
 
@@ -423,7 +530,9 @@ var AccurateImage = {
   },
 
   fillMortarFull: function(){
-    $(".item").css('background-image', 'url("'+ this.selectedMortar.fillImage +'")');
+    var mortar = this.getMortar();
+
+    $(".item").css('background-image', 'url("'+ mortar.fillImage +'")');
     $(".item").css('background-repeat', 'repeat');
     $(".item > span").attr('style', this.innerDivstyle());
   },
@@ -433,7 +542,9 @@ var AccurateImage = {
   },
 
   fillRowBricks: function(){
-    $('.row-' + this.rowNumber + ' .item > span > img').attr('src', this.getBrick().imgUrl);
+    var brick = this.getBrick();
+    $('.row-' + this.rowNumber + ' .item > span > img').attr('src', brick.imgUrl);
+    $('.row-' + this.rowNumber + ' .item > span > img').css({'width': brick.width, 'height': brick.height });
   },
 
   fillRowEvenBricks: function(){
@@ -441,19 +552,22 @@ var AccurateImage = {
   },
 
   fillRowMortar: function(){
-    $('.row-' + this.rowNumber +  ' .item').css('background-image', 'url("'+ this.selectedMortar.fillImage +'")');
+    var mortar = this.getMortar();
+    $('.row-' + this.rowNumber +  ' .item').css('background-image', 'url("'+ mortar.fillImage +'")');
     $('.row-' + this.rowNumber +  ' .item').css('background-repeat', 'repeat');
     $('.row-' + this.rowNumber +  ' .item > span').attr('style', this.innerDivstyle());
   },
 
   fillRowEvenMortar: function(){
-    $('.row-' + this.rowNumber +  ' .item:nth-child(odd)').css('background-image', 'url("'+ this.selectedMortar.fillImage +'")');
+    var mortar = this.getMortar();
+    $('.row-' + this.rowNumber +  ' .item:nth-child(odd)').css('background-image', 'url("'+ mortar.fillImage +'")');
     $('.row-' + this.rowNumber +  ' .item:nth-child(odd)').css('background-repeat', 'repeat');
     $('.row-' + this.rowNumber +  ' .item:nth-child(odd) > span').attr('style', this.innerDivstyle());
   },
 
   fillMortarItem: function(item){
-    item.css('background-image', 'url("'+ this.selectedMortar.fillImage +'")');
+    var mortar = this.getMortar();
+    item.css('background-image', 'url("'+ mortar.fillImage +'")');
     item.css('background-repeat', 'repeat');
     item.find("span:first").attr('style', this.innerDivstyle());
   },
@@ -541,12 +655,20 @@ var AccurateImage = {
 
   calulateRowWidth: function(){
     var brick = this.getBrick();
-    return (this.dimensionX * (brick.width + this.selectedMortar.left + this.selectedMortar.right));
+    var mortar = this.getMortar();
+    return (this.dimensionX * (brick.width + mortar.left + mortar.right));
   },
 
   calulateRowHeight: function(){
     var brick = this.getBrick();
-    return brick.height + this.selectedMortar.top + this.selectedMortar.bottom;
+    var mortar = this.getMortar();
+    return brick.height + mortar.top + mortar.bottom;
+  },
+
+  setInitialDefaults: function(){
+    this.initialSelectedBrick = this.selectedBrick;
+    this.initialSelectedMortar = this.selectedMortar;
+    this.initialCoursing = this.selectedCoursing;
   },
 
   drawWall: function(){
@@ -557,8 +679,7 @@ var AccurateImage = {
 
     wallContainer.html("");
 
-    this.initialSelectedBrick = this.selectedBrick;
-    this.initialSelectedMortar = this.selectedMortar;
+    this.setInitialDefaults();
 
     for(var i=0; i < this.dimensionY; i++){
       this.rowNumber  = i;
