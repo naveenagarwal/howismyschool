@@ -120,6 +120,14 @@ var AccurateImage = {
     this.clearSelectedBrick();
   },
 
+  getCoursing: function(){
+    if(this.useInitiallySelectedCoursing){
+      return this.initialCoursing;
+    }else{
+      return this.selectedCoursing;
+    }
+  },
+
   getBrick: function(){
     var brick, coursing;
 
@@ -132,7 +140,7 @@ var AccurateImage = {
     if(this.useInitiallySelectedCoursing){
       coursing = this.initialCoursing;
     }else{
-      coursing = this.selectedCoursing
+      coursing = this.selectedCoursing;
     }
 
     switch(coursing){
@@ -218,7 +226,7 @@ var AccurateImage = {
     var brick = this.getBrick();
     var mortar = this.getMortar();
     return  '\
-              <span data-coursing="'+ this.selectedCoursing +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
+              <span data-coursing="'+ this.getCoursing() +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
                 <span style="'+ this.innerDivstyle() +'">\
                   <img style="'+ this.brickImgStyle() +'" src="'+ brick.imgUrl +'">\
                 </span>\
@@ -258,7 +266,7 @@ var AccurateImage = {
     var rowCoursing = parseInt(element.parent().data("coursing"));
     var performCoursing = false, lastBrickIndex, lastElWidth, lastElImgWidth;
     var margin = occupiedWidth = width = 0;
-    var stagger, rowWidth, numberOfBricksX, elementPosition, brick;
+    var stagger, rowWidth, numberOfBricksX, elementPosition, brick, mortar, el;
 
     row.find("span.item").each(function(){
       if(parseInt($(this).data("coursing")) != coursingType){
@@ -305,9 +313,11 @@ var AccurateImage = {
 
       row.css("height", this.calulateRowHeight());
       row.data("coursing", coursingType);
+      this.fillRowMortar();
     } // End if for performRowCoursing
     else{
       brick = this.getBrick();
+      mortar = this.getMortar();
 
       if(stagger != NONE){
         if(element.data("brick_index").split("-")[1] == "0"){
@@ -320,44 +330,43 @@ var AccurateImage = {
         marginFront = 0;
       }
 
-      console.log("margin front is - " + marginFront);
       element.find("img").attr("src", brick.imgUrl);
       element.find("img").css({"height": brick.height, "width": brick.width});
-      element.css({"width": brick.width });
+      element.find("img").css({"width": brick.width });
+      element.css({"width": brick.width + mortar.right + mortar.left});
+      element.data("coursing", coursingType);
+
       row.find("span.item:first").css({"margin-left": "-" + marginFront + "px"});
 
       lastElWidth = row.find(".item:last").width();
       lastElImgWidth = row.find(".item:last").find("img").width();
 
       occupiedWidth = this.calcOccupiedWidth(row) - marginFront;
-      console.log("occupied width is " + occupiedWidth);
 
       if(lastElWidth != lastElImgWidth && lastElWidth < lastElImgWidth && row.width() > occupiedWidth){
-        console.log("Last El width is " + lastElWidth);
-        row.find(".item:last").css("width", lastElImgWidth);
+        row.find(".item:last").css("width", lastElImgWidth + mortar.right + mortar.left);
         occupiedWidth = this.calcOccupiedWidth(row) - marginFront;
       }
 
       this.useInitiallySelectedCoursing  = this.useInitiallySelectedBrick = this.useInitiallySelectedMortar = true;
 
       numberOfBricksX = this.calcNumberOfBricksX(width);
-      console.log("numberOfBricksX - " + numberOfBricksX);
 
       for(var i=0; i < numberOfBricksX; i ++){
         elementPosition = this.rowNumber - 1 + "-" + (i + 1 + parseInt(row.find(".item:last").data("brick_index").split("-")[1]));
         row.append(this.renderEvenWallHtml(elementPosition));
+        this.fillMortarItem(row.find("span.item:last"));
       }
 
       occupiedWidth = this.calcOccupiedWidth(row) - marginFront;
-      console.log("occupied width after loop - " + occupiedWidth);
       lastBrickIndex = parseInt(row.find(".item:last").data("brick_index").split("-")[1]);
 
       brick = this.getBrick();
 
       if(row.width() > occupiedWidth){
-        console.log("occupied width is less than row width, occupied width is - " + occupiedWidth);
         elementPosition = this.rowNumber - 1 + "-" + (lastBrickIndex + 1);
         row.append(this.renderEvenWallHtml(elementPosition));
+        this.fillMortarItem(row.find("span.item:last"));
 
         width = row.width() - occupiedWidth;
         maxWidth = brick.width + this.selectedMortar.left + this.selectedMortar.right;
@@ -365,41 +374,62 @@ var AccurateImage = {
         if(width > maxWidth){
           elementPosition = this.rowNumber - 1 + "-" + (lastBrickIndex + 2);
           row.append(this.renderEvenWallHtml(elementPosition));
+          this.fillMortarItem(row.find("span.item:last"));
           width = width - maxWidth;
         }
       }else if(row.width() < occupiedWidth){
         width = row.width() - this.calcOccupiedWidth(row) + marginFront;
-        console.log("occupied width is greater - extra width is " + width);
         width = row.find("span.item:last").width() + width;
       }else if(row.width() == occupiedWidth){
-        console.log("occupied width is equal to row width");
         width = row.find("span.item:last").width();
       }
       row.find("span.item:last").css("width", width + "px");
       //Incase ethe width becomes zero - it happens when width goes in negative
       if(row.find("span.item:last").width() == 0){
-        var el;
         while(true){
           el = row.find("span.item:last");
           row.find("span.item:last").remove()
           width = this.calcOccupiedWidth(row) - marginFront;
           if(row.width() > width){
             row.append(el);
+            this.fillMortarItem(row.find("span.item:last"));
             break;
           }
         }
-        console.log("width becomes zero");
         //recalculate the width for the last item to be set
-        console.log("function returns width is - " + this.calcOccupiedWidth(row));
         width = row.width() - this.calcOccupiedWidth(row) + row.find("span.item:last").width() + marginFront;
-        console.log("last width to be set is - " + width);
         row.find("span.item:last").css("width", width + "px");
       }
 
       this.useInitiallySelectedCoursing  = this.useInitiallySelectedBrick = this.useInitiallySelectedMortar = false;
     } // End of else part
 
-    this.fillRowMortar();
+
+  },
+
+  fillRowEvenCoursing: function(){
+    var row = $('.row-' + this.rowNumber),
+        elements = row.find("span.item:nth-child(odd)");
+
+    elements.each(function(){
+      $(this).trigger("click");
+    });
+
+    if(parseInt(row.data("coursing")) != this.selectedCoursing){
+      //reassign elements as number of elements may have changed if different coursing has been set
+      elements = row.find("span.item:nth-child(odd)");
+
+      elements.each(function(){
+        var el = $(this);
+        if(el.next().html() != undefined && el.find("img").attr("src") == el.next().find("img").attr("src")){
+          el.trigger("click");
+          el.nextAll("span.item:nth-child(odd)").each(function(){
+            $(this).trigger("click");
+          });
+        }
+      });
+    }
+
   },
 
   fillRunningCoursing: function(element){
@@ -581,8 +611,7 @@ var AccurateImage = {
   },
 
   fillEven: function(){
-    this.fillRowEvenBricks();
-    this.fillRowEvenMortar();
+    this.fillRowEvenCoursing();
   },
 
   staggerRowNone: function(){
