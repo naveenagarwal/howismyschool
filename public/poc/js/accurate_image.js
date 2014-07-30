@@ -389,7 +389,6 @@ var AccurateImage = {
           }
         }
         console.log("width becomes zero");
-        // row.find("span.item:last").remove();
         //recalculate the width for the last item to be set
         console.log("function returns width is - " + this.calcOccupiedWidth(row));
         width = row.width() - this.calcOccupiedWidth(row) + row.find("span.item:last").width() + marginFront;
@@ -577,8 +576,8 @@ var AccurateImage = {
   },
 
   fillRow: function(){
-    this.fillRowBricks();
-    this.fillRowMortar();
+    var element = $('.row-' + this.rowNumber +  ' span.item:first');
+    this.fillCoursingFor(element, this.selectedCoursing, true);
   },
 
   fillEven: function(){
@@ -598,6 +597,7 @@ var AccurateImage = {
     $(".row-" + this.rowNumber + " span.item:first").css("margin-left", "0");
     $(".row-" + this.rowNumber).data("stagger", NONE);
   },
+
   staggerRow: function(){
     this.staggerRowNone();
 
@@ -650,6 +650,7 @@ var AccurateImage = {
       }, function(action, el, pos) {
         AccurateImage.rowNumber = parseInt(el.parent().data("row"));
         AccurateImage[action]();
+        AccurateImage.pushChangeToUndoRedoStack();
     });
   },
 
@@ -763,6 +764,7 @@ var AccurateImage = {
   renderMortar: function(listContainer){
     listContainer.append(this.mortarsListHtml());
   },
+
   renderMortars: function(){
     var container = $("#mortars_toggle"),
         listContainer = $(container.data("toggle"));
