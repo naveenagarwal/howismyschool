@@ -98,3 +98,12 @@ body{
   -o-transform-origin: 0 0;
   transform-origin: 0 0;
 }
+
+.center {
+  margin: 10px 0;
+  text-align: center;
+}
+
+form#customWallForm input{
+  width: 50px;
+}

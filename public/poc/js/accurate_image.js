@@ -894,7 +894,7 @@ var AccurateImage = {
 
     html2canvas($("div#full-wall-copy"), {
       onrendered: function(canvas) {
-        var base64Img = canvas.toDataURL();
+        var base64Img = canvas.toDataURL("image/jpeg", 1.0);
         var myWindow = window.open("", "_blank", "width=800, height=600");
         myWindow.document.write('<img src="' + base64Img + '">');
         $("div#full-wall-copy").hide();

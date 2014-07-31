@@ -27,6 +27,15 @@
   <body>
       <h3 class="heading">Accurate Image</h3>
       <br />
+      <div class="center">
+        <form id="customWallForm">
+          Custom Units
+          <input type="number" id="x" value="10" min="1" required>
+          &nbsp; by &nbsp;
+          <input type="number" id="y" value="10" min="1" required>
+          <input type="submit" id="customWallBtn" value="Draw">
+        </form>
+      </div>
       <div class="inline-div span2 set-border left">
         <div>
           <a href="javascript:void(0);" data-toggle="#products_list" id="products_toggle"> + </a>
@@ -64,7 +73,6 @@
           | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="6x6">6x6</a>
 
           | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="7x7">7x7</a>
-          | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="17x17">17x17</a>
 
           | <a href="javascript:void(0);" class="save-as-image" id="save_as_image">Save as Image</a>
         </div>
