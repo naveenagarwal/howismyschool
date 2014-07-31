@@ -121,7 +121,6 @@ $(document).ready(function(){
   $(document).ready(function(){
     $("form#customWallForm").submit(function(){
       var wallDimension = $("#x").val() + "x" + $("#y").val();
-      console.log(wallDimension);
       AccurateImage.selectedWallDimesions = wallDimension;
       AccurateImage.drawDefaultWall();
       AccurateImage.pushChangeToUndoRedoStack();
