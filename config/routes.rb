@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   # devise_for :admins
@@ -94,6 +93,8 @@ Rails.application.routes.draw do
       get 'day_events'
     end
   end
+
+  resources :mock_tests
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

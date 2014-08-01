@@ -341,7 +341,7 @@ var AccurateImage = {
         occupiedWidth = this.calcOccupiedWidth(row) - marginFront;
       }
 
-      if((this.initialCoursing == STANDARD || this.initialCoursing == HEADERS) && (this.selectedCoursing == STANDARD || this.selectedCoursing == HEADERS)){
+      if(((this.initialCoursing == RUNNING && this.selectedCoursing == RUNNING) ||(this.initialCoursing == STANDARD || this.initialCoursing == HEADERS) && (this.selectedCoursing == STANDARD || this.selectedCoursing == HEADERS))){
         this.useInitiallySelectedCoursing  = this.useInitiallySelectedBrick = this.useInitiallySelectedMortar = true;
       }
 

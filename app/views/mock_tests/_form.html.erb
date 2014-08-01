@@ -1,0 +1,33 @@
+<%= form_for(@mock_test) do |f| %>
+  <% if @mock_test.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@mock_test.errors.count, "error") %> prohibited this mock_test from being saved:</h2>
+
+      <ul>
+      <% @mock_test.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :school_branch_id %><br>
+    <%= f.text_field :school_branch_id %>
+  </div>
+  <div class="field">
+    <%= f.label :creator_id %><br>
+    <%= f.text_field :creator_id %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :class_room_id %><br>
+    <%= f.text_field :class_room_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

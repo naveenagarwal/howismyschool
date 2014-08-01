@@ -9,4 +9,5 @@ class SchoolBranch < ActiveRecord::Base
   has_many :test_results
   has_many :documents
   has_many :schedules
+  has_many :mock_tests
 end

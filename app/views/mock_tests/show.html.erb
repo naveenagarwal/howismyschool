@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>School branch:</strong>
+  <%= @mock_test.school_branch %>
+</p>
+
+<p>
+  <strong>Creator:</strong>
+  <%= @mock_test.creator %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @mock_test.name %>
+</p>
+
+<p>
+  <strong>Class room:</strong>
+  <%= @mock_test.class_room %>
+</p>
+
+<%= link_to 'Edit', edit_mock_test_path(@mock_test) %> |
+<%= link_to 'Back', mock_tests_path %>

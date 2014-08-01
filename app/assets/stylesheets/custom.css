@@ -283,19 +283,43 @@ body {
 }
 
 div#header_container {
-  position: fixed;
+  /*position: fixed;*/
   top: 0;
   height: 50px;
   width: 100%;
   z-index: 1;
 }
 
+.sub-menu > ul {
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  color: #ffffff;
+}
+
+.sub-menu .dropdown a,.sub-menu > ul a {
+  color: #ffa500;
+}
+
+.sub-menu .dropdown a, .sub-menu .dropdown a:hover {
+  text-decoration: none;
+}
+.sub-menu .dropdown {
+  font-size: 18px;
+  margin-left: 5px;
+  top: 11px;
+}
+
+.sub-menu:hover > ul {
+  /*display: block;*/
+}
+
 div#main_container{
   padding-top: 50px;
-    padding-bottom: 50px;
-    top:0px;
-    bottom:0px;
-    width:100%;
+  padding-bottom: 50px;
+  top:0px;
+  bottom:0px;
+  width:100%;
 }
 
 .margin-left-20 {
