@@ -68,7 +68,7 @@ class MockTestsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_mock_test
-      @mock_test = MockTest.find(params[:id])
+      @mock_test = current_school_branch.mock_tests.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
