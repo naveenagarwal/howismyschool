@@ -10,6 +10,7 @@ class ClassRoom < ActiveRecord::Base
   has_many :test_results, dependent: :destroy
   has_many :class_room_students, dependent: :destroy
   has_many :students, through: :class_room_students
+  has_many :mock_tests
 
   validates :name,
             presence: true,

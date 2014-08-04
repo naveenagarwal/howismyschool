@@ -2,6 +2,9 @@ class MockTest < ActiveRecord::Base
   belongs_to :school_branch
   belongs_to :creator, polymorphic: true
   belongs_to :class_room
+  belongs_to :subject
 
-  validates :name, presence: true
+  has_many :ques_and_ans, dependent: :destroy
+
+  validates :name, :subject_id, :class_room_id, presence: true
 end

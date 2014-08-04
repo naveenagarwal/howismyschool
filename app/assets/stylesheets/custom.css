@@ -402,6 +402,6 @@ table.blue-text-last-td.table-bordered th, table.blue-text-last-td.table-bordere
     text-align: left;
 }
 
-.width-5-percent, div.inline-div.width-5-percent {
-  width: 5%;
+.width-200, div.inline-div.width-200 {
+  width: 200px;
 }

@@ -6,7 +6,7 @@ class Student < ActiveRecord::Base
 
   has_many :test_results, dependent: :destroy
   has_many :class_room_students, dependent: :destroy
-
+  has_many :mock_test_takens
 
   validates :name, :roll_number, :class_room_id, :year, presence: true
   validates :name,

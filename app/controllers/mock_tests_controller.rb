@@ -1,11 +1,12 @@
 class MockTestsController < ApplicationController
+  before_action :authenticate_teacher!
   before_action :set_mock_test, only: [:show, :edit, :update, :destroy]
 
   # GET /mock_tests
   # GET /mock_tests.json
   def index
     @mock_tests = Paginate.get_records(
-        relation_object: current_school_branch.mock_tests.includes(:class_room),
+        relation_object: current_school_branch.mock_tests.includes(:class_room, :subject),
         page: params[:page],
         per_page: params[:per_page]
       )
@@ -19,11 +20,13 @@ class MockTestsController < ApplicationController
   # GET /mock_tests/new
   def new
     @mock_test = MockTest.new
+    @subjects_array = get_subjects_array
     @class_rooms_array = get_class_room_array
   end
 
   # GET /mock_tests/1/edit
   def edit
+    @subjects_array = get_subjects_array
     @class_rooms_array = get_class_room_array
   end
 
@@ -31,6 +34,8 @@ class MockTestsController < ApplicationController
   # POST /mock_tests.json
   def create
     @mock_test = MockTest.new(mock_test_params)
+    @mock_test.creator = current_teacher || current_entity
+    @mock_test.school_branch = current_school_branch
 
     respond_to do |format|
       if @mock_test.save
@@ -38,6 +43,7 @@ class MockTestsController < ApplicationController
         format.json { render :show, status: :created, location: @mock_test }
       else
         format.html {
+          @subjects_array = get_subjects_array
           @class_rooms_array = get_class_room_array
           render :new
         }
@@ -56,6 +62,7 @@ class MockTestsController < ApplicationController
       else
         format.html {
           @class_rooms_array = get_class_room_array
+          @subjects_array = get_subjects_array
           render :edit
         }
         format.json { render json: @mock_test.errors, status: :unprocessable_entity }
@@ -81,11 +88,17 @@ class MockTestsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def mock_test_params
-      params.require(:mock_test).permit(:school_branch_id, :creator_id, :creator_type, :name, :class_room_id)
+      params.require(:mock_test).permit(:subject_id, :publish, :name, :class_room_id)
     end
 
     def get_class_room_array
       ClassRoom.get_class_rooms_array_for_select_option(
+          school_branch_id: current_school_branch.id
+        )
+    end
+
+    def get_subjects_array
+      Subject.get_subjects_array_for_select_option(
           school_branch_id: current_school_branch.id
         )
     end

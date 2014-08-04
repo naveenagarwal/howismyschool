@@ -4,7 +4,7 @@ class Subject < ActiveRecord::Base
   belongs_to :document
 
   has_many :test_results, dependent: :destroy
-
+  has_many :mock_tests
   validates :name,
     presence: true,
     uniqueness: {

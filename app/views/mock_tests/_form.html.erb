@@ -3,20 +3,26 @@
     <% render partial: "/shared/form_errors", locals: { obj: @mock_test, name: "Test" } %>
   </div>
 
-  <div class="inline-div">
+  <div class="inline-div width-200">
     <%= f.label :name, required_span_with("Name") %>
     <%= f.text_field :name %>
   </div>
-  <div class="inline-div">
-    <%= f.label :class_room_id %>
+  <div class="inline-div width-200">
+    <%= f.label :class_room_id, required_span_with("Class Room") %>
     <%= f.select :class_room_id, @class_rooms_array, { include_blank: true }, class: "select2"  %>
   </div>
-  <div class="inline-div width-5-percent">
+  <div class="inline-div width-200">
+    <%= f.label :subject_id, required_span_with("Subject") %>
+    <%= f.select :subject_id, @subjects_array, { include_blank: true }, class: "select2"  %>
+  </div>
+  <div class="inline-div width-200">
     <%= f.label :publish %>
     <%= f.check_box :publish %>
   </div>
+
   <p></p>
-  <div class="actions inline-div">
+
+  <div class="actions inline-div width-200">
     <%= f.submit %>
   </div>
 <% end %>
