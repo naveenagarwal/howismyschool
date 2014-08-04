@@ -20,6 +20,7 @@ class MockTestsController < ApplicationController
   # GET /mock_tests/new
   def new
     @mock_test = MockTest.new
+    3.times { @mock_test.ques_and_ans.build }
     @subjects_array = get_subjects_array
     @class_rooms_array = get_class_room_array
   end
@@ -78,6 +79,10 @@ class MockTestsController < ApplicationController
       format.html { redirect_to mock_tests_url, notice: 'Mock test was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def add_question
+    @count = params[:count].to_i
   end
 
   private

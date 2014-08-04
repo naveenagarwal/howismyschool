@@ -94,7 +94,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :mock_tests
+  resources :mock_tests do
+    collection do
+      get 'add_question/:count' => 'mock_tests#add_question', as: :add_question
+    end
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

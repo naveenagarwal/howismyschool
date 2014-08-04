@@ -22,7 +22,39 @@
 
   <p></p>
 
+  <div class="inline-div">
+    <div id="ques_and_ans">
+      <% @count = 0 %>
+      <%= f.fields_for :ques_and_ans do |builder| %>
+        <%= render partial: 'ques_and_ans_form', locals: { f: builder } %>
+      <% end %>
+    </div>
+  </div>
+
+  <p></p>
+
   <div class="actions inline-div width-200">
     <%= f.submit %>
   </div>
 <% end %>
+<%= link_to "Add More Question", add_question_mock_tests_path(@count), data: { remote: true } %>
+
+<div id="modal_boxes">
+  <div class="modal fade" id="answer_type_modal_0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span class="sr-only">Close</span></button>
+          <h4 class="modal-title blue" id="myModalLabel">Enter Multiple Choices for the question</h4>
+        </div>
+        <div class="modal-body">
+        <%= render partial: 'multiple_choices' %>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<input type="hidden" id="last_selected_answer_type">

@@ -24,6 +24,36 @@ $(document).ready(function() {
   Student.initializeStudentScoreCharts();
   initializeDateTimePicker();
 
+  $(document).on("change", "select.answer-type", function(){
+    var val = $(this).val();
+    $("#answer_type_modal_" + val).modal('show');
+    $("#last_selected_answer_type").val($(this).data("count"));
+  });
+
+  $(document).on("click", "#add_more_multiple_choices", function(){
+    $('<div><input type="text" class="multiple-choices-input"><a href="javascript:void(0);" class="remove_multiple_choice">Remove</a><br></div>').insertBefore($(this));
+  });
+
+  $(document).on("click", ".remove-multiple-choice", function(){
+    $(this).parent().remove();
+  });
+
+  $(document).on("click", "#add_multiple_choice", function(){
+    var count = $("#last_selected_answer_type").val();
+    var el = $(".answer-choices-" + count);
+
+    el.html("<br />");
+
+    $(".multiple-choices-input").each(function(index){
+      var choice = $.trim($(this).val());
+      if(choice.length > 0){
+        el.append('<input type="checkbox" name="qa[]['+ $("#last_selected_answer_type").val() +']choices['+ index +']">&nbsp;&nbsp;&nbsp;' + choice + '<br />');
+      }
+    });
+
+    $(".modal").modal('hide');
+  });
+
 });
 
 var loadCarousel = function(){
