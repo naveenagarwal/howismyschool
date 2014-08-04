@@ -401,3 +401,7 @@ table.blue-text-last-td.table-bordered th, table.blue-text-last-td.table-bordere
     z-index: 1;
     text-align: left;
 }
+
+.width-5-percent, div.inline-div.width-5-percent {
+  width: 5%;
+}

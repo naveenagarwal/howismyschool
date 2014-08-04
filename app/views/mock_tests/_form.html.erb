@@ -1,33 +1,22 @@
 <%= form_for(@mock_test) do |f| %>
-  <% if @mock_test.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@mock_test.errors.count, "error") %> prohibited this mock_test from being saved:</h2>
-
-      <ul>
-      <% @mock_test.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :school_branch_id %><br>
-    <%= f.text_field :school_branch_id %>
+  <div id="form_errors">
+    <% render partial: "/shared/form_errors", locals: { obj: @mock_test, name: "Test" } %>
   </div>
-  <div class="field">
-    <%= f.label :creator_id %><br>
-    <%= f.text_field :creator_id %>
-  </div>
-  <div class="field">
-    <%= f.label :name %><br>
+
+  <div class="inline-div">
+    <%= f.label :name, required_span_with("Name") %>
     <%= f.text_field :name %>
   </div>
-  <div class="field">
-    <%= f.label :class_room_id %><br>
-    <%= f.text_field :class_room_id %>
+  <div class="inline-div">
+    <%= f.label :class_room_id %>
+    <%= f.select :class_room_id, @class_rooms_array, { include_blank: true }, class: "select2"  %>
   </div>
-  <div class="actions">
+  <div class="inline-div width-5-percent">
+    <%= f.label :publish %>
+    <%= f.check_box :publish %>
+  </div>
+  <p></p>
+  <div class="actions inline-div">
     <%= f.submit %>
   </div>
 <% end %>

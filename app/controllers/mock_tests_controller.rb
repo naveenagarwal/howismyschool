@@ -19,10 +19,12 @@ class MockTestsController < ApplicationController
   # GET /mock_tests/new
   def new
     @mock_test = MockTest.new
+    @class_rooms_array = get_class_room_array
   end
 
   # GET /mock_tests/1/edit
   def edit
+    @class_rooms_array = get_class_room_array
   end
 
   # POST /mock_tests
@@ -35,7 +37,10 @@ class MockTestsController < ApplicationController
         format.html { redirect_to @mock_test, notice: 'Mock test was successfully created.' }
         format.json { render :show, status: :created, location: @mock_test }
       else
-        format.html { render :new }
+        format.html {
+          @class_rooms_array = get_class_room_array
+          render :new
+        }
         format.json { render json: @mock_test.errors, status: :unprocessable_entity }
       end
     end
@@ -49,7 +54,10 @@ class MockTestsController < ApplicationController
         format.html { redirect_to @mock_test, notice: 'Mock test was successfully updated.' }
         format.json { render :show, status: :ok, location: @mock_test }
       else
-        format.html { render :edit }
+        format.html {
+          @class_rooms_array = get_class_room_array
+          render :edit
+        }
         format.json { render json: @mock_test.errors, status: :unprocessable_entity }
       end
     end
@@ -74,5 +82,11 @@ class MockTestsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def mock_test_params
       params.require(:mock_test).permit(:school_branch_id, :creator_id, :creator_type, :name, :class_room_id)
+    end
+
+    def get_class_room_array
+      ClassRoom.get_class_rooms_array_for_select_option(
+          school_branch_id: current_school_branch.id
+        )
     end
 end
