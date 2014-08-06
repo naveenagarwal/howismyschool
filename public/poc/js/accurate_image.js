@@ -39,6 +39,28 @@ var AccurateImage = {
   undoRedoStack: [],
   coursingTypes: ["standard", "running", "headers"], // order of array matters dont change it
   selectedCoursing: 0, // 0 means standard, it is the index of coursingtypes array
+  bricksArray: [],
+  thisBrickItem: null,
+  thisBrickItemX: 0,
+  thisBrickItemY: 0,
+  defaultWallBricksArray: [
+      [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+      [3,14,0,12,10,8,9,15,11,6,4,2,1,5,7,13],
+      [15,13,11,9,7,5,3,1,2,0,14,12,10,8,6,4],
+      [14,2,10,8,6,4,12,0,15,13,11,9,7,5,3,1],
+      [13,11,9,7,5,3,1,2,4,6,8,10,12,14,0,15],
+      [12,10,8,6,4,2,14,0,1,3,5,7,9,15,11,13],
+      [11,9,7,5,3,1,13,15,2,4,6,8,10,12,14,0],
+      [10,8,0,6,14,4,12,1,3,15,2,5,7,9,11,13],
+      [9,15,14,13,0,2,3,8,7,11,10,12,8,1,4,5],
+      [8,15,0,7,2,1,9,3,10,4,11,5,12,14,13,6],
+      [7,0,15,14,13,11,6,12,10,9,8,5,4,3,2,1],
+      [6,1,2,0,8,9,10,15,14,13,12,11,7,4,5,3],
+      [5,15,10,1,0,2,13,11,4,3,14,12,8,6,7,9],
+      [4,9,3,11,8,15,14,12,13,7,6,10,5,2,0,1],
+      [1,10,0,13,2,11,9,15,14,12,5,4,3,7,6,8],
+      [2,12,3,11,9,13,0,1,4,7,8,6,10,5,15,14],
+    ],
 
   baseUnit: 1, // in pxels
   inchPixels: 32, // one inch is 32 pixles
@@ -711,8 +733,11 @@ var AccurateImage = {
       this.rowNumber  = i;
       evenRow         = i%2 == 0 ? true : false;
       rowContainer    = $('<span data-stagger="'+ (evenRow ? NONE : this.selectedStagger) +'" data-coursing="'+ this.selectedCoursing +'" style="width: '+ this.calulateRowWidth() +'px; height:'+ this.calulateRowHeight() +'px;" class="row row-'+ (i + 1) +'" data-row="'+ (i + 1) +'"></span>');
+      this.bricksArray[i] = [];
+      this.thisBrickItemX = i;
 
       for(var j=0; j < this.dimensionX; j++){
+        this.thisBrickItemY = j;
         elementPosition = i + "-" + j;
         this.renderWallBrick(evenRow, elementPosition, rowContainer);
 

@@ -38,6 +38,7 @@ products = [
             name: "Brick1",
             height: 40,
             width: 100,
+            imgUrlArray: ["images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg"],
             imgUrl: "images/brick_1_1.jpg",
             running: {
              imgUrl: "images/brick_r_1_1.jpg",
@@ -59,6 +60,7 @@ products = [
             name: "Brick2",
             height: 35,
             width: 105,
+            imgUrlArray: ["images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg"],
             imgUrl: "images/brick_1_2.jpg",
             running: {
              imgUrl: "images/brick_r_1_2.jpg",
