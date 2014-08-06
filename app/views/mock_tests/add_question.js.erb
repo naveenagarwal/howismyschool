@@ -1,1 +1,2 @@
-$("#ques_and_ans").append('<%= j render(partial: "ques_and_ans_form") %>')
+$("#ques_and_ans").append('<%= j render(partial: "ques_and_ans_form") %>');
+$("a#add_more_question").attr("href", "<%= add_question_mock_tests_path(@count) %>");

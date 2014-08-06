@@ -13,11 +13,11 @@
 
   <div class="width-200 answer-type-<%= @count %>" data-count="<%=@count %>" >
     <%= label_tag "answer_type_#{@count}", required_span_with("Answer Type") %>
-    <%= select_tag "answer_type", "<option val=""></option>".html_safe + options_for_select(QuesAndAns::ANSWER_TYPE.map.with_index { |p,i| [p, i] }), class: "select2 answer-type", data: { count: @count }, name: "qa[][#{@count}][answer_type]", id: "answer_type_#{@count}" %>
+    <%= select_tag "answer_type", "<option value=""></option>".html_safe + options_for_select(QuesAndAns::ANSWER_TYPE.map.with_index { |p,i| [p, i] }), class: "select2 answer-type", data: { count: @count }, name: "qa[][#{@count}][answer_type]", id: "answer_type_#{@count}" %>
   </div>
 
   <div class="answer-choices answer-choices-<%= @count %>">
     <%#= answer_choices_for(f.object) %>
   </div>
 </div>
-<input type="hidden" class="last-count" val="<%= @count %>">
+<input type="hidden" class="last-count" value="<%= @count %>">

@@ -37,18 +37,34 @@
     <%= f.submit %>
   </div>
 <% end %>
-<%= link_to "Add More Question", add_question_mock_tests_path(@count), data: { remote: true } %>
+<%= link_to "Add More Question", add_question_mock_tests_path(@count), data: { remote: true }, id: "add_more_question" %>
 
 <div id="modal_boxes">
-  <div class="modal fade" id="answer_type_modal_0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal fade"  style="display:none;" id="answer_type_modal_0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span class="sr-only">Close</span></button>
-          <h4 class="modal-title blue" id="myModalLabel">Enter Multiple Choices for the question</h4>
+          <h4 class="modal-title blue" id="myModalLabel1">Enter Multiple Choices for the question</h4>
         </div>
         <div class="modal-body">
-        <%= render partial: 'multiple_choices' %>
+        <%= render partial: 'multiple_choices', locals: { name: "checkbox" } %>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="answer_type_modal_1" tabindex="-2" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true" style="display:none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span class="sr-only">Close</span></button>
+          <h4 class="modal-title blue" id="myModalLabel2">Enter Multiple Choices for the question</h4>
+        </div>
+        <div class="modal-body">
+        <%= render partial: 'multiple_choices', locals: { name: "radio" } %>
         </div>
         <div class="modal-footer">
           <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
