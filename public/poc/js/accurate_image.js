@@ -47,24 +47,7 @@ var AccurateImage = {
   thisBrickItemX: 0,
   thisBrickItemY: 0,
   useDefaultWallBricksArray: false,
-  defaultWallBricksArray: [
-      [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,2],
-      [3,14,0,12,10,8,9,15,11,6,4,2,1,5,7,13,0],
-      [15,13,11,9,7,5,3,1,2,0,14,12,10,8,6,4,15],
-      [14,2,10,8,6,4,12,0,15,13,11,9,7,5,3,1,13],
-      [13,11,9,7,5,3,1,2,4,6,8,10,12,14,0,15,8],
-      [12,10,8,6,4,2,14,0,1,3,5,7,9,15,11,13,3],
-      [11,9,7,5,3,1,13,15,2,4,6,8,10,12,14,0,11],
-      [10,8,0,6,14,4,12,1,3,15,2,5,7,9,11,13,9],
-      [9,15,14,13,0,2,3,8,7,11,10,12,8,1,4,5,10],
-      [8,15,0,7,2,1,9,3,10,4,11,5,12,14,13,6,12],
-      [7,0,15,14,13,11,6,12,10,9,8,5,4,3,2,1,14],
-      [6,1,2,0,8,9,10,15,14,13,12,11,7,4,5,3,1],
-      [5,15,10,1,0,2,13,11,4,3,14,12,8,6,7,9,4],
-      [4,9,3,11,8,15,14,12,13,7,6,10,5,2,0,1,5],
-      [1,10,0,13,2,11,9,15,14,12,5,4,3,7,6,8,6],
-      [2,12,3,11,9,13,0,1,4,7,8,6,10,5,15,14,7]
-    ],
+  defaultWallBricksArray: null,
 
   baseUnit: 1, // in pxels
   inchPixels: 32, // one inch is 32 pixles
@@ -822,6 +805,59 @@ var AccurateImage = {
     this.initialCoursing = this.selectedCoursing;
   },
 
+  getRandomImgURLsIndexArrayForWall: function(){
+    var i=0, j=0, array=[];
+
+    while(true){
+      if(i > 15){
+        break;
+      }
+      array[i] = [];
+      while(true) {
+        if(array[i].length >= this.maxImageVariant){
+          j = 0;
+          break;
+        }
+
+        if(i == 0){
+          if(j == 0){
+            array[i][j] = Math.floor(Math.random() * 16);
+          }
+          else{
+            while(true) {
+              z = Math.floor(Math.random() * 16);
+              if(array[i][j - 1] != z){
+                array[i][j] =  z;
+                break;
+              }
+            }
+          }
+        }else if( i > 0){
+          if( j > 0){
+            while(true){
+              z = Math.floor(Math.random() * 16);
+              if(array[i][j - 1] != z && array[i - 1][j - 1] != z && array[i-1][j] != z && array[i-1][j+1] != z){
+                array[i][j] = z;
+                break;
+              }
+            }
+          }else{
+            while(true){
+              z = Math.floor(Math.random() * 16);
+              if(array[i - 1][j] != z && array[i-1][j+1] != z){
+                array[i][j] = z;
+                break;
+              }
+            }
+          }
+        }
+        ++j;
+      }
+      ++i;
+    }
+    return array;
+  },
+
   drawWall: function(){
     var elementPosition,
         evenRow,
@@ -832,6 +868,7 @@ var AccurateImage = {
 
     this.setInitialDefaults();
     this.useDefaultWallBricksArray = true;
+    this.defaultWallBricksArray = this.getRandomImgURLsIndexArrayForWall();
 
     for(var i=0; i < this.dimensionY; i++){
       this.rowNumber  = i;
@@ -1055,3 +1092,22 @@ var AccurateImage = {
   }
 
 };
+
+[
+  [8, 14, 1, 3, 6, 13, 15, 8, 10, 9, 10, 0, 7, 12, 10, 4],
+  [15, 3, 5, 15, 12, 7, 6, 11, 7, 6, 1, 14, 10, 9, 8, 12],
+  [11, 10, 8, 3, 10, 1, 5, 8, 5, 15, 0, 8, 5, 6, 2, 3],
+  [7, 15, 12, 7, 4, 3, 6, 14, 10, 8, 12, 3, 14, 15, 5, 14],
+  [9, 4, 8, 1, 15, 13, 1, 4, 15, 9, 6, 4, 10, 2, 3, 1],
+  [13, 1, 2, 14, 8, 6, 0, 13, 1, 14, 13, 12, 0, 1, 7, 6],
+  [4, 11, 0, 1, 5, 10, 8, 10, 15, 6, 11, 4, 15, 8, 4, 14],
+  [9, 10, 2, 9, 8, 9, 15, 6, 12, 3, 13, 6, 14, 3, 13, 5],
+  [12, 5, 15, 7, 10, 2, 4, 3, 14, 6, 12, 7, 4, 0, 7, 0],
+  [1, 10, 2, 12, 9, 12, 15, 5, 2, 11, 9, 11, 12, 1, 12, 1],
+  [7, 11, 4, 15, 7, 10, 6, 0, 9, 7, 8, 14, 4, 7, 10, 4],
+  [3, 9, 8, 0, 4, 15, 2, 1, 13, 0, 9, 3, 10, 2, 13, 14],
+  [10, 12, 5, 1, 10, 9, 8, 15, 2, 3, 7, 4, 13, 6, 3, 9],
+  [8, 4, 3, 11, 6, 5, 13, 14, 10, 14, 15, 0, 9, 2, 5, 6],
+  [13, 7, 13, 5, 12, 11, 1, 4, 12, 7, 3, 1, 3, 6, 1, 7],
+  [3, 15, 14, 9, 0, 2, 0, 13, 1, 5, 0, 11, 2, 15, 2, 10]
+]
