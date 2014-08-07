@@ -198,7 +198,7 @@ var AccurateImage = {
   },
 
   setRandomBrick: function(element){
-    var i,x,y, array = this.getRandomArray();
+    var i,x,y, imgIndex = parseInt(element.data("imgindex")),array = this.getRandomArray();
 
     if(this.useDefaultWallBricksArray){
       this.imgIndex = this.defaultWallBricksArray[this.thisBrickItemX][this.thisBrickItemY];
@@ -206,10 +206,10 @@ var AccurateImage = {
       x = this.thisBrickItemX;
       y = this.thisBrickItemY;
       for(i=0; i < array.length; i ++){
-        if(this.previousRowOk(array[i],x,y) && this.currentRowOk(array[i],x,y) && this.nextRowOk(array[i],x,y) ){
+        if(this.previousRowOk(array[i],x,y) && this.currentRowOk(array[i],x,y) && this.nextRowOk(array[i],x,y) && imgIndex != array[i]){
+          console.log("current index is - " + imgIndex + ", array index is - " + array[i]);
           element.find("img:first").attr("src", this.getBrick().imgUrlArray[array[i]]);
           element.data("imgindex", array[i]);
-          console.log(array[i]);
           this.imgIndex = this.bricksArray[x][y] = array[i];
           break;
         }
@@ -340,7 +340,7 @@ var AccurateImage = {
     var imgIndex = brick.imgUrlArray.indexOf(brick.imgUrl);
 
     return  '\
-              <span id=item-"'+ elementPosition +'" data-imgIndex="'+ imgIndex +'" data-coursing="'+ this.getCoursing() +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
+              <span id="item-'+ elementPosition +'" data-imgIndex="'+ imgIndex +'" data-coursing="'+ this.getCoursing() +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
                 <span style="'+ this.innerDivstyle() +'">\
                   <img style="'+ this.brickImgStyle(brick) +'" src="'+ brick.imgUrl +'">\
                 </span>\
@@ -449,7 +449,6 @@ var AccurateImage = {
       }
 
       element.find("img").attr("src", brick.imgUrl);
-      element.data("imgindex", brick.imgUrlArray.indexOf(brick.imgUrl));
       element.find("img").css({"height": brick.height, "width": brick.width});
       element.find("img").css({"width": brick.width });
       element.css({"width": brick.width + mortar.right + mortar.left});
