@@ -207,7 +207,6 @@ var AccurateImage = {
       y = this.thisBrickItemY;
       for(i=0; i < array.length; i ++){
         if(this.previousRowOk(array[i],x,y) && this.currentRowOk(array[i],x,y) && this.nextRowOk(array[i],x,y) && imgIndex != array[i]){
-          console.log("current index is - " + imgIndex + ", array index is - " + array[i]);
           element.find("img:first").attr("src", this.getBrick().imgUrlArray[array[i]]);
           element.data("imgindex", array[i]);
           this.imgIndex = this.bricksArray[x][y] = array[i];
@@ -237,8 +236,6 @@ var AccurateImage = {
   getBrick: function(){
     var brick, coursing;
 
-    this.setImageIndex();
-
     if(this.useInitiallySelectedBrick){
       brick = this.initialSelectedBrick;
     }else{
@@ -264,7 +261,7 @@ var AccurateImage = {
         brick = brick.header;
         break;
     }
-
+    this.setImageIndex();
     brick.imgUrl = brick.imgUrlArray[this.imgIndex];
     return brick;
   },
@@ -338,7 +335,6 @@ var AccurateImage = {
     var brick = this.getBrick();
     var mortar = this.getMortar();
     var imgIndex = brick.imgUrlArray.indexOf(brick.imgUrl);
-
     return  '\
               <span id="item-'+ elementPosition +'" data-imgIndex="'+ imgIndex +'" data-coursing="'+ this.getCoursing() +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
                 <span style="'+ this.innerDivstyle() +'">\
@@ -841,7 +837,6 @@ var AccurateImage = {
       this.rowNumber  = i;
       evenRow         = i%2 == 0 ? true : false;
       rowContainer    = $('<span data-stagger="'+ (evenRow ? NONE : this.selectedStagger) +'" data-coursing="'+ this.selectedCoursing +'" style="width: '+ this.calulateRowWidth() +'px; height:'+ this.calulateRowHeight() +'px;" class="row row-'+ (i + 1) +'" data-row="'+ (i + 1) +'"></span>');
-      this.bricksArray[i] = [];
       this.thisBrickItemX = i;
 
       for(var j=0; j < this.dimensionX; j++){
@@ -864,7 +859,7 @@ var AccurateImage = {
 
     this.rowNumber = null;
     this.useDefaultWallBricksArray = false;
-    this.bricksArray = this.defaultWallBricksArray;
+    this.bricksArray = $.extend(true, [], this.defaultWallBricksArray);
     this.enableContextMenu();
   },
 
