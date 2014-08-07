@@ -3,7 +3,8 @@ var HALF = 2,
     NONE = 0,
     STANDARD = 0,
     RUNNING = 1,
-    HEADERS = 2;
+    HEADERS = 2,
+    UNDEFINED = "undefined";
 
 var staggerArray = [NONE, HALF, ONE_THIRD];
 
@@ -41,25 +42,28 @@ var AccurateImage = {
   selectedCoursing: 0, // 0 means standard, it is the index of coursingtypes array
   bricksArray: [],
   thisBrickItem: null,
+  maxImageVariant: 17,
+  imgIndex: null,
   thisBrickItemX: 0,
   thisBrickItemY: 0,
+  useDefaultWallBricksArray: false,
   defaultWallBricksArray: [
-      [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
-      [3,14,0,12,10,8,9,15,11,6,4,2,1,5,7,13],
-      [15,13,11,9,7,5,3,1,2,0,14,12,10,8,6,4],
-      [14,2,10,8,6,4,12,0,15,13,11,9,7,5,3,1],
-      [13,11,9,7,5,3,1,2,4,6,8,10,12,14,0,15],
-      [12,10,8,6,4,2,14,0,1,3,5,7,9,15,11,13],
-      [11,9,7,5,3,1,13,15,2,4,6,8,10,12,14,0],
-      [10,8,0,6,14,4,12,1,3,15,2,5,7,9,11,13],
-      [9,15,14,13,0,2,3,8,7,11,10,12,8,1,4,5],
-      [8,15,0,7,2,1,9,3,10,4,11,5,12,14,13,6],
-      [7,0,15,14,13,11,6,12,10,9,8,5,4,3,2,1],
-      [6,1,2,0,8,9,10,15,14,13,12,11,7,4,5,3],
-      [5,15,10,1,0,2,13,11,4,3,14,12,8,6,7,9],
-      [4,9,3,11,8,15,14,12,13,7,6,10,5,2,0,1],
-      [1,10,0,13,2,11,9,15,14,12,5,4,3,7,6,8],
-      [2,12,3,11,9,13,0,1,4,7,8,6,10,5,15,14],
+      [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,2],
+      [3,14,0,12,10,8,9,15,11,6,4,2,1,5,7,13,0],
+      [15,13,11,9,7,5,3,1,2,0,14,12,10,8,6,4,15],
+      [14,2,10,8,6,4,12,0,15,13,11,9,7,5,3,1,13],
+      [13,11,9,7,5,3,1,2,4,6,8,10,12,14,0,15,8],
+      [12,10,8,6,4,2,14,0,1,3,5,7,9,15,11,13,3],
+      [11,9,7,5,3,1,13,15,2,4,6,8,10,12,14,0,11],
+      [10,8,0,6,14,4,12,1,3,15,2,5,7,9,11,13,9],
+      [9,15,14,13,0,2,3,8,7,11,10,12,8,1,4,5,10],
+      [8,15,0,7,2,1,9,3,10,4,11,5,12,14,13,6,12],
+      [7,0,15,14,13,11,6,12,10,9,8,5,4,3,2,1,14],
+      [6,1,2,0,8,9,10,15,14,13,12,11,7,4,5,3,1],
+      [5,15,10,1,0,2,13,11,4,3,14,12,8,6,7,9,4],
+      [4,9,3,11,8,15,14,12,13,7,6,10,5,2,0,1,5],
+      [1,10,0,13,2,11,9,15,14,12,5,4,3,7,6,8,6],
+      [2,12,3,11,9,13,0,1,4,7,8,6,10,5,15,14,7]
     ],
 
   baseUnit: 1, // in pxels
@@ -115,7 +119,7 @@ var AccurateImage = {
   },
 
   notDefinedProducts: function(){
-    if(typeof(this.products) === "undefined" || this.products == null){
+    if(typeof(this.products) === UNDEFINED || this.products == null){
       return true;
     }else{
       return false;
@@ -123,7 +127,7 @@ var AccurateImage = {
   },
 
   notDefined: function(element){
-    if(typeof(element) === "undefined" || element == null){
+    if(typeof(element) === UNDEFINED || element == null){
       return true;
     }else{
       return false;
@@ -149,8 +153,91 @@ var AccurateImage = {
     }
   },
 
+  previousRowOk: function(i,x,y){
+    if(typeof(this.bricksArray[x - 1]) === UNDEFINED){
+      return true;
+    }else if(i != this.bricksArray[x - 1][y - 1] && i != this.bricksArray[x - 1][y] && i != this.bricksArray[x - 1][y + 1]){
+      return true;
+    }else{
+      return false;
+    }
+  },
+
+  currentRowOk: function(i,x,y){
+    if(i != this.bricksArray[x][y - 1] && i != this.bricksArray[x][y + 1]){
+      return true;
+    }else{
+      return false;
+    }
+  },
+
+  nextRowOk: function(i,x,y){
+    if(typeof(this.bricksArray[x + 1]) === UNDEFINED){
+      return true;
+    }else if(i != this.bricksArray[x + 1][y - 1] && i != this.bricksArray[x + 1][y] && i != this.bricksArray[x + 1][y + 1]){
+      return true;
+    }else{
+      return false;
+    }
+  },
+
+  getRandomArray: function(){
+    var val, array = [];
+
+    for(var i=0; i < 16;){
+      val = Math.floor(Math.random() * 16);
+      if(array.indexOf(val) == -1){
+        array.push(val);
+        i++;
+      }
+      if(array.length >= 16){
+        break;
+      }
+    }
+    return array;
+  },
+
+  setRandomBrick: function(element){
+    var i,x,y, array = this.getRandomArray();
+
+    if(this.useDefaultWallBricksArray){
+      this.imgIndex = this.defaultWallBricksArray[this.thisBrickItemX][this.thisBrickItemY];
+    }else{
+      x = this.thisBrickItemX;
+      y = this.thisBrickItemY;
+      for(i=0; i < array.length; i ++){
+        if(this.previousRowOk(array[i],x,y) && this.currentRowOk(array[i],x,y) && this.nextRowOk(array[i],x,y) ){
+          element.find("img:first").attr("src", this.getBrick().imgUrlArray[array[i]]);
+          element.data("imgindex", array[i]);
+          console.log(array[i]);
+          this.imgIndex = this.bricksArray[x][y] = array[i];
+          break;
+        }
+      }
+    }
+  },
+
+  setImageIndex: function(){
+    var i,x,y, array = this.getRandomArray();
+
+    if(this.useDefaultWallBricksArray){
+      this.imgIndex = this.defaultWallBricksArray[this.thisBrickItemX][this.thisBrickItemY];
+    }else{
+      x = this.thisBrickItemX;
+      y = this.thisBrickItemY;
+      for(i=0; i < array.length; i ++){
+        if(this.previousRowOk(array[i],x,y) && this.currentRowOk(array[i],x,y) && this.nextRowOk(array[i],x,y) ){
+          this.imgIndex = this.bricksArray[x][y] = array[i];
+          break;
+        }
+      }
+    }
+  },
+
   getBrick: function(){
     var brick, coursing;
+
+    this.setImageIndex();
 
     if(this.useInitiallySelectedBrick){
       brick = this.initialSelectedBrick;
@@ -166,15 +253,20 @@ var AccurateImage = {
 
     switch(coursing){
       case STANDARD:
-        return brick;
+        // return brick;
         break;
       case RUNNING:
-        return brick.running;
+        // return brick.running;
+        brick = brick.running
         break;
       case HEADERS:
-        return brick.header;
+        // return brick.header;
+        brick = brick.header;
         break;
     }
+
+    brick.imgUrl = brick.imgUrlArray[this.imgIndex];
+    return brick;
   },
 
   getMortar: function(){
@@ -227,8 +319,7 @@ var AccurateImage = {
   innerDivstyle: function(){
     return "margin:" + this.innerDivStyleCalc();
   },
-  brickImgStyle: function(){
-    var brick = this.getBrick();
+  brickImgStyle: function(brick){
     return "height:" + brick.height + "px; width:" + brick.width + "px;";
   },
 
@@ -246,25 +337,25 @@ var AccurateImage = {
   renderEvenWallHtml: function(elementPosition){
     var brick = this.getBrick();
     var mortar = this.getMortar();
+    var imgIndex = brick.imgUrlArray.indexOf(brick.imgUrl);
+
     return  '\
-              <span data-coursing="'+ this.getCoursing() +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
+              <span id=item-"'+ elementPosition +'" data-imgIndex="'+ imgIndex +'" data-coursing="'+ this.getCoursing() +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
                 <span style="'+ this.innerDivstyle() +'">\
-                  <img style="'+ this.brickImgStyle() +'" src="'+ brick.imgUrl +'">\
+                  <img style="'+ this.brickImgStyle(brick) +'" src="'+ brick.imgUrl +'">\
                 </span>\
               </span>\
             ';
   },
 
-  calcNumberOfBricksX: function(width){
-    var brick = this.getBrick();
+  calcNumberOfBricksX: function(width, brick){
     var mortar = this.getMortar();
     var brickWithMortorSize = brick.width + mortar.left + mortar.right;
 
     return parseInt((width / brickWithMortorSize));
   },
 
-  calcNumberOfBricksY: function(width){
-    var brick = this.getBrick();
+  calcNumberOfBricksY: function(width, brick){
     var mortar = this.getMortar();
     var brickWithMortorSize = brick.height + mortar.left + mortar.right;
 
@@ -283,11 +374,15 @@ var AccurateImage = {
 
   fillCoursingFor: function(element, coursingType, performRowCoursing){
     var elementCoursing = parseInt(element.data("coursing"));
-    var row = element.parent()
+    var row = element.parent();
     var rowCoursing = parseInt(element.parent().data("coursing"));
     var lastBrickIndex, lastElWidth, lastElImgWidth;
-    var margin = occupiedWidth = width = 0, brick = this.getBrick();
+    var margin = occupiedWidth = width = 0, brick;
     var stagger, rowWidth, numberOfBricksX, elementPosition, mortar, el;
+
+    this.thisBrickItemX = parseInt(row.data("row")) - 1;
+    this.thisBrickItemY = parseInt(element.data("brick_index").split("-")[1]);
+    brick = this.getBrick();
 
     // if brick height is different we will perform row coursing
     if(!(row.height() == (brick.height + this.selectedMortar.top + this.selectedMortar.bottom))){
@@ -299,10 +394,14 @@ var AccurateImage = {
 
     if(performRowCoursing){
       rowWidth = row.width();
-      numberOfBricksX = this.calcNumberOfBricksX(rowWidth);
+      numberOfBricksX = this.calcNumberOfBricksX(rowWidth, brick);
       row.html("");
+      // Empty bricks array as we going to redraw the full row
+      this.bricksArray[this.rowNumber] = [];
+      this.thisBrickItemX = this.rowNumber - 1;
 
       for(var j=0; j < numberOfBricksX; j++){
+        this.thisBrickItemY = j;
         elementPosition = this.rowNumber - 1 + "-" + j
         row.append(this.renderEvenWallHtml(elementPosition));
       }
@@ -314,11 +413,13 @@ var AccurateImage = {
 
       occupiedWidth = this.calcOccupiedWidth(row) - margin;
       if(row.width() != occupiedWidth){
+        this.thisBrickItemY = j;
         elementPosition = this.rowNumber - 1 + "-" + j;
         row.append(this.renderEvenWallHtml(elementPosition));
         width = row.width() - occupiedWidth;
         maxWidth = this.getBrick().width + this.selectedMortar.left + this.selectedMortar.right;
         if(width > maxWidth){
+          this.thisBrickItemY = j + 1;
           elementPosition = this.rowNumber - 1 + "-" + (j + 1);
           row.append(this.renderEvenWallHtml(elementPosition));
           width = width - maxWidth;
@@ -331,6 +432,8 @@ var AccurateImage = {
       this.fillRowMortar();
     } // End if for performRowCoursing
     else{
+      this.thisBrickItemX = parseInt(row.data("row")) - 1;
+      this.thisBrickItemY = parseInt(element.data("brick_index").split("-")[1]);
       brick = this.getBrick();
       mortar = this.getMortar();
 
@@ -346,6 +449,7 @@ var AccurateImage = {
       }
 
       element.find("img").attr("src", brick.imgUrl);
+      element.data("imgindex", brick.imgUrlArray.indexOf(brick.imgUrl));
       element.find("img").css({"height": brick.height, "width": brick.width});
       element.find("img").css({"width": brick.width });
       element.css({"width": brick.width + mortar.right + mortar.left});
@@ -367,10 +471,12 @@ var AccurateImage = {
         this.useInitiallySelectedCoursing  = this.useInitiallySelectedBrick = this.useInitiallySelectedMortar = true;
       }
 
-      numberOfBricksX = this.calcNumberOfBricksX(width);
+      numberOfBricksX = this.calcNumberOfBricksX(width, brick);
 
       for(var i=0; i < numberOfBricksX; i ++){
-        elementPosition = this.rowNumber - 1 + "-" + (i + 1 + parseInt(row.find(".item:last").data("brick_index").split("-")[1]));
+        j = (i + 1 + parseInt(row.find(".item:last").data("brick_index").split("-")[1]));
+        this.thisBrickItemY = j;
+        elementPosition = this.rowNumber - 1 + "-" + j;
         row.append(this.renderEvenWallHtml(elementPosition));
         this.fillMortarItem(row.find("span.item:last"));
       }
@@ -381,7 +487,9 @@ var AccurateImage = {
       brick = this.getBrick();
 
       if(row.width() > occupiedWidth){
-        elementPosition = this.rowNumber - 1 + "-" + (lastBrickIndex + 1);
+        j = (lastBrickIndex + 1);
+        this.thisBrickItemY = j;
+        elementPosition = this.rowNumber - 1 + "-" + j;
         row.append(this.renderEvenWallHtml(elementPosition));
         this.fillMortarItem(row.find("span.item:last"));
 
@@ -389,7 +497,9 @@ var AccurateImage = {
         maxWidth = brick.width + this.selectedMortar.left + this.selectedMortar.right;
 
         if(width > maxWidth){
-          elementPosition = this.rowNumber - 1 + "-" + (lastBrickIndex + 2);
+          j = (lastBrickIndex + 2);
+          this.thisBrickItemY = j;
+          elementPosition = this.rowNumber - 1 + "-" + j;
           row.append(this.renderEvenWallHtml(elementPosition));
           this.fillMortarItem(row.find("span.item:last"));
           width = width - maxWidth;
@@ -417,10 +527,8 @@ var AccurateImage = {
         width = row.width() - this.calcOccupiedWidth(row) + row.find("span.item:last").width() + marginFront;
         row.find("span.item:last").css("width", width + "px");
       }
-
       this.useInitiallySelectedCoursing  = this.useInitiallySelectedBrick = this.useInitiallySelectedMortar = false;
     } // End of else part
-
 
   },
 
@@ -540,7 +648,6 @@ var AccurateImage = {
     if(lastElement){
       style = this.staggeredLastElementStyle();
     }
-
     return style;
   },
 
@@ -551,11 +658,12 @@ var AccurateImage = {
     }else{
       var style = this.staggeredElementStyle(elementPosition);
       var brick = this.getBrick();
+      var imgIndex = brick.imgUrlArray.indexOf(brick.imgUrl);
     }
     return  '\
-              <span data-coursing="'+ this.selectedCoursing +'" style="'+ style +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
+              <span id="item-'+ elementPosition +'" data-imgIndex="'+ imgIndex +'" data-coursing="'+ this.selectedCoursing +'" style="'+ style +'" class="item" data-row="'+ this.rowNumber +'" data-brick_index="'+ elementPosition +'" data-image_id="'+ brick.id +'">\
                 <span style="'+ this.innerDivstyle() +'">\
-                  <img style="'+ this.brickImgStyle() +'" src="'+ brick.imgUrl +'">\
+                  <img style="'+ this.brickImgStyle(brick) +'" src="'+ brick.imgUrl +'">\
                 </span>\
               </span>\
             ';
@@ -728,6 +836,7 @@ var AccurateImage = {
     wallContainer.html("");
 
     this.setInitialDefaults();
+    this.useDefaultWallBricksArray = true;
 
     for(var i=0; i < this.dimensionY; i++){
       this.rowNumber  = i;
@@ -743,18 +852,20 @@ var AccurateImage = {
 
         if(!evenRow && this.selectedStagger != NONE && (j+1) == this.dimensionX){
           ++j;
+          this.thisBrickItemY = j;
           elementPosition = i + "-" + j;
           this.renderWallBrick(evenRow, elementPosition, rowContainer);
         }
-
       }
-
       wallContainer.append(rowContainer);
       wallContainer.append(this.renderBreakWallBrickHtml());
-
     }
+
     this.fillMortarFull();
+
     this.rowNumber = null;
+    this.useDefaultWallBricksArray = false;
+    this.bricksArray = this.defaultWallBricksArray;
     this.enableContextMenu();
   },
 
@@ -931,10 +1042,10 @@ var AccurateImage = {
   },
 
   zoomWallBy: function(scale, container, setScale){
-    if(typeof(container) === "undefined" || container == null){
+    if(typeof(container) === UNDEFINED || container == null){
       container = "div#full-wall";
     }
-    if(typeof(setScale) === "undefined" || setScale == null){
+    if(typeof(setScale) === UNDEFINED || setScale == null){
       setScale = true;
     }
     if(setScale){

@@ -38,7 +38,7 @@ products = [
             name: "Brick1",
             height: 40,
             width: 100,
-            imgUrlArray: ["images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg","images/brick_1_1.jpg"],
+            imgUrlArray: ["images/brick_1_1.jpg","images/brick_1_2.jpg","images/brick_1_3.jpg","images/brick_1_4.jpg","images/brick_1_5.jpg","images/brick_1_6.jpg","images/brick_1_7.jpg","images/brick_1_8.jpg","images/brick_1_9.jpg","images/brick_1_10.jpg","images/brick_1_11.jpg","images/brick_1_12.jpg","images/brick_1_13.jpg","images/brick_1_14.jpg","images/brick_1_15.jpg","images/brick_1_16.jpg"],
             imgUrl: "images/brick_1_1.jpg",
             running: {
              imgUrl: "images/brick_r_1_1.jpg",
@@ -58,8 +58,8 @@ products = [
           {
             id: "Brick2",
             name: "Brick2",
-            height: 35,
-            width: 105,
+            height: 40,
+            width: 100,
             imgUrlArray: ["images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg","images/brick_1_2.jpg"],
             imgUrl: "images/brick_1_2.jpg",
             running: {
