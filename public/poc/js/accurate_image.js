@@ -776,12 +776,22 @@ var AccurateImage = {
     this.staggerRow();
   },
 
+  setBrickFor: function(el, brickIndex){
+    el.find("img:first").attr("src", this.selectedBrick.imgUrlArray[brickIndex])
+  },
+
   enableContextMenu: function(){
     $(".item").contextMenu({
       menu: 'AIMenu'
       }, function(action, el, pos) {
-        AccurateImage.rowNumber = parseInt(el.parent().data("row"));
-        AccurateImage[action]();
+        var regex = /^set-/;
+        if(regex.test(action)){
+          AccurateImage.setBrickFor(el, (parseInt(action.split("-")[1]) -1));
+        }else{
+          AccurateImage.rowNumber = parseInt(el.parent().data("row"));
+          AccurateImage[action]();
+        }
+
         AccurateImage.pushChangeToUndoRedoStack();
         AccurateImage.enableContextMenu();
     });

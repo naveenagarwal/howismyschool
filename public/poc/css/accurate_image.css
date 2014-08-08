@@ -107,3 +107,28 @@ body{
 form#customWallForm input{
   width: 50px;
 }
+
+li.list-menu > ul.sub-menu{
+  display: none;
+  background-color: #eee;
+  display: none;
+  left: 201px;
+  list-style-type: disc;
+  position: absolute;
+  top: 0;
+  width: 100px;
+}
+
+li.list-menu:hover > .sub-menu{
+  display: block;
+  background-color: #eee;
+}
+
+.contextMenu li.list-menu:hover > a {
+  background-color: #eee;
+  color: #333;
+}
+
+li.list-menu:hover ul.sub-menu li:hover {
+  background-color: #3399FF;
+}
