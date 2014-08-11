@@ -33,4 +33,14 @@ Student.initializeStudentScoreCharts = function(){
         Charts.drawStudentScore(url, student, container, xlabel);
       });
   }
+
+  $(document).on("click", "#student_generic_modalbox_link", function(){
+    $("#student_more_modalboxdal").hide();
+    $("#student_generic_modalboxdal").show();
+  });
+
+  $(document).on("click", "#student_more_modalbox_link", function(){
+    $("#student_more_modalboxdal").show();
+    $("#student_generic_modalboxdal").hide();
+  });
 };

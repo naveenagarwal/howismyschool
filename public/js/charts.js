@@ -197,7 +197,7 @@ Charts.drawStudentScore = function(dataURL, student, container, labelX, labelY){
 
     for(dataset in data){
       $("#" + container).append(Charts.createChartBlock(i));
-      Charts.drawChartFromArray(data[dataset].data, "student_chart_container" + i, xlabel, ylabel).resize(700, 350);
+      Charts.drawChartFromArray(data[dataset].data, "student_chart_container" + i, xlabel, ylabel).resize(1200, 350);
       i++;
     }
 

@@ -1,7 +1,7 @@
-<%= link_to 'General Details', "javascript:void(0);", data: { toggle: "modal", target: "#student_generic_modalboxdal" } %> |
+<%= link_to 'General Details', "javascript:void(0);", data: { toggle: "modal", target: "#student_generic_modalboxdal" }, id: "student_generic_modalbox_link" %> |
 <%= link_to 'Edit', edit_student_path(@student) %> |
 <%= link_to 'Back', students_path %> |
-<%= link_to 'More', "javascript:void(0);", data: { toggle: "modal", target: "#student_more_modalboxdal" } %>
+<%= link_to 'More', "javascript:void(0);", data: { toggle: "modal", target: "#student_more_modalboxdal" }, id: "student_more_modalbox_link" %>
 
 <% if @student.has_test_results_for_current_year? %>
 
