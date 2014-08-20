@@ -91,4 +91,38 @@ class ApplicationController < ActionController::Base
     return redirect_to root_url unless current_session?
   end
 
+  def get_class_rooms_array_for_select_option
+    ClassRoom.get_class_rooms_array_for_select_option(
+        school_branch_id: current_school_branch.id
+      )
+  end
+
+  def get_students_array_for_select_option
+    Student.get_students_array_for_select_option(
+        school_branch_id: current_school_branch.id
+      )
+  end
+
+  def get_class_tests_array_for_select_option
+    ClassTest.get_class_tests_array_for_select_option(
+        school_branch_id: current_school_branch.id
+      )
+  end
+
+  def get_subjects_array_for_select_option
+    Subject.get_subjects_array_for_select_option(
+        school_branch_id: current_school_branch.id
+      )
+  end
+
+  def default_chart_hash(chart_type)
+    {
+      "JSChart" => {
+        "datasets" => [{
+            "type" =>  chart_type
+          }]
+        }
+    }
+  end
+
 end

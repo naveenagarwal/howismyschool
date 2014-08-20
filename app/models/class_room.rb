@@ -119,6 +119,14 @@ class ClassRoom < ActiveRecord::Base
       ).group("class_test_name, class_test_id")
   end
 
+  def distinct_class_test_ids
+    TestResult.select("distinct(class_test_id)").where(class_room_id: id).pluck(:class_test_id)
+  end
+
+  def distinct_subject_ids
+    TestResult.select("distinct(subject_id)").where(class_room_id: id).pluck(:subject_id)
+  end
+
   private
 
   def testwise_array_for_bar_chart(order: "DESC")

@@ -1,0 +1,17 @@
+<%= form_for(@look_up) do |f| %>
+  <% if @look_up.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@look_up.errors.count, "error") %> prohibited this look_up from being saved:</h2>
+
+      <ul>
+      <% @look_up.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   resources :subjects
   resources :students
 
-  resources :test_results, except: [ :edit ] do
+  resources :test_results, except: [:edit] do
     member do
       get 'for_edit'
     end
@@ -79,7 +79,7 @@ Rails.application.routes.draw do
   resources :uploaded_test_results, except: [:edit, :update]
   resources :documents, except: [:edit, :update]
 
-  resources :search, only: [ :index, :create, :show ]
+  resources :search, only: [:index, :create, :show]
 
   get 'my_account' => 'my_accounts#index'
   get 'my_account/more_details' => 'my_accounts#more_details'
@@ -97,6 +97,13 @@ Rails.application.routes.draw do
   resources :mock_tests do
     collection do
       get 'add_question/:count' => 'mock_tests#add_question', as: :add_question
+    end
+  end
+
+  resources :look_ups, only: [:index] do
+    collection do
+      post 'show' => 'look_ups#show', as: :show
+      get 'get_data'
     end
   end
 

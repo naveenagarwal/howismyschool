@@ -102,16 +102,6 @@ module Charts
 
     protected
 
-    def default_chart_hash(chart_type)
-      {
-        "JSChart" => {
-          "datasets" => [{
-              "type" =>  chart_type
-            }]
-          }
-      }
-    end
-
     def test_results_for_class_room(class_room)
       test_results = TestResult.where(class_room_id: class_room.id, year: TimeExt.current_year)
       class_test_ids = test_results.order("id").pluck(:class_test_id).uniq

@@ -115,21 +115,10 @@ class TestResultsController < ApplicationController
     end
 
     def get_arrays_for_select_options
-      @class_rooms_array = ClassRoom.get_class_rooms_array_for_select_option(
-            school_branch_id: current_school_branch.id
-          )
-
-      @students_array = Student.get_students_array_for_select_option(
-            school_branch_id: current_school_branch.id
-          )
-
-      @class_tests_array = ClassTest.get_class_tests_array_for_select_option(
-            school_branch_id: current_school_branch.id
-          )
-
-      @subjects_array = Subject.get_subjects_array_for_select_option(
-            school_branch_id: current_school_branch.id
-          )
+      @class_rooms_array  = get_class_rooms_array_for_select_option
+      @students_array     = get_students_array_for_select_option
+      @class_tests_array  = get_class_tests_array_for_select_option
+      @subjects_array     = get_subjects_array_for_select_option
     end
 
 end

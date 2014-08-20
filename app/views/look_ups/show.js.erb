@@ -1,0 +1,26 @@
+$('#look-up-charts').html('');
+var data;
+
+<% if @look_up.class_room_average_test_result.present? %>
+
+  data = JSON.parse('<%= @look_up.class_room_average_test_result.to_json.html_safe %>');
+  $('#class_room_avg_result').parent().find('.absoulte-position strong').html('Average Test scores For Class Room');
+  Charts.drawChartFromArray(data, 'class_room_avg_result', 'Class Test' , 'Percentage(%)');
+
+<% end %>
+
+<% if @look_up.class_room_minimum_test_result.present? %>
+
+  data = JSON.parse('<%= @look_up.class_room_minimum_test_result.to_json.html_safe %>');
+  $('#class_room_min_result').parent().find('.absoulte-position strong').html('Minimum Test scores For Class Room');
+  Charts.drawChartFromArray(data, 'class_room_min_result', 'Class Test' , 'Percentage(%)');
+
+<% end %>
+
+<% if @look_up.class_room_maximum_test_result.present? %>
+
+  data = JSON.parse('<%= @look_up.class_room_maximum_test_result.to_json.html_safe %>');
+  $('#class_room_max_result').parent().find('.absoulte-position strong').html('Maximum Test scores For Class Room');
+  Charts.drawChartFromArray(data, 'class_room_max_result', 'Class Test' , 'Percentage(%)');
+
+<% end %>

@@ -24,54 +24,67 @@ $(document).ready(function() {
   Student.initializeStudentScoreCharts();
   initializeDateTimePicker();
 
-  var selectedAnswerType;
-  $(document).on("change", "select.answer-type", function(){
-    $("#last_selected_answer_type").val($(this).data("count"));
-    selectedAnswerType = $(this);
+  // var selectedAnswerType;
+  // $(document).on("change", "select.answer-type", function(){
+  //   $("#last_selected_answer_type").val($(this).data("count"));
+  //   selectedAnswerType = $(this);
 
-    var val = parseInt($(this).val());
-    var count = $("#last_selected_answer_type").val();
-    var el = $(".answer-choices-" + count);
+  //   var val = parseInt($(this).val());
+  //   var count = $("#last_selected_answer_type").val();
+  //   var el = $(".answer-choices-" + count);
 
-    if(val < 2){
-      $("#answer_type_modal_" + val).modal('show');
-    }else{
-      el.html("<br />");
-      el.append('<textarea placeholder="Student will write the answer here" name="qa[]['+ $("#last_selected_answer_type").val() +'][answer_choices][0]"></textarea>');
-    }
-  });
+  //   if(val < 2){
+  //     $("#answer_type_modal_" + val).modal('show');
+  //   }else{
+  //     el.html("<br />");
+  //     el.append('<textarea placeholder="Student will write the answer here" name="qa[]['+ $("#last_selected_answer_type").val() +'][answer_choices][0]"></textarea>');
+  //   }
+  // });
 
-  $(document).on("click", ".add_more_multiple_choices", function(){
-    var inputType = selectedAnswerType.find("option:selected").text() == "Single choice" ? "radio" : "checkbox";
-    $('<div><input type="text" class="multiple-choices-input-'+inputType+'"><a href="javascript:void(0);" class="remove-multiple-choice">Remove</a><br></div>').insertBefore($(this));
-  });
+  // $(document).on("click", ".add_more_multiple_choices", function(){
+  //   var inputType = selectedAnswerType.find("option:selected").text() == "Single choice" ? "radio" : "checkbox";
+  //   $('<div><input type="text" class="multiple-choices-input-'+inputType+'"><a href="javascript:void(0);" class="remove-multiple-choice">Remove</a><br></div>').insertBefore($(this));
+  // });
 
-  $(document).on("click", "a.remove-multiple-choice", function(){
-    $(this).parent().remove();
-  });
+  // $(document).on("click", "a.remove-multiple-choice", function(){
+  //   $(this).parent().remove();
+  // });
 
-  $(document).on("click", ".add_multiple_choice", function(){
-    var count = $("#last_selected_answer_type").val();
-    var el = $(".answer-choices-" + count);
-    var inputType = selectedAnswerType.find("option:selected").text() == "Single choice" ? "radio" : "checkbox";
-    el.html("<br />");
+  // $(document).on("click", ".add_multiple_choice", function(){
+  //   var count = $("#last_selected_answer_type").val();
+  //   var el = $(".answer-choices-" + count);
+  //   var inputType = selectedAnswerType.find("option:selected").text() == "Single choice" ? "radio" : "checkbox";
+  //   el.html("<br />");
 
-    $(".multiple-choices-input-" + inputType).each(function(index){
-      var choice = $.trim($(this).val());
-      if(choice.length > 0){
-        if(inputType == "checkbox"){
-          el.append('<input type="'+ inputType +'" name="qa[]['+ $("#last_selected_answer_type").val() +'][answer_choices]['+ index +']">&nbsp;&nbsp;&nbsp;' + choice + '<br />');
-        }else{
-          el.append('<input type="'+ inputType +'" name="qa[]['+ $("#last_selected_answer_type").val() +'][answer_choices][0]">&nbsp;&nbsp;&nbsp;' + choice + '<br />');
-        }
+  //   $(".multiple-choices-input-" + inputType).each(function(index){
+  //     var choice = $.trim($(this).val());
+  //     if(choice.length > 0){
+  //       if(inputType == "checkbox"){
+  //         el.append('<input type="'+ inputType +'" name="qa[]['+ $("#last_selected_answer_type").val() +'][answer_choices]['+ index +']">&nbsp;&nbsp;&nbsp;' + choice + '<br />');
+  //       }else{
+  //         el.append('<input type="'+ inputType +'" name="qa[]['+ $("#last_selected_answer_type").val() +'][answer_choices][0]">&nbsp;&nbsp;&nbsp;' + choice + '<br />');
+  //       }
 
-      }
-      if(index > 0){
-        $(this).parent().remove();
-      }
-    });
-    $(".modal").modal('hide');
-  });
+  //     }
+  //     if(index > 0){
+  //       $(this).parent().remove();
+  //     }
+  //   });
+  //   $(".modal").modal('hide');
+  // });
+
+  // $(document).on('change', 'select.look_up_select_option', function(){
+  //   var el = $(this),
+  //       val = el.find('option:selected').val(),
+  //       selectedType = el.data('select-type'),
+  //       url = '/look_ups/get_data?selectedTypeData=' + val + '&selectedType=' + selectedType;
+
+  //       $.ajax({
+  //         url: url,
+  //         dataType: 'script'
+  //       });
+
+  // });
 
 });
 

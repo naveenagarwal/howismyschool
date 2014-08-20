@@ -405,3 +405,7 @@ table.blue-text-last-td.table-bordered th, table.blue-text-last-td.table-bordere
 .width-200, div.inline-div.width-200 {
   width: 200px;
 }
+
+form#look_up_form .inline-div {
+  width: 15%;
+}

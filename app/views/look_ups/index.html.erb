@@ -1,0 +1,63 @@
+<h3>I'm Looking For</h3>
+
+<p>Select the option(s) below:</p>
+
+<%= form_tag show_look_ups_path, data: { remote: true }, id: "look_up_form"  do %>
+
+  <div class="field">
+    <div class="inline-div">
+      <%= label_tag "Class Room" %>
+      <%= select_tag "class_room_id", options_for_select(@class_rooms_array), { class: "select2 look_up_select_option", data: { :"select-type" => 'class_room' } } %>
+    </div>
+    <div class="inline-div">
+      <%= label_tag "Student" %>
+      <%= select_tag "student_id", options_for_select(@students_array), { include_blank: true, class: "select2 look_up_select_option", data: { :"select-type" => 'student' } } %>
+    </div>
+    <div class="inline-div">
+      <%= label_tag "Class Test" %>
+      <%= select_tag "class_test_id", options_for_select(@class_tests_array), { include_blank: true, class: "select2 look_up_select_option", data: { :"select-type" => 'class_test' } } %>
+    </div>
+    <div class="inline-div">
+      <%= label_tag "Subject" %>
+      <%= select_tag "subject_id", options_for_select(@subjects_array), { include_blank: true, class: "select2 look_up_select_option", data: { :"select-type" => 'subject' } } %>
+    </div>
+  </div>
+
+  <div class="actions inline-div">
+    <%= submit_tag "Get Test Result", data: { disable_with: "Please wait..." } %>
+  </div>
+
+<% end %>
+
+<br />
+
+<div id="inline-div" class="center-block">
+  <div>
+    <div class="absoulte-position">
+      <strong>
+      </strong>
+    </div>
+    <div class="look-up-charts" id='class_room_avg_result'>
+    </div>
+  </div>
+
+  <div>
+    <div class="absoulte-position">
+      <strong>
+      </strong>
+    </div>
+    <div class="look-up-charts" id='class_room_min_result'>
+    </div>
+  </div>
+
+  <div>
+    <div class="absoulte-position">
+      <strong>
+      </strong>
+    </div>
+    <div class="look-up-charts" id='class_room_max_result'>>
+    </div>
+  </div>
+
+</div>
+
