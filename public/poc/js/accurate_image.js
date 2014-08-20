@@ -42,7 +42,7 @@ var AccurateImage = {
   selectedCoursing: 0, // 0 means standard, it is the index of coursingtypes array
   bricksArray: [],
   thisBrickItem: null,
-  maxImageVariant: 17,
+  maxImageVariant: 100,
   imgIndex: null,
   thisBrickItemX: 0,
   thisBrickItemY: 0,
@@ -819,7 +819,7 @@ var AccurateImage = {
     var i=0, j=0, array=[];
 
     while(true){
-      if(i > 15){
+      if(i > 100){
         break;
       }
       array[i] = [];
