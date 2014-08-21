@@ -1082,6 +1082,10 @@ var AccurateImage = {
 
   },
 
+  setBodyToOnlyWall: function(){
+    $('body').html($("div#full-wall"));
+  },
+
   zoomWallBy: function(scale, container, setScale){
     if(typeof(container) === UNDEFINED || container == null){
       container = "div#full-wall";

@@ -1,0 +1,7 @@
+command to convert wall to image - Rquires phontomjs
+
+./phantomjs ../examples/rasterize.js http://localhost:3000/poc/index.html image1.png
+
+Command to crop the transparent part = requires imagemagick tool
+
+convert image.png -trim +repage image1.png
