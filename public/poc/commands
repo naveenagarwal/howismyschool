@@ -9,3 +9,7 @@ convert image.png -trim +repage image1.png
 Command to convert from png to tiff fromat - requires imagemagick tool
 
 convert image.png image.tiff
+
+Convert png images to tga images that is RGB + alpha images
+
+convert image.png -alpha on -channel rgba image.tga

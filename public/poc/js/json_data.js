@@ -36,7 +36,7 @@ products = [
           {
             id: "Brick1",
             name: "Brick1",
-            height: 40,
+            height: 36,
             width: 100,
             imgUrlArray: ["images/brick_1_1.jpg","images/brick_1_2.jpg","images/brick_1_3.jpg","images/brick_1_4.jpg","images/brick_1_5.jpg","images/brick_1_6.jpg","images/brick_1_7.jpg","images/brick_1_8.jpg","images/brick_1_9.jpg","images/brick_1_10.jpg","images/brick_1_11.jpg","images/brick_1_12.jpg","images/brick_1_13.jpg","images/brick_1_14.jpg","images/brick_1_15.jpg","images/brick_1_16.jpg"],
             imgUrl: "images/brick_1_1.jpg",
