@@ -409,3 +409,8 @@ table.blue-text-last-td.table-bordered th, table.blue-text-last-td.table-bordere
 form#look_up_form .inline-div {
   width: 15%;
 }
+
+select#lookup_class_room_select {
+  left: auto !important;
+  top: auto !important;
+}

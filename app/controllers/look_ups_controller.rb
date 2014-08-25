@@ -8,12 +8,9 @@ class LookUpsController < ApplicationController
     @subjects_array     = get_subjects_array_for_select_option
   end
 
-  def get_data
-     respond_to do |format|
-      format.js {
-
-      }
-     end
+  def class_room_students
+    class_room = ClassRoom.find params[:class_room]
+    @students_array = class_room.students.map { |p| [ p.name_with_rno, p.id ] }
   end
 
   def show

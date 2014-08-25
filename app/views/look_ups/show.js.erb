@@ -1,26 +1,65 @@
 $('#look-up-charts').html('');
 var data;
 
-<% if @look_up.class_room_average_test_result.present? %>
+<% graph_array_data = @look_up.class_room_average_test_result %>
+<% if graph_array_data.present? %>
 
-  data = JSON.parse('<%= @look_up.class_room_average_test_result.to_json.html_safe %>');
+  data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
   $('#class_room_avg_result').parent().find('.absoulte-position strong').html('Average Test scores For Class Room');
   Charts.drawChartFromArray(data, 'class_room_avg_result', 'Class Test' , 'Percentage(%)');
 
 <% end %>
 
-<% if @look_up.class_room_minimum_test_result.present? %>
+<% graph_array_data = @look_up.class_room_average_test_result %>
+<% if graph_array_data.present? %>
 
-  data = JSON.parse('<%= @look_up.class_room_minimum_test_result.to_json.html_safe %>');
+  data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
   $('#class_room_min_result').parent().find('.absoulte-position strong').html('Minimum Test scores For Class Room');
   Charts.drawChartFromArray(data, 'class_room_min_result', 'Class Test' , 'Percentage(%)');
 
 <% end %>
 
-<% if @look_up.class_room_maximum_test_result.present? %>
+<% graph_array_data = @look_up.class_room_average_test_result %>
+<% if graph_array_data.present? %>
 
-  data = JSON.parse('<%= @look_up.class_room_maximum_test_result.to_json.html_safe %>');
+  data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
   $('#class_room_max_result').parent().find('.absoulte-position strong').html('Maximum Test scores For Class Room');
   Charts.drawChartFromArray(data, 'class_room_max_result', 'Class Test' , 'Percentage(%)');
+
+<% end %>
+
+<% if params[:student_id].present? %>
+
+  var container, testName, studentName;
+
+  studentName = $("select#lookup_student_select option:selected").text();
+
+  <% graph_array_data = @look_up.student_average_test_result %>
+  <% if graph_array_data.present? %>
+
+    data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
+    $('#student_avg_result').parent().find('.absoulte-position strong').html('Average Test scores For Student: ' + studentName);
+    Charts.drawChartFromArray(data, 'student_avg_result', 'Class Test' , 'Percentage(%)');
+
+  <% end %>
+
+  <% graph_array_data = @look_up.student_individual_test_results %>
+  <% if graph_array_data.flatten.present? %>
+
+    <% graph_array_data.each.with_index do |graph_data, index|%>
+
+      data = JSON.parse('<%= graph_data[:test_result].to_json.html_safe %>');
+      container = 'test_result_<%= "#{index}" %>';
+      if($('#' + container).length < 1){
+        $('#inline-div').append('<%= j render(partial: "graph_block", locals: { index: index }) %>');
+      }
+      testName = '<%= "#{graph_data[:test_name]}".html_safe %>';
+      console.log(testName);
+      $('#' + container).parent().find('.absoulte-position strong').html(testName + ' Test scores For: ' + studentName);
+      Charts.drawChartFromArray(data, container, 'Subjects' , 'Percentage(%)');
+
+    <% end %>
+
+  <% end %>
 
 <% end %>

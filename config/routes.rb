@@ -103,7 +103,7 @@ Rails.application.routes.draw do
   resources :look_ups, only: [:index] do
     collection do
       post 'show' => 'look_ups#show', as: :show
-      get 'get_data'
+      get 'class_room_students'
     end
   end
 

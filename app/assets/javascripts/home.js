@@ -9,6 +9,7 @@ $(document).on('page:load', function() {
   highlightText();
   Student.initializeStudentScoreCharts();
   initializeDateTimePicker();
+  loadStudentsOnClassRoomSelectForLookUp();
 
 });
 
@@ -23,6 +24,7 @@ $(document).ready(function() {
   highlightText();
   Student.initializeStudentScoreCharts();
   initializeDateTimePicker();
+  loadStudentsOnClassRoomSelectForLookUp();
 
   // var selectedAnswerType;
   // $(document).on("change", "select.answer-type", function(){
@@ -73,20 +75,18 @@ $(document).ready(function() {
   //   $(".modal").modal('hide');
   // });
 
-  // $(document).on('change', 'select.look_up_select_option', function(){
-  //   var el = $(this),
-  //       val = el.find('option:selected').val(),
-  //       selectedType = el.data('select-type'),
-  //       url = '/look_ups/get_data?selectedTypeData=' + val + '&selectedType=' + selectedType;
-
-  //       $.ajax({
-  //         url: url,
-  //         dataType: 'script'
-  //       });
-
-  // });
 
 });
+
+var loadStudentsOnClassRoomSelectForLookUp = function(){
+  $(document).on('change', 'select#lookup_class_room_select', function(){
+    var url = '/look_ups/class_room_students?class_room=' + $(this).val();
+    $.ajax({
+      url: url,
+      dataType: 'script'
+    });
+  });
+};
 
 var loadCarousel = function(){
   $("#myCarousel").carousel({
