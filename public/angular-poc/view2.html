@@ -1,16 +1,47 @@
-<p>View 2</p>
+<div ng-hide="hideNewForm">
+  <p>New Comment</p>
 
-<form ng-submit="addCustomer()">
-  Name:
-  <br />
-  <input type="text" required ng-model="newCustomer.name"><br />
+  <form ng-submit="addComment()">
+    Description :
+    <textarea required ng-model="newComment.description"></textarea>
+    <input type="submit" value="Add Comment" />
+  </form>
+  <br/>
+</div>
 
-  City:
-  <br />
-  <input type="text" required ng-model="newCustomer.city"><br />
+<div ng-hide="hideEditForm">
+  <p>Edit Comment</p>
 
-  <input type="submit" value="Add Customer" />
-</form>
-<br />
+  <form ng-submit="updateComment(editComment.id)">
+    Description :
+    <textarea required ng-model="editComment.description"></textarea>
+    <input type="submit" value="Update Comment" />
+  </form>
+  <br>
+  <td><a href="javascript:void(0);" ng-click="newComment()">New Comment</a></td>
+
+</div>
+
+<br>
+<p>Comments</p>
+<table>
+  <tr>
+    <th>Comment ID</th>
+    <th>Comment</th>
+    <th>Created At</th>
+    <th></th>
+    <th></th>
+    <!-- <th>Created At</th> -->
+    <tr ng-repeat="comment in comments">
+      <td>{{ comment.id }}</td>
+      <td>{{ comment.description }}</td>
+      <td>{{ comment.created_at | formatDate }}</td>
+      <!-- <td>{{ comment.created_at | date: 'medium'}}</td> -->
+      <td><a href="javascript:void(0);" ng-click="removeComment(comment.id)">Delete</a></td>
+      <td><a href="javascript:void(0);" ng-click="editComment(comment.id)">Edit</a></td>
+    </tr>
+  </tr>
+</table>
+
 <a href="#/view1">View 1</a>
 
