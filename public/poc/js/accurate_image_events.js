@@ -87,7 +87,7 @@ $(document).ready(function(){
       return;
     }
 
-    // AccurateImage.fillMortarItem($(this));
+    AccurateImage.fillMortarItem($(this));
     // AccurateImage.fillBrickItem($(this));
     AccurateImage.fillCoursing($(this));
     AccurateImage.setRandomBrick($(this));
