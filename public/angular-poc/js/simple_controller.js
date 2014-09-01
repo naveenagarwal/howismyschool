@@ -1,6 +1,6 @@
-var controllers = {};
+var myApp = angular.module('myApp', ['ngRoute', 'ngResource']);
 
-controllers.simpleController = function ($scope){
+var simpleController = function ($scope, $routeParams, Comments){
   $scope.customers = [
     { name: "John", city: "Phoenix"},
     { name: "Jane", city: "Seattle"},
@@ -9,17 +9,25 @@ controllers.simpleController = function ($scope){
   ];
 
   $scope.addCustomer = function(){
-    console.log($scope.newCustomer);
     $scope.customers.push(
         {name: $scope.newCustomer.name, city: $scope.newCustomer.city}
       );
   };
+
+  comments = Comments;
 };
 
-var myApp = angular.module('myApp', ['ngRoute']);
-myApp.controller(controllers);
+var simpleController1 = function($scope){
 
-myApp.config(function($routeProvider){
+};
+
+myApp.factory('Comments', ['$resource', function($resource){
+  return $resource("/comments/:id", { id: "@id" }, {
+    'update': { method: 'PUT', params: {id: "@id"}}
+  });
+}]);
+
+myApp.config(['$routeProvider',function($routeProvider){
   $routeProvider
   .when('/',
         {
@@ -28,7 +36,7 @@ myApp.config(function($routeProvider){
         })
   .when('/view2',
       {
-        controller: 'simpleController',
+        controller: 'simpleController1',
         templateUrl: 'view2.html'
       })
   .when('/view1',
@@ -36,4 +44,7 @@ myApp.config(function($routeProvider){
         controller: 'simpleController',
         templateUrl: 'view1.html'
       });
-});
+}]);
+
+myApp.controller('simpleController', ['$scope', '$routeParams', 'Comments', simpleController]);
+myApp.controller('simpleController1', ['$scope', simpleController1]);
