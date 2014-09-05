@@ -17,12 +17,13 @@ var simpleController = function ($scope, Comments){
   comments = Comments;
 };
 
-var simpleController1 = function($scope, Comments){
+var simpleController1 = function($scope, $location, Comments){
   $scope.hideNewForm = false;
   $scope.hideEditForm = true;
   $scope.comments = Comments.query();
 
   $scope.addComment = function(){
+    x = this;
     var comment = { description: $scope.newComment.description };
     Comments.save(comment, function(){
       $scope.comments = Comments.query();
@@ -58,8 +59,13 @@ var simpleController1 = function($scope, Comments){
     $scope.newComment.description = "";
   }
 
+  $scope.goSomeWhere = function(){
+    $location.path('/view1');
+  }
+
   $scope.hideThisForm = true;
 };
+
 myApp.filter('formatDate', function($filter){
   return function(input){
     if(input == null){ return ""; }
@@ -99,4 +105,4 @@ myApp.config(['$routeProvider',function($routeProvider){
 }]);
 
 myApp.controller('simpleController', ['$scope', 'Comments', simpleController]);
-myApp.controller('simpleController1', ['$scope', 'Comments', simpleController1]);
+myApp.controller('simpleController1', ['$scope', '$location', 'Comments', simpleController1]);

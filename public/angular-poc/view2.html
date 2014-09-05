@@ -3,7 +3,7 @@
 
   <form ng-submit="addComment()">
     Description :
-    <textarea required ng-model="newComment.description"></textarea>
+    <textarea required ng-model="newComment.description" name="comment[description]"></textarea>
     <input type="submit" value="Add Comment" />
   </form>
   <br/>
@@ -43,5 +43,6 @@
   </tr>
 </table>
 
-<a href="#/view1">View 1</a>
+<a href="#/view1">View 1</a> |
+<a href="javascript:void(0);" ng-click="goSomeWhere()">Go SomeWhere</a>
 
