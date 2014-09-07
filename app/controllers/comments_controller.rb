@@ -5,7 +5,12 @@ class CommentsController < ApplicationController
   # GET /comments
   # GET /comments.json
   def index
-    render json: @comments = Comment.order("created_at desc").all
+    render json: @comments = Paginate.get_records(
+        relation_object: Comment.order("created_at desc"),
+        page: params[:page],
+        per_page: params[:per_page]
+      )
+
   end
 
   # GET /comments/1

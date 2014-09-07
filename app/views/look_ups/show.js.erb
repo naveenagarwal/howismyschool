@@ -1,4 +1,7 @@
-$('#look-up-charts').html('');
+$('.removable-look-up-charts').parent().html('');
+$('.absoulte-position').html('');
+$('hr.look_up_hr').remove();
+
 var data;
 
 <% graph_array_data = @look_up.class_room_average_test_result %>
@@ -10,7 +13,7 @@ var data;
 
 <% end %>
 
-<% graph_array_data = @look_up.class_room_average_test_result %>
+<% graph_array_data = @look_up.class_room_minimum_test_result %>
 <% if graph_array_data.present? %>
 
   data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
@@ -19,7 +22,7 @@ var data;
 
 <% end %>
 
-<% graph_array_data = @look_up.class_room_average_test_result %>
+<% graph_array_data = @look_up.class_room_maximum_test_result %>
 <% if graph_array_data.present? %>
 
   data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
@@ -29,7 +32,7 @@ var data;
 <% end %>
 
 <% if params[:student_id].present? %>
-
+  $('#inline-div').append('<hr class="look_up_hr">');
   var container, testName, studentName;
 
   studentName = $("select#lookup_student_select option:selected").text();
@@ -37,8 +40,10 @@ var data;
   <% graph_array_data = @look_up.student_average_test_result %>
   <% if graph_array_data.present? %>
 
+    $('#inline-div').append('<%= j render(partial: "graph_block", locals: { id: "student_avg_result" }) %>');
+    $('#student_avg_result').parent().find('.absoulte-position strong').html('Average Test scores : ' + studentName);
+
     data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
-    $('#student_avg_result').parent().find('.absoulte-position strong').html('Average Test scores For Student: ' + studentName);
     Charts.drawChartFromArray(data, 'student_avg_result', 'Class Test' , 'Percentage(%)');
 
   <% end %>
@@ -51,10 +56,9 @@ var data;
       data = JSON.parse('<%= graph_data[:test_result].to_json.html_safe %>');
       container = 'test_result_<%= "#{index}" %>';
       if($('#' + container).length < 1){
-        $('#inline-div').append('<%= j render(partial: "graph_block", locals: { index: index }) %>');
+        $('#inline-div').append('<%= j render(partial: "graph_block", locals: { id: "test_result_#{index}" }) %>');
       }
       testName = '<%= "#{graph_data[:test_name]}".html_safe %>';
-      console.log(testName);
       $('#' + container).parent().find('.absoulte-position strong').html(testName + ' Test scores For: ' + studentName);
       Charts.drawChartFromArray(data, container, 'Subjects' , 'Percentage(%)');
 

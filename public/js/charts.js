@@ -1,5 +1,23 @@
 var colors = new Array('#AF0202', '#EC7A00', '#FCD200', '#81C714', '#0F0F0F', '#F77777', '#2ea5cd', '#150937', '#E2D2B0');
 
+var getRandomArray = function(){
+  var val,
+      length = colors.length - 1,
+      array = [];
+
+  for(var i=0; i < length;){
+    val = Math.floor(Math.random() * length);
+    if(array.indexOf(val) == -1){
+      array.push(val);
+      i++;
+    }
+    if(array.length >= length){
+      break;
+    }
+  }
+  return array;
+}
+
 function Charts(){
 }
 
@@ -13,9 +31,11 @@ Charts.drawChart = function(url, container, xlabel, ylabel){
   myChart.setBarValuesColor("#000000");
   myChart.setBarValuesDecimals(2);
 
-  var newClorsArray = [];
+  var newClorsArray = [],
+      array = getRandomArray();
+
   for(var i=0; i<myChart.ml.bi.length; i++){
-    newClorsArray.push(colors[i]);
+    newClorsArray.push(colors[array[i]]);
   }
 
   myChart.colorizeBars(newClorsArray);
@@ -35,9 +55,11 @@ Charts.drawChartFromArray = function(data, container, xlabel, ylabel){
   myChart.setBarValuesDecimals(2);
   myChart.setLabelAlignX(true);
 
-  var newClorsArray = [];
-  for(var i=0; i<data.length; i++){
-    newClorsArray.push(colors[i]);
+  var newClorsArray = [],
+      array = getRandomArray();
+
+  for(var i=0; i<myChart.ml.bi.length; i++){
+    newClorsArray.push(colors[array[i]]);
   }
 
   myChart.colorizeBars(newClorsArray);

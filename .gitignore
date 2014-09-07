@@ -19,3 +19,6 @@
 /config/secrets*.yml
 /db/schema.rb
 /public/uploads
+dump.rdb
+logfile
+sunspot_solr-2.1.1.gem

@@ -1,7 +1,7 @@
 class LookUp
 
   attr_accessor :class_room, :class_room, :student_ids, :subject_ids, :year,
-    :chart_hash, :test_name
+    :chart_hash, :test_name, :class_test_ids
 
   AVGERAGE  = "avg"
   MINIMUM   = "avg"
@@ -12,8 +12,8 @@ class LookUp
     @chart_hash     = chart_hash
     @class_room     = ClassRoom.find class_room_id
     @student_ids    = student_id.blank? ? class_room.student_ids : [student_id]
-    @class_test_ids = class_test_id.blank? ? class_room.distinct_class_test_ids : [class_test_id]
-    @subject_ids    = subject_id.blank? ? class_room.distinct_subject_ids : [subject_id]
+    @class_test_ids = class_test_id.blank? ? class_room.distinct_class_test_ids.uniq : [class_test_id]
+    @subject_ids    = subject_id.blank? ? class_room.distinct_subject_ids.uniq : [subject_id]
   end
 
   def class_room_average_test_result
@@ -74,7 +74,9 @@ class LookUp
     def test_results
       TestResult.where(
           year: year,
-          class_room_id: class_room.id
+          class_room_id: class_room.id,
+          class_test_id: class_test_ids,
+          subject_id: subject_ids
         )
     end
 

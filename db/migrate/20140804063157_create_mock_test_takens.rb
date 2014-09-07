@@ -4,7 +4,7 @@ class CreateMockTestTakens < ActiveRecord::Migration
       t.references :mock_test, index: true
       t.references :student, index: true
       t.references :ques_and_ans, index: true
-      t.json :answer_given, default: {}
+      t.text :answer_given, default: {}
 
       t.timestamps
     end

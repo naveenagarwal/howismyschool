@@ -156,6 +156,9 @@ body {
 .select2 {
   width:  220px;
 }
+.select2 a.select2-choice {
+  height: 33px;
+}
 
 .navbar .nav > li > a {
   color: #FFFFFF;
@@ -413,4 +416,16 @@ form#look_up_form .inline-div {
 select#lookup_class_room_select {
   left: auto !important;
   top: auto !important;
+}
+
+hr.look_up_hr {
+  border-color: #ffa500;
+}
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
+  height: 26px;
+}
+
+.set-margin-top-25, input.set-margin-top-25 {
+  margin-top: 25px;
 }

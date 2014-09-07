@@ -18,12 +18,12 @@
 
     <div class="inline-div">
       <%= label_tag "Class Test" %>
-      <%= select_tag "class_test_id", options_for_select(@class_tests_array), { include_blank: true, class: "select2", id: "lookup_class_test_select" } %>
+      <%= select_tag "class_test_id", options_for_select(@class_tests_array), { include_blank: true, multiple: true, class: "select2", id: "lookup_class_test_select" } %>
     </div>
 
     <div class="inline-div">
       <%= label_tag "Subject" %>
-      <%= select_tag "subject_id", options_for_select(@subjects_array), { include_blank: true, class: "select2", id: "lookup_subject_select" } %>
+      <%= select_tag "subject_id", options_for_select(@subjects_array), { include_blank: true, multiple: true, class: "select2", id: "lookup_subject_select" } %>
     </div>
 
   </div>
@@ -61,15 +61,6 @@
       </strong>
     </div>
     <div class="look-up-charts" id='class_room_max_result'>
-    </div>
-  </div>
-
-  <div>
-    <div class="absoulte-position">
-      <strong>
-      </strong>
-    </div>
-    <div class="look-up-charts" id='student_avg_result'>
     </div>
   </div>
 

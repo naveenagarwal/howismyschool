@@ -28,7 +28,6 @@ class TestResult < ActiveRecord::Base
   end
 
   def student_name_only
-    byebug
     student_name.split("-").first.squish
   end
 
