@@ -19,9 +19,10 @@ module Parser
     def create_student(row)
       student = Student.new with_student_attributes(row)
 
-      if student.save
+      if student.save && student.create_class_room_student
         @ids << student.id
       else
+        student.destroy if student.persisted?
         false
       end
     end
