@@ -1,6 +1,7 @@
 .navbar-inner {
   background-color: #C57A63;
   background-image: linear-gradient(to bottom, #180301, #180301);
+  min-height: 46px;
 }
 
 body div.github-fork-ribbon-wrapper.left {
@@ -428,4 +429,8 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
 
 .set-margin-top-25, input.set-margin-top-25 {
   margin-top: 25px;
+}
+
+div map img {
+  top: auto !important;
 }
