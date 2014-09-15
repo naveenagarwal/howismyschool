@@ -119,4 +119,12 @@ module ChartsHelper
     ".html_safe
   end
 
+  def barchart_for_class_room_full_test_result(class_room_id, test_id, container)
+    "
+      <script type='text/javascript'>
+        Charts.drawClassTestFullTestResultChart('#{class_room_id}', #{test_id} ,'#{container}');
+      </script>
+    ".html_safe
+  end
+
 end

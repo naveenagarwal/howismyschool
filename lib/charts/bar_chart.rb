@@ -9,7 +9,8 @@ module Charts
           :chart_for_class_room_toppers_testwise,
           :chart_for_class_room_lowest_scorers_testwise,
           :chart_for_class_room_toppers_subjectwise,
-          :class_room_tests_pass_fail_details
+          :class_room_tests_pass_fail_details,
+          :class_test_full_test_result
         ]
 
       before_action :set_common_chart_data_for_class_test_charts, only: [
@@ -35,9 +36,6 @@ module Charts
 
     end
 
-    module ClassMethods
-    end
-
     def chart_for_latest_test_results
       chart_type                                  = params[:chart_type] || DEFAULT_CHART_TYPE
       js_chart                                    = default_chart_hash(chart_type)
@@ -49,53 +47,7 @@ module Charts
       end
     end
 
-    def chart_for_class_room
-      chart_type                                  = params[:chart_type] || DEFAULT_CHART_TYPE
-      js_chart                                    = default_chart_hash(chart_type)
-      class_room                                  = ClassRoom.find params[:id]
-      js_chart["JSChart"]["datasets"][0]["data"]  = test_results_for_class_room(class_room)
-
-      respond_to do |format|
-        format.json { render json: js_chart }
-      end
-    end
-
-    def chart_for_class_room_toppers_subjectwise
-      @js_chart["JSChart"]["datasets"][0]["data"]  =
-        @class_room.get_toppers_array_subjectwise_for_bar_chart
-
-      respond_to do |format|
-        format.json { render json: @js_chart }
-      end
-    end
-
-    def chart_for_class_room_toppers_testwise
-      @js_chart["JSChart"]["datasets"][0]["data"]  =
-        @class_room.get_toppers_array_testwise_for_bar_chart
-
-      respond_to do |format|
-        format.json { render json: @js_chart }
-      end
-    end
-
-    def chart_for_class_room_lowest_scorers_testwise
-      @js_chart["JSChart"]["datasets"][0]["data"]  =
-        @class_room.get_lowest_scorers_array_testwise_for_bar_chart
-
-      respond_to do |format|
-        format.json { render json: @js_chart }
-      end
-    end
-
-    def class_room_tests_pass_fail_details
-      @js_chart["JSChart"]["datasets"][0]["data"]  =
-        @class_room.get_pass_fail_tests_details_for_pie_chart(params[:class_test_id])
-
-      respond_to do |format|
-        format.json { render json: @js_chart }
-      end
-    end
-
+    include Charts::BarChartForClassRoom
     include Charts::BarChartForClassTest
     include Charts::BarChartForSubjects
     include Charts::BarChartForStudents
@@ -117,12 +69,6 @@ module Charts
           }
       end
       average_test_results
-    end
-
-    def set_common_chart_data_for_class_room_charts
-      chart_type = params[:chart_type] || DEFAULT_CHART_TYPE
-      @js_chart   = default_chart_hash(chart_type)
-      @class_room = ClassRoom.find params[:id]
     end
 
   end

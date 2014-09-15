@@ -1,0 +1,16 @@
+<% @tests.each.with_index do | test, index |%>
+  <% block_id = "full_test_result_#{index}" %>
+  <div class="have-margin">
+    <div class="absoulte-position">
+      Class Room
+      <strong>
+        Complete Test Result For Test: <%= test.name %>
+      </strong>
+      for the year: <strong><%= TimeExt.current_year %></strong>
+    </div>
+    <div id="<%= block_id %>">
+      Hey, howdy!. Is every thing all right with you?
+      <%= barchart_for_class_room_full_test_result @class_room.id, test.id, block_id %>
+    </div>
+  </div>
+<% end %>

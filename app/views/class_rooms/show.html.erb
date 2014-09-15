@@ -13,10 +13,18 @@
 
   <div class="center-block">
     <%= link_to "Pass/Fail Details(list)", "javascript:void(0);", data:{ toggle: "modal", target: "#pass_fail_details_modalboxdal_list" } %> |
-    <%= link_to "Pass/Fail Details(Charts)", "javascript:void(0);", data:{ toggle: "modal", target: "#pass_fail_details_modalboxdal_charts" } %>
+    <%= link_to "Pass/Fail Details(Charts)", "javascript:void(0);", data:{ toggle: "modal", target: "#pass_fail_details_modalboxdal_charts" } %> |
+    <%= link_to "Complete Test Result(Charts)", complete_test_results_class_room_path(@class_room.id), data: { remote: true } %>
   </div>
 
+
   <div id="inline-div" class="center-block">
+    <div id="complete_test_results" class="hide">
+      <p id="" class="hide"><a href="javascript:void(0);" id="complete_test_results_toggler">Hide/Show Complete Test Results</a></p>
+      <div id="complete_test_results_container" class="hide"></div>
+    </div>
+    <div class="clearfix"></div>
+    <br>
 
     <div class="have-margin">
       <div class="absoulte-position">
@@ -74,6 +82,7 @@
       </div>
     </div>
 
+    <%#= render 'full_test_results' %>
 
   </div>
 <% end %>

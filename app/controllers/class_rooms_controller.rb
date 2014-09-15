@@ -1,6 +1,6 @@
 class ClassRoomsController < ApplicationController
   before_action :authenticate_teacher!
-  before_action :set_class_room, only: [:show, :edit, :update, :destroy]
+  before_action :set_class_room, only: [:show, :edit, :update, :destroy, :complete_test_results]
 
   # GET /class_rooms
   # GET /class_rooms.json
@@ -15,6 +15,10 @@ class ClassRoomsController < ApplicationController
   # GET /class_rooms/1
   # GET /class_rooms/1.json
   def show
+  end
+
+  def complete_test_results
+    @tests = ClassTest.where(id: @class_room.distinct_class_test_ids)
   end
 
   # GET /class_rooms/new

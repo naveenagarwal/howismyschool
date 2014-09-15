@@ -10,6 +10,7 @@ $(document).on('page:load', function() {
   Student.initializeStudentScoreCharts();
   initializeDateTimePicker();
   loadStudentsOnClassRoomSelectForLookUp();
+  classRoomCompleteTestResultsToggler();
 
 });
 
@@ -25,6 +26,7 @@ $(document).ready(function() {
   Student.initializeStudentScoreCharts();
   initializeDateTimePicker();
   loadStudentsOnClassRoomSelectForLookUp();
+  classRoomCompleteTestResultsToggler();
 
   // var selectedAnswerType;
   // $(document).on("change", "select.answer-type", function(){
@@ -202,3 +204,11 @@ var initializeDateTimePicker = function(){
     });
   }
 };
+
+var classRoomCompleteTestResultsToggler = function() {
+  $(document).on("click", "#complete_test_results_toggler", function(){
+    if($("#complete_test_results_container").length > 0){
+      $("#complete_test_results_container").toggle();
+    }
+  });
+}

@@ -49,8 +49,16 @@ class ClassRoom < ActiveRecord::Base
     test_results.where(year: TimeExt.current_year, school_branch_id: school_branch_id)
   end
 
+  def test_results_for_year(year)
+    test_results.where(year: year, school_branch_id: school_branch_id)
+  end
+
   def has_test_results_for_current_year?
-    test_results.where(year: TimeExt.current_year).count > 0
+    current_test_results.count > 0
+  end
+
+  def has_test_results_for_year?(year)
+    test_results_for_year(year).count > 0
   end
 
   def get_toppers_array_subjectwise_for_bar_chart
@@ -120,11 +128,32 @@ class ClassRoom < ActiveRecord::Base
   end
 
   def distinct_class_test_ids
-    TestResult.select("distinct(class_test_id)").where(class_room_id: id).pluck(:class_test_id)
+    TestResult.select("class_test_id").where(class_room_id: id).pluck(:class_test_id).uniq
   end
 
   def distinct_subject_ids
-    TestResult.select("distinct(subject_id)").where(class_room_id: id).pluck(:subject_id)
+    TestResult.select("subject_id").where(class_room_id: id).pluck(:subject_id).uniq
+  end
+
+  def class_test_full_test_result(class_test_id: nil, year: nil)
+    average_test_results  = []
+    year                  = TimeExt.current_year unless year
+
+    test_results_for_year = test_results_for_year year
+    student_ids           = students_for_year(year).pluck(:id)
+
+    test_result = test_results_for_year.
+      select("avg(percentage) as percentage, student_name").
+      where(class_test_id: class_test_id, student_id: student_ids).
+      group("student_name")
+
+    test_result.each do |test_result|
+      average_test_results << {
+          unit: test_result.student_name,
+          value: test_result.percentage
+        }
+    end
+    average_test_results
   end
 
   private

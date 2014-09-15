@@ -32,7 +32,12 @@ Rails.application.routes.draw do
     root 'home#index'
   end
 
-  resources :class_rooms
+  resources :class_rooms do
+    member do
+      get 'complete_test_results'
+    end
+  end
+
   resources :class_tests
   resources :school_controllers
   resources :teachers
@@ -74,6 +79,7 @@ Rails.application.routes.draw do
       get 'subjects_yearwise_score'
     end
     collection do
+      get 'class_test_full_test_result/:id/:class_test_id' => 'draw_chart#class_test_full_test_result'
       get 'chart_for_latest_test_results'
     end
   end

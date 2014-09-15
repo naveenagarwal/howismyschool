@@ -1,17 +1,16 @@
 var colors = new Array('#AF0202', '#EC7A00', '#FCD200', '#81C714', '#0F0F0F', '#F77777', '#2ea5cd', '#150937', '#E2D2B0');
 
-var getRandomArray = function(){
+var getRandomColorArray = function(returnArraylength){
   var val,
-      length = colors.length - 1,
       array = [];
 
-  for(var i=0; i < length;){
-    val = Math.floor(Math.random() * length);
+  for(var i=0; i < returnArraylength;){
+    val = "#" + Math.random().toString(16).slice(2, 8);
     if(array.indexOf(val) == -1){
       array.push(val);
       i++;
     }
-    if(array.length >= length){
+    if(array.length >= returnArraylength){
       break;
     }
   }
@@ -31,12 +30,7 @@ Charts.drawChart = function(url, container, xlabel, ylabel){
   myChart.setBarValuesColor("#000000");
   myChart.setBarValuesDecimals(2);
 
-  var newClorsArray = [],
-      array = getRandomArray();
-
-  for(var i=0; i<myChart.ml.bi.length; i++){
-    newClorsArray.push(colors[array[i]]);
-  }
+  var newClorsArray = getRandomColorArray(myChart.ml.bi.length);
 
   myChart.colorizeBars(newClorsArray);
   myChart.draw();
@@ -55,12 +49,7 @@ Charts.drawChartFromArray = function(data, container, xlabel, ylabel){
   myChart.setBarValuesDecimals(2);
   myChart.setLabelAlignX(true);
 
-  var newClorsArray = [],
-      array = getRandomArray();
-
-  for(var i=0; i<myChart.ml.bi.length; i++){
-    newClorsArray.push(colors[array[i]]);
-  }
+  var newClorsArray = getRandomColorArray(myChart.ml.bi.length);
 
   myChart.colorizeBars(newClorsArray);
   myChart.draw();
@@ -195,10 +184,10 @@ Charts.drawStudentOverallChart = function(student, container){
 };
 
 Charts.drawStudentScore = function(dataURL, student, container, labelX, labelY){
-  if(typeof(labelX) === "undefiend"){
+  if(typeof(labelX) === "undefined"){
     var labelX = null;
   }
-  if(typeof(labelY) === "undefiend"){
+  if(typeof(labelY) === "undefined"){
     var labelY = null;
   }
 
@@ -256,7 +245,7 @@ Charts.drawPieChart = function(url, container){
 
   myChart.colorizePie(newClorsArray);
   myChart.draw();
-  // myChart.resize(500, 350)
+
   return myChart;
 };
 
@@ -267,3 +256,11 @@ Charts.drawClassRoomPieChart = function(class_room, class_test, container){
   Charts.drawPieChart(url, container);
 };
 
+Charts.drawClassTestFullTestResultChart = function(class_test, test_id, container){
+  var url       = '/draw_chart/class_test_full_test_result/'+ class_test + '/' + test_id + '.json?chart_type=bar',
+      container = container,
+      xlabel    = 'Stdeunt-Roll Number',
+      ylabel    = 'Percentage(%)';
+
+  Charts.drawChart(url, container, xlabel, ylabel).resize(1200, 350);
+};
