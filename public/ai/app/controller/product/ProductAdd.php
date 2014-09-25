@@ -1,0 +1,336 @@
+<?php
+
+$return_url = '';
+if ($_REQUEST['rurl'] != '') {
+    $return_url = URL . trim($_REQUEST['rurl']) . '&sortField='
+    .trim($_REQUEST['sortField'])
+    . '&sortOrderBy=' . trim($_REQUEST['sortOrderBy'])
+    . '&page=' . trim($_REQUEST['page']);
+}
+
+$product_obj = create_model_object($db_obj, 'product/', 'Product');
+
+$name               = trim($_POST['name']);
+$page_url           = URL.$_SERVER['QUERY_STRING'];
+$manufacturer_id    = empty($_POST['manufacturer_id']) ? 0 : $_POST['manufacturer_id'];
+$size_id            = empty($_POST['size_id']) ? 0 : $_POST['size_id'];
+$plant_id           = empty($_POST['plant_id']) ? 0 : $_POST['plant_id'];
+$texture_id         = empty($_POST['texture_id']) ? 0 : $_POST['texture_id'];
+$color_id           = empty($_POST['color_id']) ? 0 : $_POST['color_id'];
+
+//process POST vars
+if(!empty($_POST['submit'])){
+    //create validation arrays
+    $validation_array[] = array('value' => t('Name'),'type' => 'input_text',
+    'required' => TRUE,'vtype' => 3,'vmax' => 50);
+    $data_array[]   = array('name' => $name);
+    $column_array[] = 'name';
+
+    $validation_array[] = array('value' => t('Product Number'),'type' => 'input_text',
+	'required' => TRUE,'vtype' => 2,'vmax' => 50);
+    $data_array[]   = array('product_number' => $_POST['product_number']);
+    $column_array[] = 'product_number';
+
+	$validation_array[] = array('value' => t('Length'),'type' => 'input_text',
+	'required' => TRUE,'vtype' => 1,'vmax' => 11);
+    $data_array[]   = array('length' => $_POST['length']);
+    $column_array[] = 'length';
+
+	$validation_array[] = array('value' => t('Breadth'),'type' => 'input_text',
+	'required' => TRUE,'vtype' => 1,'vmax' => 11);
+    $data_array[]   = array('breadth' => $_POST['breadth']);
+    $column_array[] = 'breadth';
+
+    $validation_array[] = array('value' => t('Width'),'type' => 'input_text',
+    'required' => TRUE,'vtype' => 1,'vmax' => 11);
+    $data_array[]   = array('width' => $_POST['width']);
+    $column_array[] = 'width';
+
+    $validation_array[] = array('value' => t('Dimension Unit'),'type' => 'input_text',
+    'required' => TRUE,'vtype' => 3,'vmax' => 20);
+    $data_array[]   = array('dimension_unit' => $_POST['dimension_unit']);
+    $column_array[] = 'dimension_unit';
+
+    $validation_array[] = array('value' => t('Status'),'type' => 'radio',
+    'required' => TRUE,
+	'vtype' => 0,'vmax' => 0,'enum'=>'1~0');
+    $data_array[]   = array('is_active' => $_POST['is_active']);
+    $column_array[] = 'is_active';
+
+    $cnt = count($validation_array);
+    $error_flag = false;
+    $success_flag = false;
+    for($i=0;$i<$cnt;$i++){
+        if(!$utility_obj->validate_form_field($validation_array[$i],$data_array[$i],
+        $column_array[$i])){
+            $error_flag = true;
+            $utility_obj->set_flash_message($_SESSION['errorMessage'],'error');
+            break;
+        }
+    }
+
+    if(!$error_flag){
+        //check duplicate values
+        if( $product_obj->check_duplicate_column('product_number',$_POST['product_number']) ) {
+            $error_flag = true;
+            $utility_obj->set_flash_message(t('Product number already exists'), 'error');
+        }
+
+        $references_arr = array(
+                               'name'           => $name,
+                               'manufacturer_id'=> $manufacturer_id,
+                               'size_id'        => $size_id,
+                               'plant_id'       => $plant_id,
+                               'texture_id'     => $texture_id,
+                               'color_id'       => $color_id,
+                               'product_id'     => ''
+                               );
+        if( $product_obj->check_duplicate_product($references_arr) ) {
+            $error_flag = true;
+            $utility_obj->set_flash_message(t('Product name and references combination already exists'),
+            'error');
+        }
+
+		if( !$error_flag ){
+			if( !empty($_FILES['image_path']['name'])) {
+                $temp_file = $_FILES['image_path']['tmp_name'];
+                $file_parts = pathinfo($_FILES['image_path']['name']);
+                $message = $utility_obj->validate_image_file($temp_file,$_FILES['image_path']['name'],
+                                                            $_FILES['image_path']['size']);
+                $utility_obj->set_flash_message($message, 'error');
+			}
+
+            if( !empty($_FILES['variant_image']['name']) ) {
+                $temp_file_variant = $_FILES['variant_image']['tmp_name'];
+                $file_parts_variant = pathinfo($_FILES['variant_image']['name']);
+                $message = $utility_obj->validate_image_file($temp_file_variant,$_FILES['variant_image']['name'],
+                                                            $_FILES['variant_image']['size']);
+                $utility_obj->set_flash_message($message, 'error');
+            }
+		}
+
+        if( !$error_flag ) {
+            $data['name']               = $name;
+            $data['product_number']     = trim($_POST['product_number']);
+            $data['description']        = trim($_POST['description']);
+            $data['catalog']            = trim($_POST['catalog']);
+            $data['length']             = trim($_POST['length']);
+            $data['breadth']            = trim($_POST['breadth']);
+            $data['width']              = trim($_POST['width']);
+			$data['dimension_unit']		= trim($_POST['dimension_unit']);
+            $data['is_active']		    = $_POST['is_active'];
+
+            $product_id = $product_obj->save_product_data($data);
+            if( $product_id ) {
+                $data                   = array();
+                $data['manufacturer_id']= $manufacturer_id;
+                $data['size_id']        = $size_id;
+                $data['plant_id']       = $plant_id;
+                $data['texture_id']     = $texture_id;
+                $data['color_id']       = $color_id;
+                $data['product_id']     = $product_id;
+                $data['has_image']      = '0';
+                $product_reference_id = $product_obj->save_product_references_data($data);
+
+                if( $product_reference_id ) {
+
+                    // Code to upload logo image
+                    $image_path     = PRODUCT_IMAGE_PHYSICAL_PATH.'/'.$product_id;
+                    $logo_image_name= 'product_'.$product_id.'_logo.'.$file_parts['extension'];
+                    $image_data_arr = array(
+                        'extension'  => $file_parts['extension'],
+                        'image_path' => $image_path,
+                        'temp_file'  => $temp_file,
+                        'image_name' => $logo_image_name,
+                        'image_width'=> PRODUCT_IMAGE_WIDTH,
+                        'thumbnail'  => 1
+                    );
+                    $utility_obj->upload_image($image_data_arr);
+
+                    // Code to upload variant image
+                    $variant_image_name = 'product_'.$product_id.'_variant.'.$file_parts_variant['extension'];
+                    $image_data_arr = array(
+                        'extension'  => $file_parts_variant['extension'],
+                        'image_path' => $image_path,
+                        'temp_file'  => $temp_file_variant,
+                        'image_name' => $variant_image_name
+                    );
+                    $utility_obj->upload_image($image_data_arr);
+                    
+                    // Slice variant image
+                    if($file_parts_variant['extension']!=''){
+                        $image_slice_arr = array(
+                            'image_path'    => $image_path,
+                            'source_image'  => $variant_image_name,
+                            'slice_prefix'  => 'product_'.$product_id,
+                            'slice_hor'  => '16',
+                            'slice_ver'  => '1'
+                        );
+                        $utility_obj->slice_image($image_slice_arr);
+                    }
+
+                    $data = array();
+                    $data['product_id']             = $product_id;
+                    $data['image_initial_text']     = 'product_'.$product_id;
+                    $data['logo_image']             = $logo_image_name;
+                    $data['variant_image']          = $variant_image_name;
+                    $product_image_id = $product_obj->save_product_images_data($data);
+
+                    if( $product_image_id ) {
+                        $data                                   = array();
+                        $data['leed_distance']                  = $_POST['leed_distance'];
+                        $data['recommended_cleaning']           = $_POST['recommended_cleaning'];
+                        $data['astm_type']                      = $_POST['astm_type'];
+                        $data['master_format_2010']             = $_POST['master_format_2010'];
+                        $data['astm_specification']             = $_POST['astm_specification'];
+                        $data['test_date']                      = $_POST['test_date'];
+                        $data['efflorescence']                  = $_POST['efflorescence'];
+                        $data['percent_void']                   = $_POST['percent_void'];
+                        $data['min_thickness_of_face_shells']   = $_POST['min_thickness_of_face_shells'];
+                        $data['equivalent_web_thickness']       = $_POST['equivalent_web_thickness'];
+                        $data['recycled_content_percent']       = $_POST['recycled_content_percent'];
+                        $data['qty_per_sf']                     = $_POST['qty_per_sf'];
+                        $data['product_water_absorption_types'] = $_POST['product_water_absorption_types'];
+                        $data['weight_pounds']                  = $_POST['weight_pounds'];
+                        $data['compressive_strength_psi']       = $_POST['compressive_strength_psi'];
+                        $data['specifications']                 = $_POST['specifications'];
+                        $data['product_id']                     = $product_id;
+                        $return_id = $product_obj->save_product_details_data($data);
+
+                        if($return_id) {
+                            $success_flag = true;
+                            $utility_obj->set_flash_message(t('Data saved successfully'), 'success');
+                            $page_urlArray = explode('rurl', $_SERVER['QUERY_STRING']);
+                            $utility_obj->redirect_user(URL.'product/ProductAdd&fancy=1');
+                            exit;
+                        }
+                        else {
+                            $error_flag = true;
+                            $utility_obj->set_flash_message(t('Product Details data could not be saved'), 'error');
+                        }
+                    }
+                    else {
+                        $error_flag = true;
+                            $utility_obj->set_flash_message(t('Product Images data could not be saved'), 'error');
+                    }
+                }
+                else {
+                    $error_flag = true;
+                    $utility_obj->set_flash_message(t('Product References data could not be saved'), 'error');
+                }
+            }
+            else {
+                $error_flag = true;
+                $utility_obj->set_flash_message(t('Product data could not be saved'), 'error');
+            }
+        }
+    }
+}
+
+// Get manufacturer details
+$manufacturer_obj = create_model_object($db_obj, 'manufacturer/', 'Manufacturer');
+
+$manufacturers_data  = $manufacturer_obj->get_manufacturer_by_type(BRICK_MANUFACTURER);
+$manufacturers_array = array();
+$manufacturers_array[] = t('Select');
+if(is_array($manufacturers_data) && count($manufacturers_data)){
+    foreach ($manufacturers_data as $manufacturer){
+        $manufacturers_array[$manufacturer['id']] = $manufacturer['company'];
+    }
+}
+$selected_manufacturer = trim($manufacturer_id);
+
+// Get plant details
+$plant_obj = create_model_object($db_obj, 'plant/', 'Plant');
+
+$plant_data  = $plant_obj->get_plant_list(' name ASC', '', '');
+$plant_array = array();
+$plant_array[] = t('Select');
+if(is_array($plant_data) && count($plant_data)){
+    foreach ($plant_data as $plant){
+        $plant_array[$plant['id']] = $plant['name'];
+    }
+}
+$selected_plant = trim($plant_id);
+
+// Get size details
+$size_obj = create_model_object($db_obj, 'size/', 'Size');
+
+$size_data  = $size_obj->get_size_list(' name ASC', '', '');
+$size_array = array();
+$size_array[] = t('Select');
+if(is_array($size_data) && count($size_data)){
+    foreach ($size_data as $size){
+        $size_array[$size['id']] = $size['name'];
+    }
+}
+$selected_size = trim($size_id);
+
+// Get texture details
+$texture_obj = create_model_object($db_obj, 'texture/', 'Texture');
+
+$texture_data  = $texture_obj->get_texture_list(' name ASC', '', '');
+$texture_array = array();
+$texture_array[] = t('Select');
+if(is_array($texture_data) && count($texture_data)){
+    foreach ($texture_data as $texture){
+        $texture_array[$texture['id']] = $texture['name'];
+    }
+}
+$selected_texture = trim($texture_id);
+
+// Get color details
+$color_obj = create_model_object($db_obj, 'color/', 'Color');
+
+$color_data  = $color_obj->get_color_list(' name ASC', '', '');
+$color_array = array();
+$color_array[] = t('Select');
+if(is_array($color_data) && count($color_data)){
+    foreach ($color_data as $color){
+        $color_array[$color['id']] = $color['name'];
+    }
+}
+$selected_color = trim($color_id);
+
+
+$noRecords = false;
+if(isset($_REQUEST['_f']) && $_REQUEST['_f']=='duplicate'){
+    $pk_field = trim($_REQUEST['id']);
+    $result_set  = $product_obj->load_product_details($pk_field);
+    if( isset($manufacturer_id) && $manufacturer_id != 0 ) {
+        $selected_manufacturer = trim($manufacturer_id);
+    }
+    else {
+        $selected_manufacturer = $result_set['manufacturer_id'];
+    }
+
+    if( isset($plant_id) && $plant_id != 0 ) {
+        $selected_plant = trim($plant_id);
+    }
+    else {
+        $selected_plant = $result_set['plant_id'];
+    }
+
+    if( isset($size_id) && $size_id != 0 ) {
+        $selected_size = trim($size_id);
+    }
+    else {
+        $selected_size = $result_set['size_id'];
+    }
+
+    if( isset($texture_id) && $texture_id != 0 ) {
+        $selected_texture = trim($texture_id);
+    }
+    else {
+        $selected_texture = $result_set['texture_id'];
+    }
+
+    if( isset($color_id) && $color_id != 0 ) {
+        $selected_color = trim($color_id);
+    }
+    else {
+        $selected_color = $result_set['color_id'];
+    }
+}
+require_once('./view/product/ProductAdd.php');
+?>

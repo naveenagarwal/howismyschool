@@ -1,0 +1,133 @@
+var User = {
+	
+	showLogInForm: function() {
+		$('#login_container').removeClass('hide');
+		$('#login_container').addClass('show');
+	},
+		
+	login: function(data) {
+		var fieldDataArr = Array()	;
+		var dataArr = data.split('&');
+		for( i=0; i<dataArr.length; i++ ) {
+			var formData = dataArr[i].split('=');
+		  	fieldDataArr[formData[0]] = formData[1];
+		}
+		//this.username = fieldDataArr['username'];
+		//this.password = fieldDataArr['password'];
+		this.username = 'deepbaveja';
+		this.password = '1234';
+		$.ajax({
+			type: 'POST',
+			url: jsURL+'create-wall/flogin',
+			dataType: 'json',
+			data: { username: this.username, password: this.password, ajax: 1 },
+			success: function(result) {
+				if( result.message.toUpperCase() == 'SUCCESS' ) {
+					alert('Login Successful');
+					$('.login').addClass('hide');
+					$('#login_container').removeClass('show');
+					$('#login_container').addClass('hide');
+					$('.logout').removeClass('hide');
+					$('.logout').addClass('show');
+				}
+				else alert(result.message);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+		        var error = "XMLHttpRequest = " + XMLHttpRequest + ", \n\n textStatus = " + textStatus + ", \n\n errorThrown = " + errorThrown;
+		        alert(error);
+		    }
+		});
+		return false;
+	},
+	
+	showLogout: function() {
+		$('#login_container').removeClass('show');
+	},
+	
+	logout: function() {
+		$.ajax({
+			url: jsURL+'create-wall/flogout',
+			data: { ajax: 1 },
+			success: function() {
+				alert('You have been logged out');
+				$('.login').removeClass('hide');
+				$('.login').addClass('show');
+				$('.logout').removeClass('show');
+				$('.logout').addClass('hide');
+			}
+		});
+	},
+	
+	showSignUpForm: function() {
+		$('#signup_container').removeClass('hide');
+		$('#signup_container').addClass('show');
+	},
+	
+	registerUser: function() {},
+	
+	saveDesign: function(user_design_id='') {
+		$.ajax({
+			type: 'POST',
+			url: jsURL+'create-wall/savedesign',
+			dataType: 'json',
+			data: { user_design_id: user_design_id, ajax: 1 },
+			success: function(result) {
+				if(result.loggedIn) {
+					alert(result.message);
+					$('.login').removeClass('show');
+					$('.login').addClass('hide');
+					$('#login_container').removeClass('show');
+					$('#login_container').addClass('hide');
+					$('.logout').removeClass('hide');
+					$('.logout').addClass('show');
+				}
+				else if(result.notLoggedIn) {
+					alert(result.message);
+					$('.login').removeClass('hide');
+					$('.login').addClass('show');
+					$('#login_container').removeClass('hide');
+					$('#login_container').addClass('show');
+					$('.logout').removeClass('show');
+					$('.logout').addClass('hide');
+				}
+				else{
+					alert("Invalid Operation!");
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+		        var error = "XMLHttpRequest = " + XMLHttpRequest + ", \n\n textStatus = " + textStatus + ", \n\n errorThrown = " + errorThrown;
+		        alert(error);
+			}
+		});
+	},
+	
+	show: function(id) {},
+	
+	edit: function(id) {}
+}
+
+$(document).ready(function() {
+	
+	$(document).on('click', 'a.logout', function() {
+		User.logout();
+	});
+	
+	$(document).on('click', 'a.login', function() {
+		User.showLogInForm();
+	});
+	
+	$('#login_form').submit(function() {
+		User.login($(this).serialize());
+		return false;
+	});
+	
+	$(document).on('click', 'a.signup', function() {
+		User.showSignUpForm();
+	});
+	
+	$(document).on('click', 'a.save', function() {
+		var user_design_id = '8';
+		User.saveDesign(user_design_id);
+	});
+	
+});

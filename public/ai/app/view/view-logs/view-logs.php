@@ -1,0 +1,90 @@
+<?php 
+//add css & js for blueimg upload
+add_blueimp_css_js(); 
+?>
+<div class="viewlog">
+	<div class="listheader">	
+        <div class="form-inline" role="form" id="viewLogsPage">
+          <div class="form-group">
+            <label for="log_type">
+        		    <?php 
+                        echo t('Select Log Type');
+                    ?>
+                </label>
+                <?php 
+                        echo form_dropdown(
+                           'log_type',
+                            $GLOBALS['glbLogTypes'],
+                            $logType,
+                            'id = "log_type" 
+                            class = "form-control"'
+                            );
+                ?>
+          </div>
+          <div class="form-group">
+            <?php
+        		echo link_create(t('View'),
+        		array('href'=>'javascript:viewLog()',
+         		'class'=>'btn btn-success viewIcon'),JAVASCRIPT_LINK);
+            ?>
+          </div>
+      
+		<?php if($uploadAllowed){?>
+            <div class="addfileinput">
+            <span class="btn btn-success fileinput-button importIcon">
+              <span><?php echo t("Import Log Data");?></span>
+                <?php echo form_upload($data = array(
+                          'name' => 'log_upload',
+                          'value'=> '',  
+                          'id'   => 'log_upload'
+                       )
+                     );?>
+              </span>
+              <br/><br/>
+              <!-- The global progress bar -->
+              <div id="blueimpProgress" class="progress">
+                <div class="progress-bar progress-bar-success"></div>
+              </div>
+            </div>
+             <div class="addfileinput">
+        <a class="btn btn-success downloadSample" 
+        href="javascript:void(0);" 
+        onclick="downloadSampleFile('<?php echo LOG_SAMPLE_FILE;?>');" >
+        <?php echo t('Download Sample File');?></a>
+        </div>
+        <?php }?>
+        <?php if($downloadAllowed){?>
+            <div class="addfileinput">
+            <?php
+        		echo link_create(t('Export Log Data'),
+        		array('href'=>'javascript:exportData()',
+         		'class'=>'btn btn-success export-btn'),JAVASCRIPT_LINK);
+		    ?>
+            </div>
+        <?php }?>
+          </div>
+	<div class="clr"></div>
+	</div>
+	<?php //Shoq Grid Here; ?>
+	<?php echo $utility_obj->get_flash_message();?>
+	<?php echo $tableHTML; ?>
+</div>
+<script type="text/javascript">
+$(function() {
+    blueimpFileUpload('log_upload',
+    '<?php echo URL.$uploadPath;?>&ajax=1',
+    'blueimpProgress',handleLogUpload);
+});
+function viewLog(){
+	window.location = '<?php echo $recordURL;?>&log_type='+$('#log_type').val();
+}
+function exportData(){
+	var sortString = '&sortIndex='+<?php echo $tableId;?>.fnSettings().aaSorting[0][0];
+	sortString += '&sortOrder='+<?php echo $tableId;?>.fnSettings().aaSorting[0][1];
+	window.location = '<?php echo URL.$downloadPath;?>&log_type='+
+	$('#log_type').val()+sortString+'&ajax=1';
+}
+function handleLogUpload(data){
+  <?php echo $tableId;?>.fnReloadAjax("<?php echo $recordURLAjax?>");
+}
+</script>

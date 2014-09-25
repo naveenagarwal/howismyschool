@@ -1,0 +1,18 @@
+<?php
+//load model class
+$aiObj = create_model_object($dbObj, AI_PATH, 'CreateWall');
+
+$user_design_id = trim($_POST['user_design_id']);
+$jsonResult = array();
+if( !$login->is_user_logged_in() ) {
+	$jsonResult['notLoggedIn'] 	= true;
+	$jsonResult['message'] 		= t('Please login first');
+}
+else {
+	$returnId = $aiObj->save_design($user_design_id);
+	$jsonResult['loggedIn']  	= true;
+	if( $returnId ) $jsonResult['message'] 	= t('Wall has been saved successfully');
+    else $jsonResult['message'] = t('Wall could not be saved due to some technical issue');
+}
+die(json_encode($jsonResult));
+?>

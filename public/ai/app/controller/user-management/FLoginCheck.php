@@ -1,0 +1,8 @@
+<?php
+$json_result = array();
+$json_result['loggedIn'] = false;
+if( $login->is_user_logged_in() ) {
+    $json_result['loggedIn'] = true;
+}
+die(json_encode($json_result));
+?>

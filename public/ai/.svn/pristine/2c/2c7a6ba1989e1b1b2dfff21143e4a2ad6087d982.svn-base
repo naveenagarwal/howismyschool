@@ -1,0 +1,155 @@
+var User = {
+  loggedIn: false,
+
+  checkUserLoggedIn: function(){
+    $.ajax({
+      url: jsURL+'create-wall/flogin_check',
+      data: { ajax: 1 },
+      dataType: 'json',
+      success: function(result){
+        if(result.loggedIn){
+          User.loggedIn = true;
+        }else{
+          User.loggedIn = false;
+        }
+        if(User.loggedIn){
+          $('#logout').removeClass('hide');
+          $('#logout').addClass('show');
+        }else{
+          $('#logout').removeClass('show');
+          $('#logout').addClass('hide');
+        }
+      }
+    });
+  },
+
+  validateLogin: function() {
+    if( !validateUserName('username') ) return false;
+    if( !validatePassword('password') ) return false;
+    return true;
+  },
+
+  createLogInHTML: function() {
+    return  '\
+              <div id="login_container">\
+              <form name="login_form" id="login_form" method="post" autocomplete="off">\
+              <input type="text" name="username" required id="username" placeholder="Enter username" maxlength="100" /><br />\
+              <input type="password" name="password" required id="password" placeholder="Enter password" maxlength="20" /><br />\
+              <input type="hidden" name="ajax" value="1" />\
+              <input type="submit" value="Login" id="login_btn" /><br />\
+              </form><br />\
+              <a href="javascript:void(0);" id="user_register">Register</a>\
+              <a href="javascript:void(0);" id="user_login" class="hide">Login</a>\
+              </div>\
+            ';
+  },
+
+  openLoginPopup: function() {
+    $("#lightbox-content").html(this.createLogInHTML());
+    $('.show-popup').trigger("click");
+  },
+
+  saveDesign: function() {
+    var data = {
+      html_info: AccurateImage.wallHTML(),
+      json_info: JSON.stringify(AccurateImage.wallJSON()),
+      user_design_id: AccurateImage.wallDesignId(),
+      ajax: '1'
+    };
+
+    this.saveDesignAfterLogin = true;
+    if(this.loggedIn){
+      $.ajax({
+        type: 'POST',
+        url: jsURL+'create-wall/savedesign',
+        dataType: 'json',
+        data: data,
+        success: function(result) {
+          if(result.loggedIn) {
+            alert(result.message);
+            $("div#full-wall").data("design_id", result.design_id);
+          }
+          else if(result.notLoggedIn) {
+            alert(result.message);
+            User.openLoginPopup();
+          }
+          else{
+            alert("Invalid Operation!");
+          }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+              var error = "XMLHttpRequest = " + XMLHttpRequest + ", \n\n textStatus = " + textStatus + ", \n\n errorThrown = " + errorThrown;
+              alert(error);
+        }
+      });
+    }
+    else{
+      User.openLoginPopup();
+    }
+  },
+
+  getSubmitURL: function(){
+    var url = "",
+        btnVal = $.trim($("#login_btn").val());
+
+    if(btnVal == "Register"){
+      url = jsURL+'create-wall/fregister';
+    }else if(btnVal == "Login"){
+      url = jsURL+'create-wall/flogin';
+    }else {
+      alert("Illegal Operation");
+      return false;
+    }
+
+    return url;
+  },
+
+  login: function() {
+    $.ajax({
+      type: 'POST',
+      url: this.getSubmitURL(),
+      dataType: 'json',
+      data: $("#login_form").serialize(),
+      success: function(result) {
+        if( result.message.toUpperCase() == 'SUCCESS' ) {
+          alert('Login Successful');
+          $('#logout').removeClass('hide');
+          $('#logout').addClass('show');
+          User.loggedIn = true;
+          if(User.saveDesignAfterLogin) {
+            User.saveDesign();
+          }
+        }
+        else {
+          alert(result.message);
+          User.loggedIn = false;
+        }
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        var error = "XMLHttpRequest = " + XMLHttpRequest + ", \n\n textStatus = " + textStatus + ", \n\n errorThrown = " + errorThrown;
+        alert(error);
+        User.loggedIn = false;
+      }
+    });
+    return false;
+  },
+
+  logout: function() {
+    $.ajax({
+      url: jsURL+'create-wall/flogout',
+      data: { ajax: 1 },
+      success: function() {
+        User.loggedIn = false;
+        alert('You have been logged out');
+        $('#logout').removeClass('show');
+        $('#logout').addClass('hide');
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        var error = "XMLHttpRequest = " + XMLHttpRequest + ", \n\n textStatus = " + textStatus + ", \n\n errorThrown = " + errorThrown;
+        alert(error);
+        User.loggedIn = false;
+      }
+    });
+  }
+
+};

@@ -1,0 +1,160 @@
+#_invisibleIfEmpty table.s4-wpTopTable div table td table td.schedule_text span {
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15) inset;
+    height: 40px;
+    padding: 5px;
+    resize: none;
+    display:block;
+}
+div table tr td.schedule_text {display: block;}
+#_invisibleIfEmpty table.s4-wpTopTable div table td table td.schedule_text span{margin:15px 0 0 !important;}
+#_invisibleIfEmpty table.s4-wpTopTable div table td.anujCmnts.schedule_text span{display: block; margin:36px 0 0 !important;}
+#_invisibleIfEmpty table.s4-wpTopTable div table td table td.schedule_text.noMargin span{margin:0 !important;}
+#_invisibleIfEmpty table.s4-wpTopTable div table th {
+    background: url(/_catalogs/images/table_heading.png) repeat-x 0 0;    
+    border-color: #ccc;
+    color: #022136;
+    font: bold 14px/25px sans-serif;
+    height: auto;
+    padding: 3px 0 3px 3px;
+    text-shadow: 0 1px 1px #fff;
+}
+#_invisibleIfEmpty table.s4-wpTopTable div table td a.projectName {
+    border: medium none;
+    display: block;
+    font-size: 12px;
+    text-align: center;
+    width: 124px;
+    margin:0 auto;
+}
+#_invisibleIfEmpty table.s4-wpTopTable div table td {
+    border-color: #ccc;
+    font-size: 12px;
+    padding: 2px;
+    position: relative !important;
+}
+#_invisibleIfEmpty table.s4-wpTopTable div table td table td {
+    padding: 0;
+}
+
+#_invisibleIfEmpty table.s4-wpTopTable div table a {
+    font: 14px/25px sans-serif;
+}
+#_invisibleIfEmpty table.s4-wpTopTable div table td {
+    border-color: #ccc;
+    font-size: 12px;
+    padding: 2px;
+    position: relative !important;
+}
+#_invisibleIfEmpty table.s4-wpTopTable div table td table td {
+    padding: 0;
+}
+#_invisibleIfEmpty div table td input.updateReport {
+    background: url("../images/button_bg.jpg") repeat-x scroll 0 0 / 100% 100% rgba(0, 0, 0, 0);
+    border: medium none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 20px 10px 0;
+    padding: 4px 10px;
+}
+#_invisibleIfEmpty table.s4-wpTopTable div table > tr > td:first-child {
+    padding-left: 15px;
+}
+#_invisibleIfEmpty table.s4-wpTopTable div table td label {
+    display: block;
+    font-size: 10px;
+    padding: 0 0 15px;
+    text-align: center;
+    width: 35px;
+}
+.updateAll input {
+    background: url("../images/button_bg.jpg") repeat-x scroll 0 0 / 100% 100% rgba(0, 0, 0, 0);
+    border: medium none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    margin: 5px 0;
+    padding: 4px 10px;
+}
+.cb {
+    clear: both;
+}
+#_invisibleIfEmpty table.s4-wpTopTable div table td label {
+    position: relative;
+}
+#_invisibleIfEmpty table.s4-wpTopTable div table td label img {
+    position: absolute;
+    right: 21px;
+    top: 16px;
+}
+table {
+    width: 100%;
+}
+.radioBtn_box {
+    margin: 0 auto;
+    position: relative;
+    width: 120px;
+}
+.radioBtn_box table {
+    height: 35px;
+}
+.radioBtn_box input[type="radio"] {
+    margin: 17px 0 0 10px;
+    padding: 0;
+    position: absolute;
+}
+.checkRed {
+    margin: -16px 0 0 90px;
+    position: absolute;
+}
+.yellowCheck {
+    margin: -16px 0 0 50px;
+    position: absolute;
+}
+.greenCheck {
+    margin: -15px 0 0 11px;
+    position: absolute;
+}
+
+#_invisibleIfEmpty .ms-wpContentDivSpace > div{padding:10px 0;}
+#_invisibleIfEmpty .ms-wpContentDivSpace > div > div{margin:10px 0;}
+.bkPMS_link{float:right; font-size:16px;}
+
+/* IE-9and8 */
+.greenCheck{
+    margin: -19px 0 0 11px\0/;
+}
+.yellowCheck {
+    margin: -19px 0 0 50px\0/;
+}
+.checkRed {
+    margin: -19px 0 0 90px\0/;
+}
+/* IE-7 */
+.radioBtn_box input[type="radio"] {
+    *margin: 15px 0 0 10px;
+}
+.bkPMS_link{*position:absolute; right:10px;}
+#_invisibleIfEmpty table.s4-wpTopTable div table td table td.schedule_text span{*margin:24px 0 0 !important;}
+#_invisibleIfEmpty table.s4-wpTopTable div table td.anujCmnts.schedule_text span{*margin:46px 0 0 !important;}
+#_invisibleIfEmpty table.s4-wpTopTable div table td table td.schedule_text.noMargin span{*margin:10px 0 0 !important;}
+/* IE-10 */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+.checkRed {
+    margin: -19px 0 0 89px;
+    position: absolute;
+}
+.yellowCheck {
+    margin: -19px 0 0 49px;
+    position: absolute;
+}
+.greenCheck {
+    margin: -19px 0 0 10px;
+    position: absolute;
+}
+}

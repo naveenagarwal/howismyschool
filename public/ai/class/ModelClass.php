@@ -1,0 +1,1135 @@
+<?php
+
+/**
+ * Description : This class used to databese connection, manupulate
+ * database query.
+ * @author 		: rasingh - Q3tech
+ * @created on 	: Aug 25, 2014
+ * @modified on : Aug 25, 2014
+ */
+
+ require_once('CustomException.php');
+ require_once('ModelClassInterface.php');
+class ModelClass implements ModelClassInterface {
+	public $CONN;
+    public $savepoint = '';
+    public static $sql_dump =array();
+    public static $connCounter = 0;
+
+	/**
+	 * This is a constructor function where variables are intialized automatically
+	 * when object is created of this class
+	 * @return null
+	 */
+    function __construct(){
+        $user = DB_USERNAME;
+        $pass = DB_PASSWORD;
+        $server = DB_SERVER;
+        $dbase = DB_DATABASE;
+        $port = DB_PORT;
+        try{
+            if( !$this->CONN =
+            @mysqli_connect($server, $user, $pass,$dbase,$port) ){
+                throw new CustomException('Error occured while connecting to
+                the server.', @mysqli_connect_errno());
+            }
+            $this::$connCounter++;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+        return true;
+    }
+
+	/**
+     * This function is used to close the connection
+     * @param void
+     * @return null
+     */
+    function close(){
+        try{
+            if( !@mysqli_close($this->CONN) ){
+                throw new CustomException('Error occured while closing
+                connection.', mysqli_errno($this->CONN));
+            }
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+        return true;
+    }
+
+	/**
+     * This function is used to display error message
+     * @param string $text
+     * @return string
+     */
+    function error($text){
+        return $text;
+    }
+
+	/**
+     * This function is used to log sql start time
+     * @param string $sql
+     * @return string
+     */
+    function sql_start($sql){
+        $mtime = microtime();
+        $mtime = explode(" ",$mtime);
+        $mtime = $mtime[1] + $mtime[0];
+        $this::$sql_dump[$sql]['SQL'] = $sql;
+        $this::$sql_dump[$sql]['START'] = $mtime;
+    }
+
+	/**
+     * This function is used to log sql end time
+     * @param string $sql
+     * @return string
+     */
+    function sql_end($sql){
+        $mtime = microtime();
+        $mtime = explode(" ",$mtime);
+        $mtime = $mtime[1] + $mtime[0];
+        $this::$sql_dump[$sql]['SQL'] = $sql;
+        $this::$sql_dump[$sql]['END'] = $mtime;
+    }
+
+	/**
+     * This function is used to display sql log
+     * @param bool $last_record_only
+     * @return string
+     */
+    function display_sql_log($last_record_only = false){
+        $tableBody = '<td colspan="5">No Queries Executed</td>';
+        if(is_array($this::$sql_dump) and count($this::$sql_dump)){
+            $tableBody = '';
+            $counter = 1;
+            $startTime = $endTime = '';
+            $dumpArray = $this::$sql_dump;
+
+            if($last_record_only){
+                $aKey = array_keys($dumpArray);
+                $lastRecordKey = $aKey[count($aKey)-1];
+                $dumpArray = array($dumpArray[$lastRecordKey]);
+            }
+            foreach ($dumpArray as $sql_dump) {
+                if($startTime == ''){
+                    $startTime = $sql_dump['START'];
+                }
+                $endTime = $sql_dump['END'];
+                $tableBody .='<tr>';
+                $tableBody .='<td>';
+                $tableBody .= $counter;
+                $tableBody .='</td>';
+                $tableBody .='<td>';
+                $tableBody .= $sql_dump['SQL'];
+                $tableBody .='</td>';
+                $tableBody .='<td>';
+                $tableBody .= $sql_dump['START'];
+                $tableBody .='</td>';
+                $tableBody .='<td>';
+                $tableBody .= $sql_dump['END'];
+                $tableBody .='</td>';
+                $tableBody .='<td>';
+                $tableBody .= round(($sql_dump['END']-$sql_dump['START']),4);
+                $tableBody .='</td>';
+                $tableBody .= '</tr>';
+                $counter++;
+            }
+            $tableBody .= '<tr><td colspan="5" align="center">Total
+            Time :'.round(($endTime -$startTime),4).'</td></tr>';
+        }
+        $tableHeader = '<tr><th>#</th><th>Query</th><th>Start</th><th>End</th>
+        <th>Duration</th></tr>';
+        $table = '<table border="1">'.$tableHeader.$tableBody.'</table>
+        <br/><strong>Total connections made :</strong>'.$this::$connCounter;
+        return $table;
+    }
+
+	/**
+     * This function is used to execute select query
+     * @param string $sql
+	 * @param bool $mode
+     * @return object
+     */
+    function select($sql="",$mode = 1){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if(!preg_match("/^select/i",$sql)){
+                throw new CustomException('Error occured due to an invalid
+                SELECT query.'.$sql);
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            $results = @mysqli_query($this->CONN,$sql);
+            $count = 0;
+            $data = array();
+            if($mode == '1'){
+             while($row = mysqli_fetch_array($results)){
+                $data[$count] = $row;
+                $count++;
+             }
+            }else{
+              while($row = mysqli_fetch_object($results)){
+                $data[$count] = $row;
+                $count++;
+             }
+            }
+            mysqli_free_result($results);
+            $this->sql_end($sql);
+            return $data;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to count number of record(s)
+     * @param string $sql
+     * @return int
+     */
+    function count_of($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to
+                an empty query.');
+
+            }
+            if(!preg_match("/^select/i",$sql)){
+                throw new CustomException('Error occured due to an invalid
+                SELECT query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            $results = @mysqli_query($this->CONN,$sql);
+            $count = 0;
+            while(mysqli_fetch_array($results)){
+                $count++;
+            }
+            mysqli_free_result($results);
+            $this->sql_end($sql);
+            return $count;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to execute union query
+     * @param string $sql
+     * @return object
+     */
+    function selectunion($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if(!preg_match("/select/i",$sql)){
+                throw new CustomException('Error occured due to an invalid
+                SELECT query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+
+            $results = @mysqli_query($this->CONN,$sql);
+
+            $count = 0;
+            $data = array();
+            while($row = mysqli_fetch_array($results)){
+                $data[$count] = $row;
+                $count++;
+            }
+            mysqli_free_result($results);
+            $this->sql_end($sql);
+            return $data;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to display updated query
+     * @param string $sql
+     * @return object
+     */
+    function newselect($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an empty
+                query.');
+
+            }
+            if(!preg_match("/^select/i",$sql)){
+                throw new CustomException('Error occured due to an invalid
+                SELECT query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+
+            $results = @mysqli_query($this->CONN,$sql);
+
+            $count = 0;
+            while ( $row = mysqli_fetch_array($results)){
+                $data[$count] = $row;
+                $count++;
+            }
+            mysqli_free_result($results);
+            $this->sql_end($sql);
+            return $data;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to display affected rows
+     * @param string $sql
+     * @return int
+     */
+    function affected($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if(!preg_match("/^select/i",$sql)){
+                throw new CustomException('Error occured due to an invalid
+                SELECT query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            mysqli_query($this->CONN,$sql);
+            $tot=0;
+            $tot=mysqli_affected_rows($this->CONN);
+            $this->sql_end($sql);
+            return $tot;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to insert data into the database
+     * @param string $sql
+	 * @param bool $throw_exception
+     * @return true/false
+     */
+    function insert ($sql="",$throw_exception = TRUE){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if(!preg_match("/^insert/i",$sql)){
+                throw new CustomException('Error occured due to an
+                invalid INSERT query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+
+            $results = @mysqli_query($this->CONN,$sql);
+            if( !$results ){
+                if($throw_exception){
+                    throw new CustomException('Error occured while
+                    inserting data into database : '
+                    . mysqli_errno($this->CONN).' SQL : '.$sql);
+                }
+                //simply return if exception throwing is turned off
+                //by the calling code
+                return false;
+            }
+            else{
+                $id = mysqli_insert_id($this->CONN);
+                return $id;
+            }
+            $this->sql_end($sql);
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to display number of adder
+     * @param string $sql
+     * @return int
+     */
+    function adder($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to
+                an empty query.');
+
+            }
+            if(!preg_match("/^insert/i",$sql)){
+                throw new CustomException('Error occured due to an invalid
+                INSERT query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            $results = @mysqli_query($this->CONN,$sql);
+            if( !$results ){
+                throw new CustomException('Error occured while adding data
+                into database : ' . mysqli_errno($this->CONN) );
+
+            }
+            else{
+                $id = mysqli_insert_id($this->CONN);
+                return $id;
+            }
+            $this->sql_end($sql);
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to edit data into the database
+     * @param string $sql
+	 * @param bool $throw_exception
+     * @return true/false
+     */
+    function edit($sql="",$throw_exception = TRUE){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if(!preg_match("/^update/i",$sql)){
+                throw new CustomException('Error occured due to an invalid
+                UPDATE query : '.$sql);
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+
+            $results = @mysqli_query($this->CONN,$sql);
+            if( !$results ){
+                if($throw_exception){
+                    throw new CustomException('Error occured while updating
+                    data into database : '
+                    . mysqli_errno($this->CONN).' SQL :'.$sql);
+                }
+                //simply return if exception throwing is turned off
+                //by the calling code
+                return false;
+
+            }
+            $rows = 0;
+            $rows = mysqli_affected_rows($this->CONN);
+            $this->sql_end($sql);
+            return 1;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to execute sql query
+     * @param string $sql
+     * @return object
+     */
+    function sql_query($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to
+                an empty query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            if( !$results = @mysqli_query($this->CONN,$sql) ){
+                throw new CustomException('Error occured while firing SQL
+                query to database. :'.$sql);
+
+            }
+
+            if(!(preg_match("/^select/i",$sql) || preg_match("/^show/i",$sql))){
+                return true;
+            }
+            else {
+                $count = 0;
+                $data = array();
+                while ( $row = mysqli_fetch_array($results))    {
+                    $data[$count] = $row;
+                    $count++;
+                }
+                mysqli_free_result($results);
+                $this->sql_end($sql);
+                return $data;
+            }
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to execute sql query for more safety purpose, this
+	 * query should run against an MySql user who has only select previledge
+     * @param string $sql
+     * @return object
+     */
+    function sql_query_special($sql=""){
+        $this->sql_start($sql);
+        //for MORE safety purpose, this query should run against an MySql user
+        //who has only select previledge
+        $errArray['error'] = '';
+        try{
+            if(empty($sql)){
+                $errArray['error'] = t('Error occured due to an empty query.');
+                throw new CustomException(t('Error occured due to
+                an empty query.'));
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                $errArray['error'] = t('Error occured while retrieving database
+                 object.');
+                throw new CustomException(t('Error occured while retrieving
+                 database object.'));
+
+            }
+            if(preg_match("/^insert/i",$sql) or preg_match("/^update/i",$sql)
+            or preg_match("/^delete/i",$sql)
+            or preg_match("/^create/i",$sql) or preg_match("/^drop/i",$sql)
+            or preg_match("/^truncate/i",$sql) ){
+                $errArray['error'] = t('DML & DDL query is not permitted.');
+                throw new CustomException('DML & DDL query is not permitted.');
+
+            }
+            if( !$results = @mysqli_query($this->CONN,$sql) ){
+                $errArray['error'] = mysqli_errno($this->CONN)
+                .':'.mysqli_error($this->CONN);
+                throw new CustomException(t('Error occured while firing SQL
+                query to database.'));
+
+            }
+
+            if(!(preg_match("/^select/i",$sql) || preg_match("/^show/i",$sql))){
+                return true; }
+                else {
+                    $count = 0;
+                    $data = array();
+                    while ( $row = mysqli_fetch_row($results))  {
+
+                        $data[$count] = $row;
+                        $count++;
+                    }
+                    $count = 0;
+                    $fields = array();
+                    $org_fields = array();
+
+                    while ($count < mysqli_num_fields($results)) {
+                        $meta = mysqli_fetch_field($results);
+                        $fields[$count] = $meta->name;
+                        $org_fields[$count] = $meta->orgtable.'.'.
+                        $meta->orgname;
+                        $count++;
+                    }
+                    mysqli_free_result($results);
+                    $this->sql_end($sql);
+                    $result = array();
+                    $result['fields'] = $fields;
+                    $result['org_fields'] = $org_fields;
+                    $result['data'] = $data;
+                    return $result;
+                }
+        }
+        catch(CustomException $e){
+            return $errArray;
+        }
+    }
+
+    /**
+     * This function is used to execute sql query structure
+     * @param string $sql
+     * @return array
+     */
+    function sql_query_structure($sql=""){
+        $this->sql_start($sql);
+        //for MORE safety purpose, this query should run against an MySql user
+        //who has only select previledge
+        $errArray['error'] = '';
+        try{
+            if(empty($sql)){
+                $errArray['error'] = t('Error occured due to an empty query.');
+                throw new CustomException(t('Error occured due to an
+                empty query.'));
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                $errArray['error'] = t('Error occured while retrieving
+                database object.');
+                throw new CustomException(t('Error occured while retrieving
+                database object.'));
+
+            }
+            if(preg_match("/^insert/i",$sql) or preg_match("/^update/i",$sql)
+            or preg_match("/^delete/i",$sql)
+            or preg_match("/^create/i",$sql) or preg_match("/^drop/i",$sql)
+            or preg_match("/^truncate/i",$sql)){
+                $errArray['error'] = t('DML & DDL query is not permitted.');
+                throw new CustomException('DML & DDL query is not permitted.');
+
+            }
+            if( !$results = @mysqli_query($this->CONN,$sql) ){
+                $errArray['error'] = mysqli_errno($this->CONN).':'
+                .mysqli_errno($this->CONN);
+                throw new CustomException(t('Error occured while firing SQL
+                query to database.'));
+
+            }
+
+            if(!(preg_match("/^select/i",$sql) || preg_match("/^show/i",$sql))){
+                return true; }
+                else {
+                    $count = 0;
+                    $fields = array();
+                    while ( $row = mysqli_fetch_row($results))  {
+                        $fields[$count] = $row[0];
+                        $count++;
+                    }
+                    mysqli_free_result($results);
+                    $this->sql_end($sql);
+                    $result = array();
+                    $result['fields'] = $fields;
+                    return $result;
+                }
+        }
+        catch(CustomException $e){
+            return $errArray;
+        }
+    }
+
+    /**
+     * To escape special characters not supported by mysql
+     * @param String $data
+     * @param bool $check
+     * @return String $data encoded string
+     */
+    function mysql_data_encode($data, $check = false){
+        $data = trim($data);
+        if(!ini_get("magic_quotes_gpc") || $check){
+            return mysqli_real_escape_string($this->CONN,$data);
+        }
+        else{
+            return $data;
+        }
+    }
+
+	/**
+     * This function is used to execute sql query structure
+     * @param string $sql
+	 * @param bool $throw_exception
+	 * @param bool $mode
+     * @return array
+     */
+    function sql_single_query($sql="",$throw_exception = true,$mode = 1){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            if( !$results = mysqli_query($this->CONN,$sql) ){
+                if($throw_exception){
+                    throw new CustomException('Error occured while firing SQL
+                    query to database. SQL :'.$sql);
+                }
+                //simply return if exception throwing is turned off
+                //by the calling code
+                return false;
+            }
+
+            // (Martin Huba) also SHOW... commands return some results
+            if(!(preg_match("/^select/i",$sql) || preg_match("/^show/i",$sql))){
+                return true; }
+                else {
+                    if($mode == '1'){
+                     $data = mysqli_fetch_array($results);
+                    }else{
+                     $data = (array)mysqli_fetch_object($results);
+                    }
+                    mysqli_free_result($results);
+                    $this->sql_end($sql);
+                    return $data;
+                }
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to call store procedure
+     * @param string $sql
+     * @return null
+     */
+    function call_procedure($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+            }
+            mysqli_query($this->CONN,$sql);
+            $this->sql_end($sql);
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to execute sql query to delete data
+     * @param string $sql
+	 * @param bool $throw_exception
+     * @return int
+     */
+    function delete($sql="",$throw_exception = TRUE){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an empty
+                query.');
+
+            }
+            if(!preg_match("/^delete/i",$sql)){
+                throw new CustomException('Error occured due to an invalid
+                SELECT query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                if($throw_exception){
+                    throw new CustomException('Error occured while firing SQL
+                    query to database. SQL :'.$sql);
+                }
+                //simply return if exception throwing is turned off
+                //by the calling code
+                return false;
+
+            }
+            mysqli_query($this->CONN,$sql);
+            $tot = 0;
+            $tot = mysqli_affected_rows($this->CONN);
+            $this->sql_end($sql);
+            return $tot;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to execute sql query to create database
+     * @param string $sql
+     * @return true / false
+     */
+    function create_database($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            if(!preg_match("/^create/i",$sql)) {
+                throw new CustomException('Error occured while creating new
+                database.');
+
+            }
+            if( !$results = @mysqli_query($this->CONN,$sql) ){
+                $results = $results;
+                throw new CustomException('Error occured while firing SQL query
+                to database.');
+
+            }
+            $this->sql_end($sql);
+            return true;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to execute sql query to create table
+     * @param string $sql
+     * @return true / false
+     */
+    function create_table($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an empty
+                query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            if(!preg_match("/^create/i",$sql)) {
+                throw new CustomException('Error occured while creating new
+                table.');
+
+            }
+            if( !$results = @mysqli_query($this->CONN,$sql) ){
+                $results = $results;
+                throw new CustomException('Error occured while firing SQL query
+                to database. SQL : '.$sql);
+
+            }
+            $this->sql_end($sql);
+            return true;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to execute sql query to drop table
+     * @param string $sql
+	 * @param bool $throw_exception
+     * @return true / false
+     */
+    function drop_table($sql="",$throw_exception = true){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            if(!preg_match("/^drop/i",$sql)) {
+                throw new CustomException('Error occured while droping table.');
+
+            }
+            if( !$results = mysqli_query($this->CONN,$sql) ){
+                $results = $results;
+                if($throw_exception){
+                    throw new CustomException('Error occured while firing SQL
+                    query to database.');
+                }
+
+            }
+            $this->sql_end($sql);
+            return true;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to execute sql query to rename table
+     * @param string $sql
+     * @return true / false
+     */
+    function rename_table($sql=""){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            if(!preg_match("/^rename/i",$sql)) {
+                throw new CustomException('Error occured while
+                renaming table.');
+
+            }
+            if( !$results = @mysqli_query($this->CONN,$sql) ){
+                $results = $results;
+                throw new CustomException('Error occured while firing SQL
+                query to database.');
+
+            }
+            $this->sql_end($sql);
+            return true;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used to execute sql query to alter table
+     * @param string $sql
+	 * @param bool $throw_exception
+     * @return true / false
+     */
+    function alter_table($sql="",$throw_exception = true){
+        $this->sql_start($sql);
+        try{
+            if(empty($sql)){
+                throw new CustomException('Error occured due to an
+                empty query.');
+
+            }
+            if( !$this->CONN || empty($this->CONN) ){
+                throw new CustomException('Error occured while retrieving
+                database object.');
+
+            }
+            if(!preg_match("/^alter/i",$sql)) {
+                throw new CustomException('Error occured while
+                altering table.');
+
+            }
+            if( !$results = @mysqli_query($this->CONN,$sql) ){
+                $results = $results;
+                if($throw_exception){
+                  throw new CustomException('Error occured while firing
+                  SQL query to database.'.$sql);
+                }
+
+            }
+            $this->sql_end($sql);
+            return true;
+        }
+        catch(CustomException $e){
+            $e->show_exception_message();
+        }
+    }
+
+	/**
+     * This function is used when transaction start
+     * @param void
+     * @return null
+     */
+    function start_transaction(){
+        $sql = 'START TRANSACTION';
+        mysqli_query($this->CONN,$sql);
+        $this->savepoint = 'SAVE'.rand(1,10000);
+        $sql = 'SAVEPOINT  '.$this->savepoint;
+        mysqli_query($this->CONN,$sql);
+    }
+
+	/**
+     * This function is used when transaction commited
+     * @param void
+     * @return null
+     */
+    function commit_transaction(){
+        $sql = 'RELEASE SAVEPOINT  '.$this->savepoint;
+        mysqli_query($this->CONN,$sql);
+        $this->savepoint = '';
+        $sql = 'COMMIT';
+        mysqli_query($this->CONN,$sql);
+    }
+
+	/**
+     * This function is used when changes rollback
+     * @param msg
+     * @return string
+     */
+    function rollback_savepoint($msg){
+        $sql = 'ROLLBACK TO SAVEPOINT  '.$this->savepoint;
+        mysqli_query($this->CONN,$sql);
+        return $msg;
+    }
+
+	/**
+     * This function is used to map the table
+     * @param string $table_name
+	 * @param string $database
+	 * @param bool $mode
+     * @return string
+     */
+    function get_table_mapping($table_name,$database = '',$mode = 1){
+        return $table_name;
+    }
+
+	/**
+     * this function is used to query via memcache
+     * @param string $function_name
+	 * @param string $query
+     * @return string
+     */
+    function memcache_select_query($function_name,$query){
+        if(!method_exists($this,$function_name)){
+            echo $function_name.' function does not exist<br/>';
+            return false;
+        }
+
+        if(extension_loaded('memcache')){
+            try{
+                //instantiating memcache extension class
+                $memcache   = new Memcache;
+                $memConnect =
+                @$memcache->connect(MEMCACHE_SERVER,MEMCACHE_PORT);
+                if(!$memConnect){
+                    throw new Exception('Could not connect to '
+                    .MEMCACHE_SERVER.' memcache server', 1);
+                }
+            }
+            catch(Exception $e){
+                return call_user_func(array($this, $function_name), $query);
+            }
+
+            $result = $memcache->get($query);
+            if($result ==''){
+                $result = call_user_func(array($this, $function_name), $query);
+                $memcache->add($query, $result, MEMCACHE_FLAG,
+                MEMCACHE_EXPIRE_TIME);
+            }
+        }else{
+            return call_user_func(array($this, $function_name), $query);
+        }
+        return $result;
+    }
+
+	/**
+     * this function is used to get data as string with saperator
+     * @param string $data
+	 * @param string $saperator
+     * @return string
+     */
+    public function get_sql_string($data, $saperator = ', ') {
+        if(!empty($data)) {
+            $string = '';
+            foreach($data as $field=>$value) {
+                if(empty($string)) {
+                    if($value === NULL) {
+                        if($saperator == ', ') {
+                            $string = $field.' = NULL';
+                        } else {
+                            $string = $field;
+                        }
+                    } else {
+                        if (strpos($field,'IS NULL') !== false) {
+                            $string = $field;
+                        } else {
+                            $string = $field.' = "'.
+                            $this->mysql_data_encode($value).'"';
+                        }
+                    }
+                } else {
+                    if($value === NULL) {
+                        if($saperator == ', ') {
+                            $string .= $saperator.$field.' = NULL';
+                        } else {
+                            $string .= $saperator.$field;
+                        }
+                    } else {
+                         if (strpos($field,'IS NULL') !== false) {
+                            $string .= $saperator.$field;
+                        } else {
+                            $string .= $saperator.$field.' = "'.
+                            $this->mysql_data_encode($value).'"';
+                        }
+                    }
+                }
+            }
+            return $string;
+        } else {
+            return FALSE;
+        }
+    }
+
+	/**
+     * this function is used to get mysql version
+     * @param void
+     * @return string
+     */
+    public function get_mysql_version() {
+        return mysqli_get_server_version($this->CONN);
+    }
+
+	/**
+     * this function is used to get mysql version information
+     * @param void
+     * @return string
+     */
+    public function get_mysql_version_info() {
+        return mysqli_get_server_info($this->CONN);
+    }
+}
+?>

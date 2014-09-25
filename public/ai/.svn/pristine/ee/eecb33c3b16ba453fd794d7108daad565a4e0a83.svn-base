@@ -1,0 +1,195 @@
+<!-- Fixed header -->
+<div class="stickheader">
+  <div class="container-fluid">
+    <div class="row">
+      <div  class="col-xs-2 text-center">
+        <table>
+          <td><a href="#" class="btn-leftbar" id="left-boxDiv" data-toggle="#manufacturers_list"><i class="fa fa-ellipsis-v"></i></a> </td>
+          <td> <img src="../assets/images/accurate-image/logo.png"/> </td>
+        </table>
+      </div>
+      <div  class="col-xs-9">
+        <div id="wrapper">
+          <div id="scroller">
+            <ul id="thelist" class="main-nav">
+              <li> <i class="stack-icon"></i>Stack </li>
+              <li> <i class="runing-icon"></i>Running </li>
+              <li> <i class="third-icon"></i>Third </li>
+              <li> <i class="coursing-icon"></i>Coursing </li>
+              <li> <i class="reset-icon"></i>Reset </li>
+              <li> <i class="undo-icon"></i>Undo </li>
+              <li> <i class="redo-icon"></i>Redo </li>
+              <li> <i class="zoomin-icon"></i>Zoom In </li>
+              <li>  <i class="zoomout-icon"></i>Zoom Out </li>
+              <li> <i class="sizetool-icon"></i>Size Tool </li>
+              <li> <i class="advSearch-icon"></i>Search </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div  class="col-xs-1 text-right">
+        <a href="#"  class="dropdown-toggle right-menu"  ><i class="fa fa-bars"></i></a>
+        <div class="dropdown-menu" role="menu">
+          <div id='cssmenu'>
+            <ul>
+              <li class='has-sub '>
+                <a href='#'><span> <i class="fa fa-pencil-square-o"></i> File</span></a>
+                <ul>
+                  <li><a href='javascript:void(0);' id='file-new-design'><span>New</span></a></li>
+                  <li><a href='javascript:void(0);' id='file-save-design'><span>Save Design</span></a></li>
+                  <li class='has-sub'>
+                    <a href='javascript:void(0);' id='file-save-image'><span>Save Image</span></a>
+                    <ul>
+                      <li><a href='javascript:void(0);' id='file-save-image-wall'><span>Wall Image</span></a></li>
+                      <li><a href='javascript:void(0);' id='file-save-image-seamless'><span>Seamless Tile</span></a></li>
+                    </ul>
+                  </li>
+                  <li><a href='javascript:void(0);' id='logout' class='<?php echo $isLogout; ?>'><span>Logout</span></a></li>
+                </ul>
+              </li>
+              <li class='has-sub'>
+                <a href='#'><span><i class="fa fa-eye"></i> View</span></a>
+                <ul>
+                  <li><a href='#'><span>menu 1</span></a></li>
+                  <li><a href='#'><span>menu 2</span></a></li>
+                </ul>
+              </li>
+              <li class='has-sub'>
+                <a href='#'><span><i class="fa fa-picture-o"></i>  Image</span></a>
+                <ul>
+                  <li><a href='#'><span>menu 1</span></a></li>
+                  <li><a href='#'><span>menu 2</span></a></li>
+                </ul>
+              </li>
+              <li class='has-sub'>
+                <a href='#'><span><i class="fa fa-th"></i> Products</span></a>
+                <ul>
+                  <li><a href='#'><span>menu 1</span></a></li>
+                  <li><a href='#'><span>menu 2</span></a></li>
+                </ul>
+              </li>
+              <li class='has-sub'>
+                <a href='#'><span><i class="fa fa-question-circle"></i> Help</span></a>
+                <ul>
+                  <li><a href='#'><span>menu 1</span></a></li>
+                  <li><a href='#'><span>menu 2</span></a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="sepreater-window"></div>
+<!-- Left panel -->
+<div class="hiddenDiv" id="leftpanelDiv">
+<!-- Nav tabs -->
+  <ul class="nav nav-tabs left-tabs" role="tablist">
+    <li class="active"><a href="#manufacturers" class="tabs" role="tab" data-toggle="tab">Manufacturers</a></li>
+    <li><a href="#manufacturer_prodcuts" class="tabs" role="tab" data-toggle="tab">Products</a></li>
+  </ul>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane active" id="manufacturers">
+      <div class="accordion innerContainer" id="manufacturers_list">
+      </div>
+    </div>
+    <div class="tab-pane" id="manufacturer_prodcuts">
+      <div class="accordion innerContainer" id="manufacturers_prodcuts_list">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Begin page content -->
+<div class="container-fluid" >
+  <div class="row">
+    <div  class="col-sm-12">
+      <div class="brick-container" id="full-wall">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="footer">
+  <div class="container-fluid">
+    <div class="row">
+      <div  class="col-xs-9">
+        <table class="table ">
+          <tr>
+            <td><a href=""><img src="../assets/images/accurate-image/acme-tilestone-logo.png"/></a></td>
+            <td><a href=""><img src="../assets/images/accurate-image/american-tilestone-logo.png"/></a></td>
+            <td><a href=""><img src="../assets/images/accurate-image/featherlite-logo.png"/></a></td>
+            <td><a href=""><img src="../assets/images/accurate-image/ibg-logo.png"/></a></td>
+            <td><a href=""><img src="../assets/images/accurate-image/texasquerries-logo.png"/></a></td>
+          </tr>
+        </table>
+      </div>
+      <div  class="col-xs-3">
+        <ul class="social-icon-list">
+          <li><a href=""> <i class="fa fa-facebook-square"></i></a></li>
+          <li><a href=""> </a></li>
+          <li><a href=""><i class="fa fa-instagram"></i> </a></li>
+          <li><a href=""> <i class="fa fa-pinterest-square"></i></a></li>
+          <li><a href=""><i class="fa fa-twitter-square"></i> </a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- bottom property content panel -->
+<div class="bottom-panel">
+  <button type="submit"  id="btnBottom"><i class="fa fa-chevron-up" id="test"></i> </button>
+  <div id="bottom-container">
+    <div class="container-fluid">
+      <div class="col-xs-11">
+        <div class="product-property-cont">
+          <h2> Product Property</h2>
+          <p>LoreumLoreum ipsum dummy text.Loreum ipsum dummy text.Loreum ipsum dummy text.Loreum ipsum dummy text.Loreum  ipsum dummy text. ipsum dummy text.</p>
+          <div class="row">
+            <div class="col-xs-3">
+              <strong>Material(s)</strong>
+              <p>Abita springs</p>
+            </div>
+            <div class="col-xs-3">
+              <strong>Size</strong>
+              <p>Builder special</p>
+            </div>
+            <div class="col-xs-3">
+              <strong>Color Family</strong>
+              <p>Red, Browns</p>
+            </div>
+            <div class="col-xs-3">
+              <strong>Manufacturer</strong>
+              <p>ACME Brick</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-1"> <button class="popup-icon show-popup"   data-showpopup="1"><i class="fa fa-ellipsis-v"></i> </button></div>
+    </div>
+  </div>
+</div>
+<div class="overlay-bg">
+<div class="overlay-content popup1" >
+  <div class="inner-box " id="lightbox-content">
+  </div>
+  <button class="close-btn"><i class="fa fa-times"></i></button>
+</div>
+<!-- Core JavaScript -->
+
+<?php
+  validateInputJS();
+?>
+
+<script type="text/javascript">
+  var myScroll;
+  function loaded() {
+    myScroll = new iScroll('wrapper');
+  }
+
+  document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+  document.addEventListener('DOMContentLoaded', loaded, false);
+
+</script>

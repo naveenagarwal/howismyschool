@@ -1,0 +1,327 @@
+<?php
+/**
+ * The Authenticate class provides functions that perform operations like
+ * Listing Verify user login attemp, User logout, Update password, Get userdetails and many more
+ * @author 		: rasingh - Q3tech
+ * @created on 	: Aug 25, 2014
+ * @modified on : Aug 25, 2014
+ */
+class Authenticate {
+	private $db_connection = NULL;
+	private $utility_connection = NULL;
+    protected $uid;
+    protected $rid;
+    protected $userAccess = array();
+
+	/**
+	 *
+	 * This is a constructor function where variables are intialized automatically
+	 * when object is created of this class
+	 * @param object $db_obj
+	 * @return null
+	 */
+    public function __construct($db_obj, $utility_obj){
+		$this->db_connection = $db_obj;
+		$this->utility_connection = $utility_obj;
+    }
+
+	/**
+	 * Verify user's number of login attemp
+	 * @param string $user_name
+	 * @param string $password
+	 * @param int $remember_me
+	 * @param int $mode
+	 * @return int
+	 */
+    public function verify_user_login_attemp($user_name, $password, $remember_me, $mode = 1){
+		$user_name  = $this->db_connection->mysql_data_encode($user_name);
+        $login_table = $this->db_connection->get_table_mapping('users');
+        $detailt_table = $this->db_connection->get_table_mapping('user_details');
+        $role_type_table = $this->db_connection->get_table_mapping('roles');
+        $query = "SELECT
+                      l.id AS UserId,l.last_login_date,
+                      d.full_name,d.address,d.contact_no,d.email_id,
+                      r.id AS RoleId,r.role_name,
+                      l.is_active AS userActive , r.is_active AS roleActive,
+                      l.is_deleted as userDeleted,r.is_deleted as roleDeleted
+                FROM
+                $login_table l,$detailt_table d,$role_type_table r
+                WHERE
+                     l.id = d.user_id AND l.role_id = r.id
+                     AND l.user_name = '$user_name'";
+                if($mode == '1'){
+                    $query .= "AND l.user_password = md5('$password')";
+                }else{
+                    //during remember me autologin
+                    $query .= "AND l.user_password = '$password'";
+                }
+
+                $result = $this->db_connection->sql_single_query($query);
+
+                if(is_array($result) and count($result)){
+
+                    if($result['userActive']!='1'){
+                       $this->utility_connection->set_flash_message(t('Your login
+                        credentials are deactivated'),'error');
+                      return 0;
+                    }
+                   if($result['userDeleted'] == '1'){
+                       $this->utility_connection->set_flash_message(t('Your login
+                        credentials are deleted'),'error');
+                      return 0;
+                    }
+                    if($result['roleActive']!='1'){
+                       $this->utility_connection->set_flash_message(t('The role to which
+                        you belong is deactivated'),'error');
+                      return 0;
+                    }
+                    if($result['RoleId'] == DELETED_ROLE){
+                      $this->utility_connection->set_flash_message(t('The role to which
+                      you belong is deleted'),'error');
+                      return 0;
+                    }
+                    $_SESSION['USER_LOGGED_IN']      = 1;
+                    $_SESSION['USER_NAME']           = $result['full_name'];
+                    $_SESSION['USER_ID']             = $result['UserId'];
+                    $_SESSION['USER_LPC_DATE']       = $result['last_login_date'];
+                    $_SESSION['USER_ADDRESS']        = $result['Address'];
+                    $_SESSION['USER_MOBILE']         = $result['contact_no'];
+                    $_SESSION['USER_EMAIL']          = $result['email_id'];
+                    $_SESSION['USER_ROLE_ID']        = $result['RoleId'];
+                    $_SESSION['USER_ROLE_NAME']      = $result['role_name'];
+
+                    if($_SESSION['USER_LPC_DATE'] == '' ||
+                     $_SESSION['USER_LPC_DATE'] == 0){
+                     $_SESSION['USER_LPC_DATE'] = time();
+                    }
+                    //remember me
+                    if($rememberMe == '1'){
+                        if($mode == '1'){
+                         $password_hash = md5($password);
+                        }else{
+                         $password_hash = $password;
+                        }
+                        setcookie (REMEMBER_ME_COOKIE, 'usr='.$user_name.'
+                        &hash='.$password_hash, time() + REMEMBER_ME_TIME);
+                    }
+                    if($mode == '1'){
+                        $currentDateTime = time();
+                        $query = "UPDATE $login_table
+                    SET last_login_date='".$currentDateTime."',
+                    last_login_IP = '".$_SERVER['REMOTE_ADDR']."'
+                    WHERE id=".$result['UserId'];
+                        $this->db_connection->edit($query);
+                        //add system log data
+                        $log_data = array('IP'=>$_SERVER['REMOTE_ADDR'],
+                        'USER_AGENT'=>$_SERVER['HTTP_USER_AGENT'],
+                        'OPERATION'=>USER_LOGIN,'MODULE'=>'Login',
+                        'ID_RANGE'=>'','TOTAL_IMPORTED'=>'',
+                        'CREATED_BY'=>$result['UserId'],'CREATED_AT'=>time());
+                        $this->utility_connection->add_system_log($log_data);
+                    }
+                  $this->set_translation_values();
+                  return 1;
+                }else{
+                 $this->utility_connection->set_flash_message(t("Invalid user name or password")
+                 ,'error');
+                 return 0;
+                }
+    }
+
+	/**
+	 * This function is used to set translate value
+	 * @param string null
+	 * @return null
+	 */
+    public function set_translation_values(){
+        $query = 'SELECT lang_code,source_label,translated_label
+        FROM '.$this->db_connection->get_table_mapping('site_translation').'
+        WHERE is_active = 1';
+        $result = $this->db_connection->select($query);
+        $tArray = array();
+        foreach ($result as $row) {
+            $tArray[$row['lang_code']][strtolower($row['source_label'])]
+            = $row['translated_label'];
+        }
+        $_SESSION['TRANSLATION_SET'] = $tArray;
+    }
+
+	/**
+	 * This function is used to change language mode
+	 * @param string $lang
+	 * @return boolean
+	 */
+	public function change_language_mode($lang){
+        if($_SESSION['USER_ID'] == ''){
+            return false;
+        }
+        $query = 'UPDATE '.$this->db_connection->get_table_mapping('user_details'). '
+                SET
+                   LanguageCode = "'.$lang.'"
+                WHERE
+                   UserId = '.$_SESSION['USER_ID'];
+        $this->db_connection->edit($query);
+
+        $_SESSION['USER_LANGUAGE_CODE'] = $lang;
+        return true;
+    }
+
+	/**
+	 * Logout the user by destroying the session and cookies
+	 * return null
+	 */
+    public function user_log_out(){
+		$_SESSION['USER_LOGGED_IN'] = '';
+        unset($_SESSION['USER_LOGGED_IN']);
+        $_SESSION['MENU_NAMES_ARRAY'] = '';
+        unset($_SESSION['MENU_NAMES_ARRAY']);
+        unset($_SESSION);
+
+        //remember me
+        if(isset($_COOKIE[REMEMBER_ME_COOKIE])){
+            setcookie (REMEMBER_ME_COOKIE, '', time() - REMEMBER_ME_TIME);
+        }
+        session_destroy();
+    }
+
+	/**
+	 * check if a user is logged in or not
+	 * return TRUE FALSE
+	 */
+    public function is_user_logged_in(){
+		if($_SESSION['USER_LOGGED_IN'] == '1'){
+            //check user access on particular submodule and project
+            return TRUE;
+        }
+        else if(isset($_COOKIE[REMEMBER_ME_COOKIE])){
+            parse_str($_COOKIE[REMEMBER_ME_COOKIE]);
+            if($this->verify_user_login_attemp($usr,$hash,1,2)){
+                return TRUE;
+            }else{
+                //to prevent infinite loop
+                setcookie (REMEMBER_ME_COOKIE, '', time() - REMEMBER_ME_TIME);
+                return FALSE;
+            }
+        }
+        else{
+            return FALSE;
+        }
+    }
+
+    /**
+     * This function is used to verify module access
+     * @param string $page
+	 * @param resource $is_special
+	 * return true false
+	 */
+    public function verify_module_access($page,$is_special = FALSE){
+		if($page == ''){
+            return true;
+        }
+        $page = ltrim($page,'/');
+        //super admin can access any link
+        if($_SESSION['USER_ID'] == SUPER_ADMIN_ID ||
+        $_SESSION['USER_ROLE_ID'] == SUPER_ADMIN_ROLE){
+            return true;
+        }
+
+        $global_allowed_page_array = array('login','logout','dashboard',
+        'missing','profile-edit', 'forgot-password','reset-password',
+        ABOUT_US_LINK, 'registration', WALL_URL, FRONTEND_LOGIN, SAVE_DESIGN, FRONTEND_REGISTER, LIST_DESIGNS,
+        GET_DESIGN, WALL_IMAGE_URL, SAVE_IMAGE);
+
+        $allowed_page_array  = $_SESSION['ALLOWED_MENU_PATH_ARRAY'];
+        $cnt = count($global_allowed_page_array);
+
+        //get only main part without the "&"
+        $page_arr = explode('&',$page);
+        if(!$is_special){
+         $page = $page_arr[0];
+        }else if($is_special == '1'
+         || $page_arr[0] == MENU_URL){//for export template buttons
+         $page = $page_arr[0].'&'.$page_arr[1];
+        }
+        for($i=0;$i<$cnt;$i++){
+            if(stripos($page, $global_allowed_page_array[$i])!== FALSE){
+                return true;
+            }
+        }
+        if(!count($allowed_page_array)){
+          return false;
+        }
+        return in_array($page, $allowed_page_array);
+    }
+
+	/**
+     * Get user details based on user id
+     * @param int $user_id
+	 * return array
+	 */
+    public function get_user_details($user_id){
+		$user_table   = $this->db_connection->get_table_mapping('users');
+        $user_details = $this->db_connection->get_table_mapping('user_details');
+        $user_role    = $this->db_connection->get_table_mapping('roles');
+
+        $query = 'SELECT
+                     user_table.id,user_table.user_name,
+                     user_details.full_name,
+                     user_details.email_id,user_details.contact_no,
+                     user_details.address,
+                     user_role.role_name
+              FROM
+                   '.$user_table.' AS user_table,
+                   '.$user_details.' AS user_details,
+                   '.$user_role.' AS user_role
+              WHERE
+                   user_table.id = user_details.user_id
+                   AND user_table.role_id = user_role.id
+                   AND user_table.id = '.$user_id;
+        return $this->db_connection->sql_single_query($query);
+    }
+
+	/**
+     * Verify user's email id based on user_name
+     * @param string $user_name
+	 * return true false
+	 */
+    public function verify_email_user_name($user_name) {
+		$user_table   = $this->db_connection->get_table_mapping('users');
+        $user_details = $this->db_connection->get_table_mapping('user_details');
+        $role_details = $this->db_connection->get_table_mapping('roles');
+        $query = 'SELECT user_table.user_name, user_details.email_id,
+                  user_details.full_name, user_table.id
+                FROM ' . $user_table . ' as user_table,
+                ' . $user_details . ' as user_details,
+                '.$role_details.' as role_details
+                WHERE user_table.id = user_details.user_id
+                AND  role_details.id = user_table.role_id
+                AND (user_table.user_name="' . $username . '"
+                OR user_details.email_id="'.$username.'")';
+        $result = $this->db_connection->sql_single_query($query);
+        if(empty($result)) {
+            return false;
+        } else {
+            return $result;
+        }
+    }
+
+	/**
+     * This function is used to update password.
+     * @param string $user_name
+	 * @param string $password
+	 * return true false
+	 */
+    public function update_password($user_name, $password) {
+		$user_table   = $this->db_connection->get_table_mapping('users');
+        $md5_password = md5($password);
+        $query = 'UPDATE '.$user_table.' SET
+			user_password="'.$md5_password.'",
+			reset_password_token=NULL,
+			reset_password_end_time=NULL
+			WHERE user_name="'.$username.'"';
+        $this->db_connection->edit($query);
+        return true;
+    }
+
+}
+?>

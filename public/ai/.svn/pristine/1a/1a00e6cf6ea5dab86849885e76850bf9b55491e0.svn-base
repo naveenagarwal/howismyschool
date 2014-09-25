@@ -1,0 +1,123 @@
+<?php
+$return_url = '';
+if ($_REQUEST['rurl'] != '') {
+    $return_url = URL . trim($_REQUEST['rurl']). '&sortField='
+    .trim($_REQUEST['sortField'])
+    . '&sortOrderBy=' . trim($_REQUEST['sortOrderBy'])
+    . '&page=' . trim($_REQUEST['page']);
+}
+
+//load model class
+require_once('./model/manufacturer/Manufacturer.php');
+$manufacturer_obj = new Manufacturer($db_obj);
+
+$page_url = URL.$_SERVER['QUERY_STRING'];
+
+
+//process POST vars
+if(!empty($_POST['submit'])){
+    //create validation arrays
+    $validation_array[] = array('value' => t('Company Name'),'type' => 'input_text',
+	'required' => TRUE,'vtype' => 2,'vmax' => 100);
+    $data_array[]   = array('company' => $_POST['company']);
+    $column_array[] = 'company';
+
+    $validation_array[] = array('value' => t('Name'),'type' => 'input_text',
+	'required' => TRUE,'vtype' => 3,'vmax' => 50);
+    $data_array[]   = array('name' => $_POST['name']);
+    $column_array[] = 'name';
+
+	$validation_array[] = array('value' => t('Contact Number'),'type' => 'input_text',
+	'required' => TRUE,'vtype' => 8,'vmax' => 50);
+    $data_array[]   = array('contact_number' => $_POST['contact_number']);
+    $column_array[] = 'contact_number';
+	
+	$validation_array[] = array('value' => t('Email'),'type' => 'input_text',
+	'required' => TRUE,'vtype' => 5,'vmax' => 50);
+    $data_array[]   = array('email_id' => $_POST['email_id']);
+    $column_array[] = 'email_id';
+	
+    $validation_array[] = array('value' => t('Status'),'type' => 'radio',
+    'required' => TRUE,
+	'vtype' => 0,'vmax' => 0,'enum'=>'1~0');
+    $data_array[]   = array('is_active' => $_POST['is_active']);
+    $column_array[] = 'is_active';
+
+    $cnt = count($validation_array);
+    $error_flag = false;
+    $success_flag = false;
+    for($i=0;$i<$cnt;$i++){
+        if(!$utility_obj->validate_form_field($validation_array[$i],$data_array[$i],
+        $column_array[$i])){
+            $error_flag = true;
+            $utility_obj->set_flash_message($_SESSION['errorMessage'],'error');
+            break;
+        }
+    }
+
+    if(!$error_flag){
+        //save the data
+        //check duplicate values
+        if($manufacturer_obj->check_duplicate_column('name',$_POST['name'])){
+            $error_flag = true;
+            $utility_obj->set_flash_message(t('This manufacturer name already exists'),
+            'error');
+        }
+		
+		$image_name='';
+		if(!$error_flag){
+			$target_path = MANUFACTURER_IMAGE_PHYSICAL_PATH;
+			if (!empty($_FILES['image_path']['name'])) {
+				$temp_file = $_FILES['image_path']['tmp_name'];
+				$temp_name = $_FILES['image_path']['name'];
+				$file_parts = pathinfo($_FILES['image_path']['name']);
+				$image_name = 'manufacturer'.time().'.'.$file_parts['extension'];
+				$target_file = rtrim($target_path,'/') . '/' . $image_name;
+				$file_types = array('jpg','jpeg','gif','png');
+				if($_FILES['image_path']['name'] !='' 
+				 && $_FILES['image_path']['tmp_name'] == ''){
+					$utility_obj->set_flash_message(t('Manimum file size exceeds'),
+					'error');
+				}
+				else if($_FILES['image_path']['size']>IMAGE_MAX_UPLOAD_B){
+					$utility_obj->set_flash_message(t('Maximum file size exceeds'),
+					'error');
+				}
+				else if (in_array(strtolower($file_parts['extension']),$file_types)){
+					$utility_obj->make_thumbnail_image($temp_file,$target_file,MANUFACTURER_IMAGE_WIDTH);
+				} else {
+					$utility_obj->set_flash_message(t('Invalid file type.'),
+					'error');
+				}
+			
+			}
+		}
+		
+        if(!$error_flag){
+            $data['company']		= $_POST['company'];
+			$data['name']			= $_POST['name'];
+			$data['address']		= trim($_POST['address']);
+			$data['contact_number']	= trim($_POST['contact_number']);
+			$data['email_id']		= trim($_POST['email_id']);
+			$data['image_path']		= $image_name;
+            $data['is_active']		= $_POST['is_active'];
+            $returnId = $manufacturer_obj->save_manufacturer_data($data);
+            if($returnId){
+                $success_flag = true;
+                $utility_obj->set_flash_message(t('Data saved successfully'),
+                'success');
+                $page_urlArray = explode('rurl', $_SERVER['QUERY_STRING']);
+                $utility_obj->redirect_user(URL.'manufacturer/ManufacturerAdd&fancy=1');
+                exit;
+            }else{
+                $error_flag = true;
+                $utility_obj->set_flash_message(t('Data could not be saved'),
+                'error');
+            }
+        }
+    }
+}
+
+$noRecords = false;
+require_once('./view/manufacturer/ManufacturerAdd.php');
+?>

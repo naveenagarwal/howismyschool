@@ -1,0 +1,27 @@
+@charset "utf-8";
+/*CSS for button image end*/
+.timepicker_button_trigger {
+	width: 16px;
+	height: 12px;
+	background: url(../images/ui-icons_222222_256x240.png) -80px -114px;
+	display: inline-block;
+	border-radius: 2px;
+	border: 1px solid #222222;
+	margin-top: 3px;
+	cursor: pointer;
+}
+
+table#income-detail td:First-child{width:20px !important;}
+
+.derived_check {
+    clear: both !important;
+}
+
+#submitForm {
+    border: solid 0px #fff; width: 66px !important;
+    height: 32px !important;
+}
+
+#searchPerson .datatable{
+	width: 98%;
+}

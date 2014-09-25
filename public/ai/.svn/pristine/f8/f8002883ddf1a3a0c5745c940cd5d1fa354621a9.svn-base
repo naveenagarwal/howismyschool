@@ -1,0 +1,483 @@
+msgid "Code should not be empty"
+msgstr "Code sollte nicht leer sein"
+
+msgid "Site Name"
+msgstr "Site-Name"
+
+msgid "Site Email"
+msgstr "Site- E-Mail"
+
+msgid "Data saved successfully"
+msgstr "Gespeicherte Daten erfolgreich"
+
+msgid "Data could not be saved"
+msgstr "Die Daten konnten nicht gespeichert werden"
+
+msgid "Mamimum file size exceeds"
+msgstr "Mamimum Dateigröße überschreitet"
+
+msgid "Site logo uploaded successfully"
+msgstr "Site logo erfolgreich hochgeladen"
+
+msgid "Keyword"
+msgstr "Stichwort"
+
+msgid "This keyword already exists"
+msgstr "Dieses Schlüsselwort ist bereits vorhanden"
+
+msgid "Record deleted succesfully"
+msgstr "Datensatz gelöscht erfolgreich"
+
+msgid "Keyword id can not be empty"
+msgstr "Keyword -ID darf nicht leer sein"
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Delete"
+msgstr "löschen"
+
+msgid "Manage Values"
+msgstr "Werte verwalten"
+
+msgid "Values saved succesfully"
+msgstr "Werte gespeichert erfolgreich"
+
+msgid "Please add at least one value"
+msgstr "Bitte fügen Sie mindestens einen Wert"
+
+msgid "Please enter value"
+msgstr "Bitte geben Sie Wert"
+
+msgid "Duplicate value found in"
+msgstr "Doppelten Wert in gefunden"
+
+msgid "position"
+msgstr "Position"
+
+msgid "Add More"
+msgstr "Mehr hinzufügen"
+
+msgid "Values"
+msgstr "Werte"
+
+msgid "Invalid username or password"
+msgstr "Benutzername oder Passwort ungültig"
+
+msgid "You are logged out due to inactivity"
+msgstr "Sie sind wegen Inaktivität angemeldet"
+
+msgid "Site Offline"
+msgstr "Website offline"
+
+msgid "No query found for execution"
+msgstr "Keine Abfrage für die Ausführung gefunden"
+
+msgid "Report Data"
+msgstr "Berichtsdaten"
+
+msgid "Chart Control"
+msgstr "Chart Control"
+
+msgid "X Axis"
+msgstr "X-Achse"
+
+msgid "Y Axis"
+msgstr "Y-Achse"
+
+msgid "No records found"
+msgstr "Keine Datensätze gefunden"
+
+msgid "Print"
+msgstr "drucken"
+
+msgid "Download Excel"
+msgstr "Download Excel"
+
+msgid "Download CSV"
+msgstr "CSV herunterladen"
+
+msgid "Sync"
+msgstr "Synchronisieren"
+
+msgid "View Bar Chart"
+msgstr "View Bar Tabelle"
+
+msgid "View Column Chart"
+msgstr "Säulendiagramm anzeigen"
+
+msgid "View Pie Chart"
+msgstr "Kreisdiagramm anzeigen"
+
+msgid "Report Not Found"
+msgstr "Bericht nicht gefunden"
+
+msgid "No Tables Found"
+msgstr "Keine Tabellen gefunden"
+
+msgid "Error"
+msgstr "Fehler"
+
+msgid "Supplier Name"
+msgstr "Name des Anbieters"
+
+msgid "Supplier Code"
+msgstr "Supplier Code"
+
+msgid "Supplier Information"
+msgstr "Informationen für Lieferanten"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "This supplier code already exists"
+msgstr "Diese Lieferantencode bereits vorhanden"
+
+msgid "Supplier id can not be empty"
+msgstr "Lieferanten-Nummer darf nicht leer sein"
+
+msgid "Input file must have four columns"
+msgstr "Eingabedatei muss vier Spalten haben"
+
+msgid "Empty supplier name found in"
+msgstr "Leere Lieferantenname gefunden"
+
+msgid "Maximum length exceeds for supplier name"
+msgstr "Maximale Länge für Lieferantenname überschreitet"
+
+msgid "Empty supplier code found in"
+msgstr "Leere Lieferantencode gefunden"
+
+msgid "Duplicate supplier code found in"
+msgstr "Doppelte Lieferantencode gefunden"
+
+msgid "Maximum length exceeds for supplier code"
+msgstr "Maximale Länge für Lieferantencode überschreitet"
+
+msgid "Maximum length exceeds for supplier info"
+msgstr "Maximale Länge für Lieferanteninfoüberschreitet"
+
+msgid "Empty or invalid status found in"
+msgstr "Leere oder ungültige Status gefunden"
+
+msgid "No supplier information found"
+msgstr "Kein Lieferant Informationen gefunden"
+
+msgid "Language Code"
+msgstr "Sprachcode"
+
+msgid "Label"
+msgstr "Etikett"
+
+msgid "Translated Label"
+msgstr "Übersetzt Label-"
+
+msgid "Active"
+msgstr "aktiv"
+
+msgid "This label already exists"
+msgstr "Dieses Label ist bereits vorhanden"
+
+msgid "Error during file upload"
+msgstr "Fehler beim Datei-Upload"
+
+msgid "Please select languege file"
+msgstr "Bitte wählen Sie Datei languege"
+
+msgid "Language file uploaded successfully"
+msgstr "Sprachdatei erfolgreich hochgeladen"
+
+msgid "Role Name"
+msgstr "Rollenname"
+
+msgid "Role Code"
+msgstr "Role -Code"
+
+msgid "This role name already exists"
+msgstr "Diese Rolle Name bereits vorhanden"
+
+msgid "This code already exists"
+msgstr "Dieser Code ist bereits vorhanden"
+
+msgid "Role id can not be empty"
+msgstr "Role -ID darf nicht leer sein"
+
+msgid "This role code already exists"
+msgstr "Diese Rolle Code bereits vorhanden"
+
+msgid "Permission updated successfully"
+msgstr "Permission erfolgreich aktualisiert"
+
+msgid "Permission could not be saved"
+msgstr "Die Erlaubnis konnte nicht gespeichert werden"
+
+msgid "User Count"
+msgstr "Benutzeranzahl"
+
+msgid "User information not found"
+msgstr "Benutzerinformationen nicht gefunden"
+
+msgid "Username"
+msgstr "Benutzername"
+
+msgid "Password"
+msgstr "Passwort"
+
+msgid "Confirm Password"
+msgstr "Passwort bestätigen"
+
+msgid "Full Name"
+msgstr "Vollständiger Name"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "Role"
+msgstr "Rolle"
+
+msgid "Passwords do not matched"
+msgstr "Passwörter stimmen nicht überein"
+
+msgid "This username already exists"
+msgstr "Benutzername existiert bereits"
+
+msgid "This email id already exists"
+msgstr "Diese E-Mail -ID ist bereits vorhanden"
+
+msgid "Select"
+msgstr "wählen"
+
+msgid "Enter New Password"
+msgstr "Enter New Password"
+
+msgid "User id can not be empty"
+msgstr "Benutzer -ID darf nicht leer sein"
+
+msgid "Super admin can not be deleted"
+msgstr "Super- Admin kann nicht gelöscht werden"
+
+msgid "Yes"
+msgstr "ja"
+
+msgid "No"
+msgstr "nicht"
+
+msgid "and"
+msgstr "und"
+
+msgid "Site Logo"
+msgstr "Site-Logo"
+
+msgid "Sitelogo"
+msgstr "Sitelogo"
+
+msgid "Submit"
+msgstr "einreichen"
+
+msgid "Dashboard"
+msgstr "Armaturenbrett"
+
+msgid "Control panel"
+msgstr "Schalttafel"
+
+msgid "Home"
+msgstr "Zuhause"
+
+msgid "AB1 Graph"
+msgstr "AB1 Graph"
+
+msgid "More info"
+msgstr "mehr Info"
+
+msgid "AB2 Graph"
+msgstr "AB2 Graph"
+
+msgid "Log History"
+msgstr "Melden Geschichte"
+
+msgid "Sales"
+msgstr "Vertrieb"
+
+msgid "Lisa"
+msgstr "Lisa"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Sign out"
+msgstr "austragen"
+
+msgid "Return to home page"
+msgstr "Zurück zur Startseite"
+
+msgid "New Keyword"
+msgstr "Neue Stichwort"
+
+msgid "Sign In"
+msgstr "Anmelden"
+
+msgid "Sign me in"
+msgstr "Melden Sie mich in"
+
+msgid "I forgot my password"
+msgstr "Ich habe mein Passwort vergessen"
+
+msgid "Save Report"
+msgstr "Bericht speichern"
+
+msgid "Delete Report"
+msgstr "Bericht löschen"
+
+msgid "Generate Report"
+msgstr "Bericht generieren"
+
+msgid "Report"
+msgstr "Bericht"
+
+msgid "Save As JPEG"
+msgstr "Speichern als JPEG"
+
+msgid "Supplier Full Name"
+msgstr "Lieferant Vollständiger Name"
+
+msgid "New Supplier"
+msgstr "Neuer Lieferant"
+
+msgid "Upload Suppliers"
+msgstr "Lieferanten Galerie"
+
+msgid "Back"
+msgstr "zurück"
+
+msgid "Save"
+msgstr "sparen"
+
+msgid "Reset"
+msgstr "rücksetzen"
+
+msgid "Search"
+msgstr "Suche"
+
+msgid "Add New Translation"
+msgstr "Füge eine neue Übersetzung"
+
+msgid "Upload Translation File"
+msgstr "Galerie Übersetzungsdatei"
+
+msgid "Language File"
+msgstr "Sprache Datei"
+
+msgid "Upload"
+msgstr "laden"
+
+msgid "Assign Permission"
+msgstr "Weisen Permission"
+
+msgid "New Role"
+msgstr "Neue Rolle"
+
+msgid "Forgot Password"
+msgstr "Passwort vergessen"
+
+msgid "Please enter your username or email id"
+msgstr "Bitte geben Sie Ihren Benutzernamen oder E-Mail -ID"
+
+msgid "Reset Password"
+msgstr "Passwort zurücksetzen"
+
+msgid "Email ID"
+msgstr "E-Mail -ID"
+
+msgid "Please enter new password"
+msgstr "Bitte neues Passwort"
+
+msgid "Please confirm new password"
+msgstr "Bitte bestätigen neues Passwort"
+
+msgid "Roles"
+msgstr "Rollen"
+
+msgid "New User"
+msgstr "Neuer Benutzer"
+
+msgid "Form Entry Summary"
+msgstr "Formular Entry Summary"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "You are not allowed to access menu"
+msgstr "Sie sind nicht berechtigt, Menü zuzugreifen"
+
+msgid "No permission items found"
+msgstr "Keine Erlaubnis Artikel gefunden"
+
+msgid "Invalid choice detected for"
+msgstr "Ungültige Wahl für erkannt"
+
+msgid "Please enter only numeric values for"
+msgstr "Bitte geben Sie nur Zahlenwerte für die"
+
+msgid "Please enter only alphabetic values for"
+msgstr "Bitte geben Sie nur alphabetische Werte für"
+
+msgid "Please enter a valid value for"
+msgstr "Bitte geben Sie einen gültigen Wert für"
+
+msgid "Please enter a valid email id"
+msgstr "Bitte geben Sie eine gültige E-Mail -ID"
+
+msgid "Please enter a valid"
+msgstr "Bitte geben Sie eine gültige"
+
+msgid "Maximum length exceeds for"
+msgstr "Maximale Länge für mehr als"
+
+msgid "Minimum length not reached for"
+msgstr "Mindestlänge nicht erreicht"
+
+msgid "Invalid file type found for"
+msgstr "Ungültige Dateityp gefunden"
+
+msgid "Maximum file size exceeds for"
+msgstr "Maximale Dateigröße für überschreitet"
+
+msgid "Error occured during uploading"
+msgstr "Fehler beim Hochladen aufgetreten"
+
+msgid "Login"
+msgstr "Anmelden"
+
+msgid "Registration"
+msgstr "Anmeldung"
+
+msgid "Edit Profile"
+msgstr "Profil bearbeiten"
+
+msgid "Page Not Found"
+msgstr "Seite nicht gefunden"
+
+msgid "About Us"
+msgstr "Über uns"
+
+msgid "Access Denied"
+msgstr "Zugriff verweigert"
+
+msgid "Reset Your Password"
+msgstr "Setzen Sie Ihr Passwort"
+
+msgid "and any previous mail of reset password will be neglected"
+msgstr "und etwaige frühere Mail- Reset- Passwort wird vernachlässigt werden"
+
+msgid "Y"
+msgstr "Y"
+
+msgid "z"
+msgstr "z"
+
+msgid "Loading data from server"
+msgstr "Lädt Daten von Server"
+

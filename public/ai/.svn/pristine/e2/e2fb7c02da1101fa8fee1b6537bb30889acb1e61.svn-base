@@ -1,0 +1,22 @@
+<?php
+$jsonResult = array();
+
+if( $_SESSION['USER_ID'] == 0 || empty($_SESSION['USER_ID']) ) {
+  $jsonResult['message']  = t('Illegal operation');
+  die(json_encode($jsonResult));
+}
+
+//load model class
+$designObj = create_model_object($db_obj, DESIGN_PATH, 'Design');
+
+if( !$login->is_user_logged_in() ) {
+  $jsonResult['notLoggedIn']  = true;
+  $jsonResult['message']    = t('Please login first');
+}
+else {
+  $user_designs = $designObj->get_designs_by_user_id();
+  $jsonResult['loggedIn']   = true;
+  $jsonResult['user_designs'] = $user_designs;
+}
+die(json_encode($jsonResult));
+?>

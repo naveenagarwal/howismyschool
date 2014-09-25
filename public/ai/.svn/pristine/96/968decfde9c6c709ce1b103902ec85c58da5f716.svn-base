@@ -1,0 +1,54 @@
+<?php
+
+/**
+ *
+ * Design Class provides functions that simply perform the actions
+ * like save design, edit design.
+ * @author      : dbaveja - Q3tech
+ * @created on  : Sep 01, 2014
+ * @modified on : Sep 01, 2014
+ */
+class Design {
+
+    private $db_connection = NULL;
+    private $table_users = '';
+    private $table_user_designs = '';
+
+    /**
+     *
+     * This is a constructor function where variables are intialized automatically
+     * when object is created of this class
+     * @param object $db_obj
+     * @return null
+     */
+    public function __construct($db_obj) {
+        $this->db_connection = $db_obj;
+        $this->table_users = $this->db_connection->get_table_mapping('users');
+        $this->table_user_designs = $this->db_connection->get_table_mapping('user_designs');
+    }
+
+    /**
+     * This function is used to get design details based on design id
+     * @param int $wall_id
+     * @return string
+     */
+    public function get_design_by_id($design_id = '') {
+        $query = 'SELECT html_info FROM '.$this->table_user_designs;
+        $query .= ' WHERE user_id = ' . $_SESSION['USER_ID'] . ' AND id = ' . $design_id . ' LIMIT 1';
+        return $this->db_connection->select($query);
+    }
+
+    /**
+     * This function lists the designs based on user id.
+     * @param void
+     * @return array
+     */
+    public function get_designs_by_user_id() {
+        $query = 'SELECT id, name FROM '.$this->table_user_designs;
+        $query .= ' WHERE user_id = ' . $_SESSION['USER_ID'] . ' ORDER BY created_at DESC';
+        return $this->db_connection->select($query);
+    }
+
+}
+
+?>

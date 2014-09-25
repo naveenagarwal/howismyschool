@@ -1,0 +1,30 @@
+<?php
+if(!empty($_POST)){
+//check empty validation
+if(empty($_POST['username'])){
+  $utility_obj->set_flash_message(t("Please enter username"),'error');
+  header('Location: '.URL.'login');
+  exit;
+}
+if(empty($_POST['password'])){
+  $utility_obj->set_flash_message(t("Please enter password"),'error');
+  $_SESSION['temp_uname'] = trim($_POST['username']);
+  header('Location: '.URL.'login');
+  exit;
+}
+//need to apply XSS and mysql injection prevention function
+$return = $login->verify_user_login_attemp(trim($_POST['username']),$_POST['password'],trim($_POST['remember_me']));
+if($return){
+header('Location: '.URL.'dashboard');
+}else{
+ $_SESSION['temp_uname'] = trim($_POST['username']);
+ header('Location: '.URL.'login');
+ exit;
+}
+}else{
+if($login->is_user_logged_in()){
+ header('Location: '.URL.'dashboard');
+}
+}
+require_once('./view/login/login.php');
+?>

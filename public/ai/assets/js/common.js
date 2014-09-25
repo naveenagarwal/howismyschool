@@ -1,0 +1,877 @@
+var global_month=new Array();
+global_month[1]="January";
+global_month[2]="February";
+global_month[3]="March";
+global_month[4]="April";
+global_month[5]="May";
+global_month[6]="June";
+global_month[7]="July";
+global_month[8]="August";
+global_month[9]="September";
+global_month[10]="October";
+global_month[11]="November";
+global_month[12]="December";
+
+var fs ='';
+var dialog;
+var deletableRowElement = '';
+var isNetscape = (navigator.appName.indexOf("Netscape")!=-1);
+var isIE = (navigator.userAgent.indexOf("MSIE")!=-1);
+var screen_x = windowWidth();
+
+$(document).ready(function() {
+    $(document).on('click', '[readonly="readonly"]', function() {
+        goBlur(this);
+    });
+    $(document).on("keydown", function (e) {
+        if (e.which === 8 && !$(e.target).is("input, textarea") && $('.fancybox-skin').length) {
+            e.preventDefault();
+        }
+    });
+    /*Add "active" class to menu*/
+    var url = window.location.href.split('&')[0];
+    if($('.nav a[href="'+url+'"]').parent().is(':visible')){
+      $('.nav a[href="'+url+'"]').parent().addClass('active');
+    }else{
+      if(url == jsURL+'user-roles/users/profile-edit'){
+    	  $('.nav li.user-menu').addClass('active');
+      }	else{
+       $('.nav a[href="'+url+'"]').parent().parent().parent().addClass('active');
+      }
+    }
+
+    /*Hide Arrow cursor from Quick Links section where no
+    physical link is present*/
+    $('#quickLinks li a').each(function(){
+	  if($(this).attr('href') == 'javascript:void(0);'){
+	    $(this).css('cursor','text');
+	    $(this).replaceWith(function(){
+	        return $("<span>" + $(this).html() + "</span>");
+	    });
+	    //$(this).removeAttr('href');
+	  }
+	});
+
+    //hide success message after 3 second
+    $('.successmessage').delay(3000).fadeOut('slow');
+
+    $('input').keydown(function(event){
+        if($(this).is(':disabled, [readonly]')) {
+            if(event.keyCode == '8'){
+                event.preventDefault();
+                return false;
+            }
+        }
+    });
+    /*Handlers for ALL ajax requests*/
+    $(document).ajaxStart(function() {
+    	$('#blockUI').show().css('height',document.body.offsetHeight);
+        $('#ajaxLoader').show();
+    });
+    $(document).ajaxComplete(function() {
+    	$('#blockUI').hide();
+        $('#ajaxLoader').hide();
+    });
+
+    /*Menu : from mouse click to hover*/
+    $('ul.nav li.dropdown').hover(function() {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(200);
+        $(this).addClass('open');
+      }, function() {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(200);
+        $(this).removeClass('open');
+    });
+});
+
+function validateDecimalString(inputString){
+    if(inputString.match(/^[0-9]*\.?[0-9]*$/)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function allowOnlyAphabets(target,type,mode){
+   if(type == 'id'){
+     var t = $('#'+target);
+   }
+   else if(type == 'name'){
+     var t = $('input[name="'+target+'"]');
+   }
+   else if(type == 'class'){
+     var t = $('.'+target);
+   }
+
+   t.on('keydown',function(event){
+        var keycode = event.keyCode;
+        if(keycode == 8 || keycode == 9 || keycode == 46 || keycode == 37 || keycode == 39){
+            return true;
+        }
+        if (keycode  < 65 || keycode > 90) {
+            event.preventDefault();
+            return false;
+        }
+    });
+}
+
+function disallowQuotes(target,type,mode){
+  if(type == 'id'){
+     var t = $('#'+target);
+   }
+   else if(type == 'name'){
+     var t = $('input[name="'+target+'"]');
+   }
+   else if(type == 'class'){
+     var t = $('.'+target);
+   }
+
+   t.on('keydown',function(event){
+        var keycode = event.keyCode;
+        if (keycode  == 222) {
+          event.preventDefault();
+          return false;
+        }
+    });
+}
+function blockNegativeString2(target,type,mode){
+   if(type == 'id'){
+        var t = $('#'+target);
+    }
+    else if(type == 'name'){
+        var t = $('input[name="'+target+'"]');
+    }
+    else if(type == 'class'){
+        var t = $('.'+target);
+    }
+
+    t.on('keydown',function(event){
+        var keycode = event.keyCode;
+        if(keycode == 8 || keycode == 9 || keycode == 46 || keycode == 37 || keycode == 39 || keycode == 116 || keycode == 190 || keycode == 110){
+            if(keycode == 190 || keycode == 110){
+                if($(this).val().indexOf('.')!='-1'){
+                   event.preventDefault();
+                   return false;
+                }
+            }
+            return true;
+        }
+        if ( (keycode  < 48 || keycode > 57) && (keycode < 96 || keycode > 105)) {
+            event.preventDefault();
+            return false;
+        }
+    });
+}
+
+function blockNegativeString(target,type,mode){
+    if(type == 'id'){
+        var t = $('#'+target);
+    }
+    else if(type == 'name'){
+        var t = $('input[name="'+target+'"]');
+    }
+    else if(type == 'class'){
+        var t = $('.'+target);
+    }
+    if(mode == '2'){
+        t.on('keydown',function(event){
+            var keycode = event.keyCode;
+            if(keycode == 8 || keycode == 9 || keycode == 46 || keycode == 37 || keycode == 39 || keycode == 116){
+                return true;
+            }
+            if ( (keycode  < 48 || keycode > 57) && (keycode < 96 || keycode > 105)) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    }else{
+        t.keydown(function(event){
+            var keycode = event.keyCode;
+            if(keycode == 8 || keycode == 9 || keycode == 46 || keycode == 37 || keycode == 39 || keycode == 116){
+                return true;
+            }
+            if ( (keycode  < 48 || keycode > 57) && (keycode < 96 || keycode > 105)) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    }
+}
+
+function forceFileDownload(fileName,mode){
+    window.open(jsURL+'common/force-file-download&ajax=1&fileName='+escape(fileName)+'&mode='+mode);
+}
+
+function alertBox(msg,func,dangerAlert){
+
+    $( "#dialog-confirm" ).html(msg);
+    var ok = "OK";
+    var autoOpen = true;
+    $( "#dialog-confirm" ).dialog({
+        resizable: false,
+        height:'auto',
+        modal: true,
+        autoOpen : autoOpen,
+        open: function () {
+            $(this).scrollTop(0);
+        },
+        buttons:[
+                 {
+     	        	text : okString,
+     	        	click : function() {
+     	                $( this ).dialog( "close" );
+     	               if(func){
+     	                    try{
+     	                        eval(func);
+     	                    }catch(e){
+     	                        txt="There was an error on this page.\n\n";
+     	                        txt+="Error description: " + e.message + "\n\n";
+     	                        txt+="Click OK to continue.\n\n";
+     	                        alert(txt);
+     	                    }
+     	                }
+     	            }
+             	}
+
+             ]
+
+    });
+    $( "#dialog-confirm").css('max-height','200px');
+    //$('.flora.ui-dialog').css({position:"fixed"});
+    $('#dialog-confirm').parent().find('.ui-draggable .ui-dialog-titlebar').hide();
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane').css('border','0px');
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane .ui-dialog-buttonset').css('float','none');
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane .ui-dialog-buttonset').css('text-align','center');
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').css('margin','0px');
+    if(!$('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').hasClass('btn btn-success')){
+     $('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').addClass('btn btn-success small-btn-text');
+    }
+    if(typeof dangerAlert != 'undefined'){
+      $('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').removeClass('btn-success');
+      if(!$('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').hasClass('btn-danger')){
+        $('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').addClass('btn-danger');
+      }
+    }
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonset .ui-button .ui-button-text').html(ok);
+}
+
+function confirmBox(msg,func,func2){
+    $( "#dialog-confirm" ).html(msg);
+    var yes = "Yes";
+    var no = "No";
+    $( "#dialog-confirm" ).dialog({
+        resizable: false,
+        height:'auto',
+        width:'auto',
+        modal: true,
+        show: {
+            effect:   "scale",
+            duration: 500
+        },
+        hide: {
+          effect:   "scale",
+          duration: 100
+        },
+        buttons:[
+            {
+	        	text : yesString,
+	        	click : function() {
+	                $( this ).dialog( "close" );
+	                if(func){
+	                    eval(func);
+	                }
+	            }
+        	},
+        	{
+	        	text : noString,
+	        	click : function() {
+	                $( this ).dialog( "close" );
+	                if(func2){
+	                    eval(func2);
+	                }
+	            }
+        	}
+        ]
+    });
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane').css('border','0px');
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane .ui-dialog-buttonset').css('float','none');
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane .ui-dialog-buttonset').css('text-align','center');
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonset .ui-button .ui-button-text').eq(0).html(yes);
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonset .ui-button .ui-button-text').eq(1).html(no);
+    if(!$('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').hasClass('btn btn-success')){
+      $('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').addClass('btn btn-success small-btn-text');
+    }
+}
+
+function confirmBoxEan(msg,func,func2){
+    $( "#dialog-confirm" ).html(msg);
+    var yes = "Yes";
+    var no = "No";
+    $( "#dialog-confirm" ).dialog({
+        resizable: false,
+        height:'auto',
+        width:'auto',
+        modal: true,
+        show: {
+            effect:   "scale",
+            duration: 500
+        },
+        hide: {
+          effect:   "scale",
+          duration: 100
+        },
+        buttons:[
+            {
+	        	text : yesString,
+	        	click : function() {
+	                $( this ).dialog( "close" );
+	                if(func){
+	                    eval(func);
+	                }
+	            }
+        	},
+        	{
+	        	text : noString,
+	        	click : function() {
+	                $( this ).dialog( "close" );
+	                if(func2){
+	                    eval(func2);
+	                }
+	            }
+        	}
+        ]
+    });
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane').css('border','0px');
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane .ui-dialog-buttonset').css('float','none');
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonpane .ui-dialog-buttonset').css('text-align','center');
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonset .ui-button .ui-button-text').eq(0).html(yes);
+    $('#dialog-confirm').parent().find('.ui-dialog-buttonset .ui-button .ui-button-text').eq(1).html(no);
+    if(!$('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').hasClass('btn btn-success')){
+      $('#dialog-confirm').parent().find('.ui-dialog-buttonpane button').addClass('btn btn-success small-btn-text');
+    }
+}
+
+function dataBox(msg,func1,func2,width){
+    if(typeof width == 'undefined'){
+        width = "'auto'";
+    }
+    $( "#dialog-databox" ).html(msg);
+    var autoOpen = true;
+    $( "#dialog-databox" ).dialog({
+        resizable: false,
+        height:'auto',
+        width : width,
+        modal: true,
+        autoOpen : autoOpen,
+        open: function () {
+            //$(this).scrollTop(0);
+        },
+    	buttons:[
+    	            {
+    		        	text : saveString,
+    		        	click : function() {
+    		                if(func1){
+    		                    eval(func1);
+    		                }else{
+    		                	$( this ).dialog( "close" );
+    		                }
+    		            }
+    	        	},
+    	        	{
+    		        	text : cancelString,
+    		        	click : function() {
+    		                $( this ).dialog( "close" );
+    		                if(func2){
+    		                    eval(func2);
+    		                }
+    		            }
+    	        	}
+    	      ]
+    });
+    $( "#dialog-databox").css('max-height','200px');
+    $('#dialog-databox').parent().find('.ui-draggable .ui-dialog-titlebar').hide();
+    $('#dialog-databox').parent().find('.ui-dialog-buttonpane').css('border','0px');
+    $('#dialog-databox').parent().find('.ui-dialog-buttonpane .ui-dialog-buttonset').css('float','none');
+    $('#dialog-databox').parent().find('.ui-dialog-buttonpane .ui-dialog-buttonset').css('text-align','center');
+    if(!$('#dialog-databox').parent().find('.ui-dialog-buttonpane button').hasClass('btn btn-success')){
+     $('#dialog-databox').parent().find('.ui-dialog-buttonpane button').addClass('btn btn-success small-btn-text');
+    }
+}
+function dataBoxClose(){
+   $( "#dialog-databox").dialog('close');
+}
+
+function closeAlertBox(){
+	$( "#dialog-confirm" ).dialog('destroy');
+}
+
+function closeConfirmBox(){
+	$( "#dialog-confirm" ).dialog('destroy');
+}
+
+function empty_all_input(container) {
+    $(container).each(function(){
+        $(this).val('');
+    });
+}
+
+
+
+function ltrim (str, charlist) {
+  // http://kevin.vanzonneveld.net
+  // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // +      input by: Erkekjetter
+  // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // +   bugfixed by: Onno Marsman
+  // *     example 1: ltrim('    Kevin van Zonneveld    ');
+  // *     returns 1: 'Kevin van Zonneveld    '
+  charlist = !charlist ? ' \\s\u00A0' : (charlist + '').replace(/([\[\]\(\)\.\?\/\*\{\}\+\$\^\:])/g, '$1');
+  var re = new RegExp('^[' + charlist + ']+', 'g');
+  return (str + '').replace(re, '');
+}
+
+function strstr (haystack, needle, bool) {
+    var pos = 0;
+    haystack += '';
+    pos = haystack.indexOf(needle);
+    if (pos == -1) {
+        return false;
+    } else {
+        if (bool) {
+            return haystack.substr(0, pos);
+        } else {
+            return haystack.slice(pos);
+        }
+    }
+}
+
+function daysBetween(first, second) {
+    var one = new Date(first.getFullYear(), first.getMonth(), first.getDate());
+    var two = new Date(second.getFullYear(), second.getMonth(), second.getDate());
+    var millisecondsPerDay = 1000 * 60 * 60 * 24;
+    var millisBetween = two.getTime() - one.getTime();
+    var days = millisBetween / millisecondsPerDay;
+    return Math.floor(days);
+}
+
+
+(function($) {
+    if (!$.exist) {
+        $.extend({
+            exist: function(elm) {
+                if (typeof elm == null) return false;
+                if (typeof elm != "object") elm = $(elm);
+                return elm.length ? true : false;
+            }
+        });
+        $.fn.extend({
+            exist: function() {
+                return $.exist($(this));
+            }
+        });
+    }
+})(jQuery);
+
+
+function isNumber (o) {
+    return ! isNaN (o-0) && o !== null && o !== "" && o !== false;
+}
+
+function createHiddensWithoutClass(n, v, c) {
+    var hdnstr = '<input type="hidden" name="'+n+'" id="'+n+'" value="'+v+'" />';
+    $('.'+c).append(hdnstr);
+}
+
+function onlyNumbers(e){
+    //    var e = event || evt; // for trans-browser compatibility
+    var charCode = e.which || e.keyCode;
+    //console.log('K='+charCode);
+    if (charCode > 31 && (charCode < 48 || charCode > 57) ){
+        e.preventDefault();
+        return false;
+    }
+    return true;
+}
+
+function checkLength(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            size++;
+        }
+    }
+    return size;
+}
+
+function imposeMaxLength(obj){
+    var mlength=obj.getAttribute? parseInt(obj.getAttribute("maxlength")) : ""
+    if (obj.getAttribute && obj.value.length>mlength){
+        obj.value=obj.value.substring(0,mlength)
+    }
+}
+
+function getSelectedText(elementId) {
+    var elt = document.getElementById(elementId);
+
+    if (elt.selectedIndex == -1)
+        return null;
+    var value = elt.options[elt.selectedIndex].value;
+    if(value.length <= 0) {
+        return null;
+    } else {
+        return elt.options[elt.selectedIndex].text;
+    }
+}
+function getSelectedValue(elementId) {
+    var elt = document.getElementById(elementId);
+
+    if (elt.selectedIndex == -1)
+        return null;
+    var value = elt.options[elt.selectedIndex].value;
+    if(value.length <= 0) {
+        return null;
+    } else {
+        return value;
+    }
+}
+
+function redirect(path) {
+    window.location = path;
+}
+
+function isset() {
+    var a = arguments,
+    l = a.length,
+    i = 0,
+    undef;
+
+    if (l === 0) {
+        throw new Error('Empty isset');
+    }
+
+    while (i !== l) {
+        if (a[i] === undef || a[i] === null) {
+            return false;
+        }
+        i++;
+    }
+    return true;
+}
+
+function isInteger(n) {
+    if(!isNaN(n)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function CapitaliseFirstLetter(ele) {
+    var txt = $(ele).val().toLowerCase();
+    ///^(.)|\s(.)/g
+    $(ele).val(txt.replace(
+        /^./,
+        function($1) {
+            return $1.toLowerCase();
+        }
+        )
+    );
+}
+
+function goBlur(ele) {
+    window.setTimeout(function(){ $(ele).blur(); }, 50);
+}
+
+function addSubChild(container, data) {
+    $('#'+container).children().remove();
+    $.each(data, function(key, val) {
+        $('#'+container).append(
+            $('<option></option>').val(key).html(val)
+        );
+    });
+}
+
+function errorAlert(resp) {
+    var path = jsURL+'login';
+    var rtext = resp.responseText;
+    if(resp.responseText == access_denied_msg) {
+        alertBox(resp.responseText, 'redirect("'+path+'")');
+    } else if(rtext.length <= 0) {
+        alertBox("Some error occured in connection. Please try again later.");
+    } else {
+        alertBox(resp.responseText);
+    }
+}
+
+function createCookie(name, value, days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        var expires = "; expires=" + date.toGMTString();
+    } else var expires = "";
+    document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+}
+
+function readCookie(name) {
+    var nameEQ = escape(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return unescape(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name, "", -1);
+}
+
+
+
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            //return decodeURIComponent(pair[1]);
+            return true;
+        }
+    }
+    return false
+}
+
+function jsDelay(delayby) {
+    var delay = delayby; // in second delay
+    var now = new Date();
+    var desiredTime = new Date().setSeconds(now.getSeconds() + delay);
+
+    while (now < desiredTime) {
+        now = new Date(); // update the current time
+    }
+}
+function empty(mixed_var) {
+  //  discuss at: http://phpjs.org/functions/empty/
+  // original by: Philippe Baumann
+  //    input by: Onno Marsman
+  //    input by: LH
+  //    input by: Stoyan Kyosev (http://www.svest.org/)
+  // bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  // improved by: Onno Marsman
+  // improved by: Francesco
+  // improved by: Marc Jansen
+  // improved by: Rafal Kukawski
+  //   example 1: empty(null);
+  //   returns 1: true
+  //   example 2: empty(undefined);
+  //   returns 2: true
+  //   example 3: empty([]);
+  //   returns 3: true
+  //   example 4: empty({});
+  //   returns 4: true
+  //   example 5: empty({'aFunc' : function () { alert('humpty'); } });
+  //   returns 5: false
+
+  var undef, key, i, len;
+  var emptyValues = [undef, null, false, 0, '', '0'];
+
+  for (i = 0, len = emptyValues.length; i < len; i++) {
+    if (mixed_var === emptyValues[i]) {
+      return true;
+    }
+  }
+
+  if (typeof mixed_var === 'object') {
+    for (key in mixed_var) {
+      // TODO: should we check for own properties only?
+      //if (mixed_var.hasOwnProperty(key)) {
+      return false;
+      //}
+    }
+    return true;
+  }
+
+  return false;
+}
+
+
+/*
+* THIS FUNCTION IS USED TO PROVIDE "ADD-REMOVE" FEATURE
+* Source : http://www.sanwebe.com/2013/03/addremove-input-fields-
+dynamically-with-jquery/comment-page-1
+*/
+
+function manageAddRemove(maxInput,fileCounter,maxlength){
+    var MaxInputs       = maxInput; //maximum input boxes allowed
+    var InputsWrapper   = $("#InputsWrapper"); //Input boxes wrapper ID
+    var AddButton       = $("#AddMoreFileBox"); //Add button ID
+    //var x = InputsWrapper.length; //initlal text box count
+    var x = fileCounter;
+    var FieldCount = fileCounter; //to keep track of text box added
+    if(x <= 1){
+     $('.removeclass').hide();
+    }
+    $(AddButton).click(function (e)  //on add input button click
+    {
+        if(x <= MaxInputs) //max input box allowed
+        {
+            FieldCount++; //text box added increment
+            //add input box
+            $(InputsWrapper).append('<div><input type="text" class="form-control"\
+             name="keyword_value[]" id="keyword_value'+ FieldCount +'"\
+             value="" maxlength="'+maxlength+'"/><a href="#"\
+             class="removeclass">X</a></div>');
+            if(x>0){
+             $('.removeclass').show();
+            }
+            else{
+             $('.removeclass').hide();
+            }
+            x++; //text box increment
+        }else{
+            alert('More than '+maxInput+' field is not supported');
+        }
+        return false;
+    });
+    $("body").on("click",".removeclass", function(e){ //user click on remove text
+        if( x > 1 ) {
+         $(this).parent('div').remove(); //remove text box
+         x--; //decrement textbox
+        }
+        if(x == 1){
+         $('.removeclass').hide();
+        }
+        else{
+         $('.removeclass').show();
+        }
+        return false;
+    });
+ }
+
+ function moveFocus(elementId){
+    $('#'+elementId).focus();
+ }
+
+
+
+
+
+
+	function getScrollY() {
+		if (isIE) {
+			var myScrollY = document.body.scrollTop;
+		} else {
+			var myScrollY = window.scrollY;
+		}
+
+		return myScrollY;
+	}
+
+	function windowWidth() {
+		var myWidth = 0;
+
+		if( typeof( window.innerWidth ) == 'number' ) {
+			//Non-IE
+			myWidth = window.innerWidth;
+		} else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+			//IE 6+ in 'standards compliant mode'
+			myWidth = document.documentElement.clientWidth;
+		} else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+			//IE 4 compatible
+			myWidth = document.body.clientWidth;
+		}
+
+		return myWidth;
+	}
+
+	function windowHeight() {
+		var myHeight = 0;
+
+		if( typeof( window.innerWidth ) == 'number' ) {
+			//Non-IE
+			myHeight = window.innerHeight;
+		} else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+			//IE 6+ in 'standards compliant mode'
+			myHeight = document.documentElement.clientHeight;
+		} else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+			//IE 4 compatible
+			myHeight = document.body.clientHeight;
+		}
+
+		return myHeight;
+	}
+
+	function getScrollX() {
+		if (isIE) {
+			var myScrollX = document.body.scrollLeft;
+		} else {
+			var myScrollX = window.scrollX;
+		}
+
+		return myScrollX;
+	}
+
+
+
+	function addFancyBoxEdit(target,type,width,height){
+
+		if(type == '2'){
+			var targetElement = '#'+target;
+		}else{
+			var targetElement = '.'+target;
+		}
+		if(typeof width == 'undefined'){
+			width = '800';
+		}
+		if(typeof height == 'undefined'){
+			height = '100%';
+		}
+		$(targetElement).each(function(){
+		  $(this).fancybox({
+		        href : $(this).attr('href')+'&fancy=1',
+				type : 'iframe',
+				padding : 5,
+				//close : 27,
+		        height : height,
+		        autoSize : false,
+		        fitToView : false,
+		        width : width,
+		        closeBtn : true,
+		        afterLoad: function(current, previous) {
+		         $('.fancybox-iframe').contents().find('.header').hide();
+		        },
+		        onUpdate : function(){
+		         $('.fancybox-iframe').contents().find('.header').hide();
+		        },
+		        beforeClose : function(){
+		        	if($('.fancybox-iframe').contents().find('.successmessage').length){
+		        		parent.reloadGrid();
+		        	}
+		        },
+		        afterClose: function() {
+		        	//parent.reloadGrid();
+			    },
+			    keys : {
+			        close  : null
+			    },
+			    helpers     : {
+			        overlay : {closeClick: false}
+			    },
+			    iframe: {
+		              preload: false // fixes issue with iframe and IE
+		        }
+		  });
+		});
+	}
+
+	function closeFancyBox(){
+		$.fancybox.close();
+	}
+	function closeFancyBoxParent(){
+		window.parent.closeFancyBox();
+	}
+	function downloadSampleFile(filename){
+		 window.location.href = filename;
+	}
+
+

@@ -1,0 +1,134 @@
+body{
+  color: #777777;
+}
+.row {
+  overflow: hidden;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  white-space: nowrap;
+}
+.heading {
+  margin: auto;
+  text-align: center;
+}
+
+.left div {
+  margin: 2px;
+}
+
+.inline-div{
+  display: inline-table;
+}
+
+.span2 {
+  width: 16%;
+}
+
+.span8 {
+  width: 64%;
+}
+
+.set-border {
+  border: 1px solid #777777;
+}
+
+.active {
+  border: 2px solid red;
+  display: inline-block;
+}
+
+.hide {
+  display: none;
+}
+.show {
+  display: block;
+}
+
+.item {
+  /*display: inline-table;*/
+  float: left
+}
+
+.item > span {
+  display: inline-block;
+}
+
+.item > span > img {
+  overflow: hidden;
+}
+.clear {
+  clear: both;
+}
+
+#wall {
+  height: 500px;
+
+}
+
+.full-wall, #full-wall-copy {
+  height: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  float: left;
+}
+
+.left-munu-item-list {
+  height: 200px;
+  overflow-y: scroll;
+}
+
+.wrapper {
+  width: auto;
+  height: auto;
+  overflow: auto;
+  position: relative;
+}
+
+.scale {
+  position: relative;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1);
+  -webkit-transform-origin: 0 0;
+  -moz-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  -o-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+
+.center {
+  margin: 10px 0;
+  text-align: center;
+}
+
+form#customWallForm input{
+  width: 50px;
+}
+
+li.list-menu > ul.sub-menu{
+  display: none;
+  background-color: #eee;
+  display: none;
+  left: 201px;
+  list-style-type: disc;
+  position: absolute;
+  top: 0;
+  width: 100px;
+}
+
+li.list-menu:hover > .sub-menu{
+  display: block;
+  background-color: #eee;
+}
+
+.contextMenu li.list-menu:hover > a {
+  background-color: #eee;
+  color: #333;
+}
+
+li.list-menu:hover ul.sub-menu li:hover {
+  background-color: #3399FF;
+}

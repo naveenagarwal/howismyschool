@@ -13,3 +13,7 @@ convert image.png image.tiff
 Convert png images to tga images that is RGB + alpha images
 
 convert image.png -alpha on -channel rgba image.tga
+
+set black background to transparent
+
+convert -fuzz 10% -transparent black orig1.jpg 1.png

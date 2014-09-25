@@ -1,0 +1,11 @@
+<?php
+$login->user_log_out();
+$redirectURL = URL;
+if($_GET['idle'] == '1'){
+  session_start();
+  $utilityObj->setFlashMessage(t('You are logged out due to inactivity'),'error');
+  $redirectURL .= 'login';
+}
+header('Location: '.$redirectURL);
+exit;
+?>

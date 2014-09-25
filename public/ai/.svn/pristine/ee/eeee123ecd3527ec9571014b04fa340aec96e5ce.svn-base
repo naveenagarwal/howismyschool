@@ -1,0 +1,11 @@
+<?php
+
+if( $login->is_user_logged_in() ) $is_logout = 'show';
+else $is_logout = 'hide';
+
+$ai_obj = create_model_object($db_obj, AI_PATH, 'CreateWall');
+
+$html = $ai_obj->get_seamless_design($_GET['id'])[0]['html'];
+require_once('./view/create-wall/design_image.php');
+
+?>

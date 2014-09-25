@@ -1,0 +1,11 @@
+<?php
+if( $login->is_user_logged_in() ) {
+	$isShowLogin = 'hide';
+	$isShowLogout = 'show';
+}
+else {
+	$isShowLogin = 'show';
+	$isShowLogout = 'hide';
+}
+require_once('././view/create-wall/design.php');
+?>

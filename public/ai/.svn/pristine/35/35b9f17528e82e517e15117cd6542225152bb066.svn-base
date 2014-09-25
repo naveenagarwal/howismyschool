@@ -1,0 +1,11 @@
+/*Images during cache off*/
+table.dataTable thead .sorting_desc {
+    background: url("../images/sort_desc.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+}
+
+table.dataTable thead .sorting {
+    background: url("../images/sort_both.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+}
+table.dataTable thead .sorting_asc {
+    background: url("../images/sort_asc.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+}

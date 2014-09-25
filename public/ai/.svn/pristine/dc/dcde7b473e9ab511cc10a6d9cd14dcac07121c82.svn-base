@@ -1,0 +1,1262 @@
+<?php
+require_once('custom_exception.php');
+class utilityclass {
+
+	private $db_connection = NULL;
+    protected $_allowedFileTypes;
+    /*Used for current page nubmer in listing*/
+    protected $currentPageNumber = 0;
+
+    /**
+     * Constructor, loads either a pre-serialized form structure or an
+     * incoming POST form
+     * @param null
+     * @access public
+     */
+    public function __construct($dbObj){
+		$this->db_connection = $dbObj;
+        $this->_allowedFileTypes = array("image/gif", "image/png",
+            "image/jpeg","video/mp4","image/pjpeg");
+        $this->currentPageNumber = 0;
+    }
+
+    /*
+     *This function is used to validate file upload
+     * @param $fileArray: Array consists of file uploading information
+     * @return bool
+     */
+    public function checkFileUpload($fileArray){
+
+        $maxSize = ini_get('upload_max_filesize');
+        $maxSizeArray = explode('M',$maxSize);
+        $flag = false;
+        if(count($maxSizeArray) == 2){
+            $flag = true;
+            $maxFileSize = $maxSizeArray[0]*1024*1024;
+        }
+        if(!$flag){
+            $maxSizeArray = explode('G',$maxSize);
+            if(count($maxSizeArray) == 2){
+                $flag = true;
+                $maxFileSize = $maxSizeArray[0]*1024*1024*1024;//in GB
+            }
+        }
+        if(!$flag){
+            $maxFileSize = 2*1024*1024;
+        }
+
+        $type = $fileArray['type'];
+        $size = $fileArray['size'];
+        $error = $fileArray['error'];
+        if(!in_array($type, $this->_allowedFileTypes)){
+            return '2';
+        }
+        if($size > $maxFileSize){
+            return '3';
+        }
+        if($error){
+            return '4';
+        }
+        return '1';
+    }
+
+    /*
+     *This function is used to validate numeric value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function checkNumericValue($value){
+        return is_numeric($value);
+    }
+
+    /*
+     *This function is used to validate alphanumeric value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function checkAlphanumericValue($value){
+        $value = str_replace(' ', '', $value);
+        return ctype_alnum($value);
+    }
+
+    /*
+     *This function is used to validate alphabetic value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function checkAlphabeticValue($value){
+        $value = str_replace(' ', '', $value);
+        return ctype_alpha($value);
+    }
+
+    /*
+     *This function is used to validate phone number value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function checkPhoneNumberValue($value){
+        return preg_match("/^([1]-)?[0-9]{3}-[0-9]{3}-[0-9]{4}$/i", $value);
+    }
+
+    /*
+     *This function is used to validate email id value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function checkEmailValue($value){
+        if(!empty($value)) {
+        	return filter_var($value, FILTER_VALIDATE_EMAIL);
+        } else {
+            return TRUE;
+        }
+    }
+
+    /*
+     *This function is used to generate mandatory sign
+     * @param $required: value to check
+     * @return string
+     */
+    public function loadMandatorySign($required){
+        if($required == ' required' or $required == '1'){
+            return '<span class="reqField">*</span>&nbsp;';
+        }else{
+            return '';
+        }
+    }
+
+    /*
+     *This function is used to generate mandatory sign
+     * @param $required: value to check
+     * @return string
+     */
+    public function loadMandatorySignForms($required){
+        if($required == '1'){
+            return $this->loadMandatorySign(' required');
+        }else{
+            return '';
+        }
+    }
+
+    /*
+     *This function is used to validate form fields
+     * @param $validationArray: Array consists of rules of validation
+     * @param $dataArray : Array consists of actual data
+     * @param $columnName : Name of the field
+     * @return bool
+     */
+    public function validateFormField($validationArray,$dataArray,$columnName){
+        $fieldName = $validationArray['value'];
+        $fieldType = $validationArray['type'];
+        $required  = $validationArray['required'];
+        $vtype = $validationArray['vtype'];
+        $vmax = $validationArray['vmax'];
+        $enum = $validationArray['enum'];
+        /*vtype = 1 : Numeric value,vtype = 2 : Alphanumeric value,vtype = 3 : Alphabetic value,
+        vtype = 4 : Phone number value,vtype = 5 : Email value,vtype = 6 : date value*/
+        if($required){
+            if($dataArray[$columnName] == ''){
+                $GLOBALS['errorMessage'] = $fieldName.'&nbsp;'.t('is required');
+                return false;
+            }
+            if($enum!=''){
+                $enumArray = explode('~',$enum);
+                foreach ($enumArray as &$value) {
+                    $value = trim(strtolower($value));
+                }
+                if(is_array($dataArray[$columnName])){
+                    $tempArr = $dataArray[$columnName];
+                    $flag = false;
+                    foreach ($tempArr as &$value) {
+                        $value = trim(strtolower($value));
+                        if(in_array($value, $enumArray)){
+                            $flag = true;
+                            break;
+                        }
+                    }
+                    if(!$flag){
+                     $GLOBALS['errorMessage'] = t('Invalid choice detected for')
+                     .'&nbsp;'.$fieldName;
+                     return false;
+                    }
+                }else{
+                    if(!in_array(trim(strtolower($dataArray[$columnName])), $enumArray)){
+                        $GLOBALS['errorMessage'] = t('Invalid choice detected for')
+                        .'&nbsp;'.$fieldName;
+                        return false;
+                    }
+                }
+            }
+        }
+        if($vtype){
+            $errorArray = array('1'=>array('fun'=>'checkNumericValue',
+                'em'=>t('Please enter only numeric values for').' '),
+            '2'=>array('fun'=>'checkAlphanumericValue',
+                'em'=>t('Please enter only alpha-numeric values for ').' '),
+            '3'=>array('fun'=>'checkAlphabeticValue',
+                'em'=>t('Please enter only alphabetic values for ').' '),
+            '4'=>array('fun'=>'checkPhoneNumberValue',
+                'em'=>t('Please enter a valid value for ').' '),
+            '5'=>array('fun'=>'checkEmailValue',
+                'em'=>t('Please enter a valid email id for').' '),
+            '6'=>array('fun'=>'validateDateValue',
+                'em'=>t('Please enter a valid ').' '),
+            '7'=>array('fun'=>'validateURL',
+                'em'=>t('Please enter a valid ').' '),
+            );
+            if($errorArray[$vtype]['fun'] == 'checkEmailValue') {
+                $validation_res = call_user_func($errorArray[$vtype]['fun'],$dataArray[$columnName], 2);
+            } else {
+                $validation_res = call_user_func($errorArray[$vtype]['fun'],$dataArray[$columnName]);
+            }
+            if(isset($errorArray[$vtype]) && !$validation_res){
+                $GLOBALS['errorMessage'] = $errorArray[$vtype]['em'].$fieldName;
+                return false;
+            }
+        }
+        if($fieldType == 'input_text' or $fieldType == 'textarea'){
+            if(strlen(trim($dataArray[$columnName]))>$vmax and $vmax!=''){
+                $GLOBALS['errorMessage'] = t('Maximum length exceeds for').' : '.$fieldName;
+                return false;
+            }
+            if(strlen(trim($dataArray[$columnName]))<$vmin and $vmin!=''){
+                $GLOBALS['errorMessage'] = t('Minimum length not reached for').' : '.$fieldName;
+                return false;
+            }
+        }
+        if($fieldType == 'file_upload'){
+            if(!empty($dataArray[$columnName]) and $dataArray[$columnName]['name']!=''){
+                $r = $this->checkFileUpload($dataArray[$columnName]);
+                if($r == '2'){
+                    $GLOBALS['errorMessage'] = t('Invalid file type found for ').$fieldName;
+                    return false;
+                }
+                if($r == '3'){
+                    $GLOBALS['errorMessage'] = t('Maximum file size exceeds for ').$fieldName;
+                    return false;
+                }
+                if($r == '3'){
+                    $GLOBALS['errorMessage'] = t('Error occured during uploading');
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+    /*
+     *This function is used to redirect user from one location to another
+     * location
+     * @param $url: User will be redirected to thie url
+     * @return null
+     */
+    public function redirectUser($url){
+        header("Location: ".$url);
+    }
+
+
+    /*
+     *This function is used to set flash message
+     * @param $message: This message will be set
+     * @param $type: Type of message
+     * @return null
+     */
+    public function setFlashMessage($message,$type){
+        if($type == 'error'){
+            $messageBody = '<div class="errormessage">'.$message.'</div>';
+        }
+        if($type == 'success'){
+            $messageBody = '<div class="successmessage">'.$message.'</div>';
+        }
+        $_SESSION['FLASH_MESSAGE'] = $messageBody.'<div class="clr"></div>';
+    }
+
+    /*
+     *This function is used to get flash message
+     * @param null
+     * @return null
+     */
+    public function getFlashMessage(){
+        $message = $_SESSION['FLASH_MESSAGE'];
+        unset($_SESSION['FLASH_MESSAGE']);
+        return $message;
+    }
+
+    /*
+     *This function is used to format date display
+     * @param $value : date value in integer
+     * @param $time : whether to display time component as well
+     * @return null
+     */
+    public function formatDateValue($value,$time = 0){
+        if($time){
+            return date('d M, Y h:i A',$value);
+        }else{
+            return date('d M, Y',$value);
+        }
+    }
+
+
+    /*
+     *This function is used to get page name
+     * @param $page_url : URL of the page
+     * @return string
+     */
+    public function getPageName($page_url = '',$mode = 1){
+        $page_url = ltrim(str_replace(URL,'', $page_url),'/');
+        $menu_names_array = $_SESSION['MENU_NAMES_ARRAY'];
+        $pageURLArray = explode('&',$page_url);
+        $pageName = '';
+
+        if(isset($menu_names_array[$page_url])){
+            $pageName = trim(t($menu_names_array[$page_url]));
+        }
+        else if(isset($menu_names_array[$pageURLArray[0]])){
+            $pageName = trim(t($menu_names_array[$pageURLArray[0]]));
+        }
+        else if($page_url == 'login'){
+            $pageName = t('Login');
+        }
+        else if($page_url == 'registration'){
+            $pageName = t('Registration');
+        }
+        else if($page_url == 'dashboard'){
+            $pageName = t('Dashboard');
+        }
+        else if($page_url == 'profile-edit'
+            or stripos($page_url, 'user-roles/users/profile-edit') !== FALSE){
+            $pageName = t('Edit Profile');
+    }
+    else if($page_url == 'missing'){
+        $pageName = t('Page Not Found');
+    }
+    else if($page_url == ABOUT_US_LINK){
+        $pageName = t('About Us');
+    }
+    else if($page_url == CENSUS_TREE_PAGE){
+        $pageName = t(CENSUS_TREE_PAGE_NAME);
+    }
+    else if($page_url == HORIZONTAL_COMPARE_PAGE){
+        $pageName = t(HORIZONTAL_COMPARE_PAGE_NAME);
+    }
+    else if($page_url == ''){
+        $pageName = t('Home');
+    }
+    else if($page_url == 'NO_ACCESS'){
+        $pageName = t('Access Denied');
+    }
+    if($mode == '1'){
+        return $pageName == '' ? SITE_NAME : SITE_NAME .' : '.$pageName;
+    }else{
+        return $pageName ;
+    }
+}
+
+
+    /*
+     * This function is used to making hidden fields
+     * @param $fields: field name or array
+     * @param $value : if $fields is a string
+     * @return string
+     */
+    public function getHiddenFields($fields = '', $value = '') {
+        if(!empty($fields)) {
+            $hidden_div_start = '<div style="display:none">';
+            $hidden_div_end = '</div>';
+            $hidden_str = '';
+            if(is_array($fields)) {
+                foreach($fields as $field) {
+                    $attrbutes = '';
+                    foreach($field as $attrname => $attrval) {
+                        if(empty($attrbutes)) {
+                            $attrbutes = $attrname.'='.$attrval;
+                        } else {
+                            $attrbutes .= ' '.$attrname.'='.$attrval;
+                        }
+                        $hidden_str .= '<input type="hidden" ' . $attrbutes
+                        . ' />';
+                    }
+                }
+            } else {
+                $hidden_str = '<input type="hidden" name="'.$fields.'"
+                value="'.$value.'" />';
+            }
+            return $hidden_div_start . $hidden_str . $hidden_div_end;
+        } else {
+            return '';
+        }
+    }
+
+    /*
+     * This function is used to get site configuration settings
+     * @param : NONE
+     * @return Array
+     */
+    public function getSiteConfiguration(){
+        $dbObj  = $GLOBALS['dbObj'];
+        $query = 'SELECT * FROM '.DB_DATABASE.'.site_configurations';
+        $result = $dbObj->select($query);
+        $returnArray = array();
+        if(is_array($result) and count($result)){
+            $configArray = $result[0];
+            foreach ($configArray as $key => $value) {
+                if(is_string($key)){
+                    $returnArray[$key] = $value;
+                }
+            }
+        }
+        return $returnArray;
+    }
+
+    /*
+     * This function is used to get set header portion(HTML) of mail
+     * @param : NONE
+     * @return string
+     */
+    public function getMailHeader($mode=1){
+    	
+		$header = '<div style="font:normal 12px Arial;
+		margin:0 auto; width:600px; border:1px solid #2784ba;">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		  <tr>';
+		  if(file_exists(IMAGE_PHYSICAL_PATH.'/'.SITE_HEADER_IMG)
+		            && SITE_HEADER_IMG!='') {
+		  	  $header .=' <td height="50" align="left" valign="middle"
+		    bgcolor="#2784ba">';
+		   	 $header .='<img src="'.IMAGE_URL.'/'.SITE_HEADER_IMG.'"
+		    alt="Lisa 5.0" width="155" height="50" border="0"
+		    style="outline:none !important; border:none !important;" />';
+		    }else{
+		    	$header .=' <td height="50" align="left" valign="middle"
+		    	bgcolor="#2784ba" style="color:#fff;font-size:16px;"><strong>';
+		    	$header .='<img src="'.IMAGE_URL.'/site_logo.png"
+		    	alt="Lisa 5.0" border="0"
+		    	style="outline:none !important; border:none !important;height:45px;" />';
+		    	$header .=' </strong>';
+		    }
+		   $header .='</td>';
+		   $header .='</tr>';
+    
+        return $header;
+    }
+
+    /*
+     * This function is used to get set footer portion(HTML) of mail
+     * @param : NONE
+     * @return string
+     */
+    public function getMailFooter(){
+    	
+    	  $footer .= '<tr>
+		    <td height="100" align="left" valign="top">&nbsp;</td>
+		  </tr>
+		  <tr>
+		    <td align="center" valign="bottom">
+		    <img src="'.IMAGE_URL.'/seperator.png"
+		    width="544" height="1" /></td>
+		  </tr>
+		  <tr>
+		    <td height="27" align="center"
+		    valign="middle" style="font:normal 10px Arial !important;">
+		    '.t('Copyrights').'&nbsp;&copy;&nbsp;'.date('Y').'.&nbsp;'.
+    	    t('All rights reserved by LISA 5.0.').'</td>
+  			</tr>';
+        $footer .= '</table></div>';
+        return $footer;
+    }
+
+    /*
+     * This function is used to get prepare ZIP archive
+     * @param : $dir : Name of the directory
+     * @return NONE
+     */
+    public function prepare_zip_archive($dir,&$zipArchiveFiles) {
+        if ($handle = opendir($dir)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != ".." && is_file($dir.'/'.$file)) {
+                    $zipArchiveFiles[] = $dir.'/'.$file;
+                }
+                else if ($file != "." && $file != ".."
+                && is_dir($dir.'/'.$file)) {
+                    $this->prepare_zip_archive($dir.'/'.$file,$zipArchiveFiles);
+                }
+            }
+            closedir($handle);
+        }
+    }
+    
+
+    public function addOrdinalNumberSuffix($num) {
+        if (!in_array(($num % 100),array(11,12,13))){
+          switch ($num % 10) {
+            case 1:  return $num.'st';
+            case 2:  return $num.'nd';
+            case 3:  return $num.'rd';
+        }
+    }
+    return $num.'th';
+}
+
+/*THIS FUNCTION IS USED TO GET RETURN URL OF A PAGE*/
+public function getReturnURL($sort,$orderBy,$page){
+   parse_str($_SERVER['QUERY_STRING'],$queryStringArray);
+   $qString2 = $qString = '';
+   if(is_array($queryStringArray) and count($queryStringArray)){
+    foreach ($queryStringArray as $key => $value) {
+        if($key == 'sortField' or $key == 'sortOrderBy' or $key == 'page'){
+            continue;
+        }
+        if($qString!=''){
+            $qString .= '&';
+        }
+        if(is_array($value)){
+          $vCnt = count($value);
+          $arrString = '';
+          for($z =0;$z<$vCnt;$z++){
+            if($arrString!=''){
+                $arrString .= '&';
+            }
+            $arrString .= $key.'[]='.$value[$z];
+        }
+        $qString .= $arrString;
+    }else{
+       $qString .= $key.'='.$value;
+   }
+}
+if($qString!=''){
+    $qString2 = $qString;
+    $qString = '?'.$qString;
+}
+}
+$returnURL = $qString2.'&sortField='.$sort.'&sortOrderBy='.$orderBy.'&page='.
+$page;
+return $returnURL;
+}
+
+
+/*THIS FUNCTION IS USED TO SEND PASSWORD RESET MAIL*/
+public function send_password_reset_mail($data,$token){
+   $subject = t('Reset Your Password');
+   $password_reset_link = URL.''.RESET_PASSWORD_LINK.'&e='.$token;
+   $message  = $this->getMailHeader();
+   $message  .= '<tr><td align="left" valign="top"
+      style="padding:0 7px !important;">';
+   $message .= '<p style="color:#367fa9 !important;
+	  margin:0 !important; padding:10px 0 0 !important;
+    font:normal 12px Arial !important;">'.t('Hi').'&nbsp;'.$data['full_name'].',
+    </p>';
+    $message .= '<p style="color:#367fa9 !important;
+	  margin:0 !important; padding:10px 0 0 !important;
+    font:normal 12px Arial !important;">';
+   $message .=  t('Changing your password is simple').'&nbsp;</p>';
+   $message .= '<p style="color:#367fa9 !important;
+	  margin:0 !important; padding:10px 0 0 !important;
+    font:normal 12px Arial !important;">';
+   $message .= t('Please use the link below.').'</p>';
+   $message .= '<p style="color:#367fa9 !important;
+	  margin:0 !important; padding:10px 0 0 !important;
+    font:normal 12px Arial !important;">';
+   $message .= '<a href="'.$password_reset_link.'">'.$password_reset_link.
+   '</a></p>';
+    $message .= '<p style="color:#367fa9 !important;
+	  margin:0 !important; padding:10px 0 0 !important;
+    font:normal 12px Arial !important;">';
+   $message .= t('Thank You').'<br/>';
+   $message .= SITE_NAME;
+   $message .= '</p>';
+   $message  .= '</td></tr>';
+   $message .= $this->getMailFooter();
+
+   include_once '../class/Email.php';
+   $mail = new Email();
+   $mail->mailtype = 'html';
+   $mail->from(SITE_EMAIL, SITE_NAME);
+   $mail->to($data['email_id']);
+   $mail->subject($subject);
+   $mail->message($message);
+   $mail->send();
+   $msg = t('We have sent you an email that will allow you to');
+   $msg = '&nbsp;';
+   $msg = t('reset your password');
+   $msg .= '&nbsp;';
+   $msg .= t('and any previous mail of reset password will be neglected');
+   $this->setFlashMessage($msg,'success');
+   return true;
+}
+
+  /*
+   * THIS FUNCTION IS USED TO CREATE HEADER SECTION OF THE DATA-TABLE GRID
+   * */
+  public function createDataTableHeader($input,&$sortField,&$noSortFields,
+    &$excludeToggleColumn,&$visibleColumns){
+    $fieldsArray = $input['FIELDS'];
+    $noSortFields = '';
+    $tableHTML = '';
+    $sortField = '';
+    $toggleClass = isset($input['COLUMN_TOGGLE'])
+    && $input['COLUMN_TOGGLE'] ? ' toggleDT' : '';
+    $tableHTML  = '<section class="content">'.PHP_EOL;
+    $tableHTML .= "\t".'<div class="row">'.PHP_EOL;
+    $tableHTML .= "\t".'<div class="col-md-12">'.PHP_EOL;
+    $tableHTML .= "\t".'<div class="listdata box">'.PHP_EOL;
+    $tableHTML .= "\t".'<div class="box-header">'.PHP_EOL;
+    $tableHTML .= "\t\t".'<h3 class="box-title">'.$input['LIST_HEADING']
+    .'</h3>'.PHP_EOL;
+    if(isset($input['ADDITIONAL_BUTTION']) && $input['ADDITIONAL_BUTTION']!=''){
+       $tableHTML .= "\t\t".$input['ADDITIONAL_BUTTION'].PHP_EOL;
+    }
+    $tableHTML .= "\t".'</div>'.PHP_EOL;
+    $tableHTML .= "\t".'<div class="box-body table-responsive'.$toggleClass.'">'
+    .PHP_EOL;
+    $tableHTML .= "\t\t".'<table id="'.$input['TABLE_ID'].'" class="table
+    table-bordered table-hover table-striped">'.PHP_EOL;
+    $tableHTML .= "\t\t\t".'<thead>'.PHP_EOL;
+    $tableHTML .= "\t\t\t\t".'<tr>'.PHP_EOL;
+    $index = 0;
+    foreach($fieldsArray as $key=>$field){
+       $tableHTML .= "\t\t\t\t\t".'<th style="'.$field['style'].'">'.
+       $field['label'].'<span class="asc-desc"></span></th>'.PHP_EOL;
+       if($key == $input['DEFAULT_SORT_FIELD']){
+          $sortField = $index;
+      }
+      if(!isset($field['sorting']) || !$field['sorting']){
+        if($noSortFields!=''){
+         $noSortFields .= ',';
+     }
+     $noSortFields .= $index;
+ }
+ if(!isset($field['toggle']) || !$field['toggle']){
+    if($excludeToggleColumn!=''){
+     $excludeToggleColumn .= ',';
+ }
+ $excludeToggleColumn .= $index;
+}
+if(!isset($field['visible']) || $field['visible']){
+    if($visibleColumns!=''){
+     $visibleColumns .= ','.PHP_EOL;
+ }
+ $visibleColumns .= '{"bVisible": true, "aTargets": [ '.$index.' ] }';
+}else{
+    if($visibleColumns!=''){
+     $visibleColumns .= ','.PHP_EOL;
+ }
+ $visibleColumns .= '{"bVisible": false, "aTargets": [ '.$index.' ] }';
+}
+$index++;
+}
+$tableHTML .= "\t\t\t\t".'</tr>'.PHP_EOL;
+$tableHTML .= "\t\t\t".'</thead>'.PHP_EOL;
+
+return $tableHTML;
+}
+
+public function createDataTableBody($colspan){
+    $tableHTML  = "\t\t\t".'<tbody>'.PHP_EOL;
+    $tableHTML .= "\t\t\t\t".'<tr>'.PHP_EOL;
+    $tableHTML .= "\t\t\t\t\t".'<td colspan="'.$colspan.'"
+    style="text-align:center;">'.DATAGRID_LOADING_TEXT
+    .'</td>'.PHP_EOL;
+    $tableHTML .= "\t\t\t\t".'</tr>'.PHP_EOL;
+    $tableHTML .= "\t\t\t".'</tbody>'.PHP_EOL;
+    return $tableHTML;
+}
+
+public function createDataTableFooter($input){
+   /*
+   $tableHTML = '';
+   $fieldsArray = $input['FIELDS'];
+   if(!isset($input['FOOTER']) || $input['FOOTER'] == TRUE){
+      $tableHTML = "\t\t\t".'<tfoot>'.PHP_EOL;
+      $tableHTML .= "\t\t\t\t".'<tr>'.PHP_EOL;
+      foreach($fieldsArray as $field){
+        $tableHTML .= "\t\t\t\t\t".'<th>'.$field['label'].'</th>'.PHP_EOL;
+      }
+     $tableHTML .= "\t\t\t\t".'</tr>'.PHP_EOL;
+     $tableHTML .= "\t\t\t".'</tfoot>'.PHP_EOL;
+    }
+    */
+	$tableHTML  = "\t\t".'</table>'.PHP_EOL;
+	$tableHTML .= "\t".'</div>'.PHP_EOL;
+	$tableHTML .= '</div>'.PHP_EOL;
+	$tableHTML .= '</div>'.PHP_EOL;
+	$tableHTML .= '</div>'.PHP_EOL;
+	$tableHTML .= '</section>'.PHP_EOL;
+	return $tableHTML;
+}
+  /*
+   * THIS FUNCTION IS USED TO ADD SHOW/HIDE COLUMN FEATURE
+   * */
+  public function colvisDataTable($input,$excludeToggleColumns){
+   $script = '';
+   if($input['COLUMN_TOGGLE'] &&
+    (substr_count($excludeToggleColumns,',')+ 1) != count($input['FIELDS'])){
+    $script  = "\t\t".'"sDom": "C<\"clear\">lfrtip",'.PHP_EOL;
+$script .= "\t\t".'"oColVis": {'.PHP_EOL;
+$script .= "\t\t\t".'"buttonText": "'.t(TOGGLE_COLUMNS_TEXT).'",'.PHP_EOL;
+if($excludeToggleColumns != ''){
+  $script .= "\t\t\t\t".'"aiExclude": [ '.$excludeToggleColumns.' ],'.PHP_EOL;
+}
+$script .= "\t\t\t".'"fnLabel": function ( index, title, th ) {';
+//$script .= "\t\t\t".'return title.substr(0,15);';
+$script .= "\t\t\t".'return title;';
+$script .= "\t\t\t".'}';
+$script .= "\t\t".'},'.PHP_EOL;
+}
+return $script;
+}
+
+  /*
+  * This function is used to get data grid with DataTable support
+  * @input : input
+  * @return : HTML & JS script code
+  */
+  public function displayDataTableListing($input){
+    $fieldsArray = $input['FIELDS'];
+    $input['FORM_ID'] = !isset($input['FORM_ID']) ? 'commonSearchFrm'
+    : $input['FORM_ID'];
+    $noSortFields = $tableHTML = $sortField = $excludeToggleColumns = '';
+    $visibleColumns = '';
+    $colspan = count($fieldsArray);
+    $tableHTML  = $this->createDataTableHeader($input,$sortField,
+        $noSortFields,$excludeToggleColumns,$visibleColumns);
+    $tableHTML .= $this->createDataTableBody($colspan);
+    $tableHTML .= $this->createDataTableFooter($input);
+    $script = PHP_EOL.'<script type="text/javascript">'.PHP_EOL;
+    $script .= "\t".'$(function() {'.PHP_EOL;
+        $script .= "\t\t".'fancyDTID = '.$input['TABLE_ID'].PHP_EOL;
+        $script .= "\t\t".'fancyDTIDURL = "'.$input['RECORD_URL'].'"'.PHP_EOL;
+        $script .= "\t".'jQuery.fn.dataTableExt.oPagination.iFullNumbersShowPages = '
+        .$input['LINKS_PER_PAGE'].PHP_EOL;
+        $script .= "\t\t".PHP_EOL.$input['TABLE_ID'].' = $("#'.$input['TABLE_ID'].'").dataTable({'.PHP_EOL;
+            $script .= "\t\t".'"bPaginate": true,'.PHP_EOL;
+            $script .= "\t\t".'"bLengthChange": false,'.PHP_EOL;
+            $script .= "\t\t".'"bFilter": false,'.PHP_EOL;
+            $script .= "\t\t".'"bSort": true,'.PHP_EOL;
+            $script .= "\t\t".'"bInfo": true,'.PHP_EOL;
+            $script .= "\t\t".'"bAutoWidth": false,'.PHP_EOL;
+            $script .= "\t\t".'"bServerSide": true,'.PHP_EOL;
+            $script .= "\t\t".'"bDeferRender": true,'.PHP_EOL;
+            if(isset($input['SHOW_SCROLLER']) && $input['SHOW_SCROLLER']){
+             $script .= "\t\t".'"sScrollX": "110%",'.PHP_EOL;
+            }
+            $script .= "\t\t".'"fnInitComplete": function(){'.PHP_EOL;
+            $script .= "\t\t\t".'addJSScrollPaneDelayed('.$input["SHOW_SCROLLER"].')'.PHP_EOL;
+            $script .= "\t\t".'},'.PHP_EOL;
+            $script .= "\t\t".'"bDeferRender": true,'.PHP_EOL;
+            //add show/hide column feature
+            $script .= $this->colvisDataTable($input,$excludeToggleColumns);
+            if($sortField!=''){
+               $script .= "\t\t".'"aaSorting": [['.PHP_EOL;
+               $script .= "\t\t\t\t".$sortField.',"'.
+               strtolower($input['DEFAULT_SORT_ORDER']).'",'.PHP_EOL;
+               $script .= "\t\t".']],'.PHP_EOL;
+           }
+       if($noSortFields!=''){
+        $script .= "\t\t".'"aoColumnDefs": ['.PHP_EOL;
+        if($visibleColumns!=''){
+           $script .= "\t\t\t\t".$visibleColumns.",".PHP_EOL;
+       }
+       $script .= "\t\t\t".'{'.PHP_EOL;
+       $script .= "\t\t\t\t".'"bSortable": false,'.PHP_EOL;
+       $script .= "\t\t\t\t".'"aTargets": [ '.$noSortFields.' ]'.PHP_EOL;
+       $script .= "\t\t\t".'}'.PHP_EOL;
+       $script .= "\t\t".'],'.PHP_EOL;
+        }else if($visibleColumns!=''){//if all fields are sortable
+            $script .= "\t\t".'"aoColumnDefs": ['.PHP_EOL;
+            $script .= "\t\t\t\t".$visibleColumns.PHP_EOL;
+            $script .= "\t\t".'],'.PHP_EOL;
+        }
+        $script .= "\t\t".'"oLanguage": {'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sZeroRecords": "'.t(NO_RECORDS_TEXT).'",'.PHP_EOL;
+        $script .= "\t\t".'"oPaginate": {'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sFirst": "'.t('First').'",'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sPrevious": "'.t('Previous').'",'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sNext": "'.t('Next').'",'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sLast": "'.t('Last').'",'.PHP_EOL;
+        $script .= "\t\t".'}'.PHP_EOL;
+        $script .= "\t\t".'},'.PHP_EOL;
+        
+        $script .= "\t\t".'"iDisplayLength" : '.$input['RECORDS_PER_PAGE'].','.PHP_EOL;
+        $script .= "\t\t".'"sAjaxSource": "'.$input['RECORD_URL'].'",'.PHP_EOL;
+        $script .= "\t\t".'"sServerMethod": "POST",'.PHP_EOL;
+        $script .= "\t\t".'"fnServerParams": function ( aoData ) {';
+        $script .= "\t\t".'addSearchParams(aoData,"'.$input['FORM_ID'].'")';
+        $script .= "\t\t".'},';
+        $script .= "\t\t".'"fnDrawCallback": function ( oSettings ) {';
+        $script .= "\t\t".'dataDatableDrawComplete("'.$input['TABLE_ID'].'");';
+        if(isset($input['FANCY_FUNC']) && $input['FANCY_FUNC']!=''){
+          $script .= "\t\t\t".'eval('.$input['FANCY_FUNC'].')'.PHP_EOL;
+        }
+        $script .= "\t\t".'}';
+        $script .= "\t".'});'.PHP_EOL;
+        $script .= "\t".'});'.PHP_EOL;
+        $script .= '</script>'.PHP_EOL;
+        return $tableHTML.PHP_EOL.$script;
+    }
+
+  /*
+  * This function is used to retrieve reference of edit & delete columns
+  * @$fieldsArray : Fields to scan
+  * @type : 1 : Edit,2: Delete
+  * @return : $output array
+  */
+  public function getDataTableEditDeleteRefs($fieldsArray,$type){
+      $output = array();
+      if(isset($fieldsArray[EDIT_OP]) && $type == 1){
+        $output['editLabel'] = $fieldsArray[EDIT_OP]['label'];
+        $output['noEditColumn'] = $fieldsArray[EDIT_OP]['NO_EDIT_COLUMN'];
+        $output['noEditColumnValue'] =
+        $fieldsArray[EDIT_OP]['NO_EDIT_COLUMN_VALUE'];
+        $output['editAction'] = $fieldsArray[EDIT_OP]['EDIT_ACTION'];
+        $output['editType'] = $fieldsArray[EDIT_OP]['EDIT_TYPE'];
+        $output['editId'] = $fieldsArray[EDIT_OP]['PK_FIELD'];
+    }
+    if(isset($fieldsArray[DELETE_OP]) && $type == 2){
+        $output['deleteLabel'] = $fieldsArray[DELETE_OP]['label'];
+        $output['noDeleteColumn'] =
+        $fieldsArray[DELETE_OP]['NO_DELETE_COLUMN'];
+        $output['noDeleteColumnValue'] =
+        $fieldsArray[DELETE_OP]['NO_DELETE_COLUMN_VALUE'];
+        $output['deleteAction'] = $fieldsArray[DELETE_OP]['DELETE_ACTION'];
+        $output['deleteType'] = $fieldsArray[DELETE_OP]['DELETE_TYPE'];
+        $output['deleteId'] = $fieldsArray[DELETE_OP]['PK_FIELD'];
+    }
+   	if(isset($fieldsArray[OTHER_OP])){
+        $output['otherLabel'] = $fieldsArray[OTHER_OP]['label'];
+        $output['otherAction'] = $fieldsArray[OTHER_OP]['OTHER_ACTION'];
+        $output['otherType'] = $fieldsArray[OTHER_OP]['OTHER_TYPE'];
+        $output['otherId'] = $fieldsArray[OTHER_OP]['PK_FIELD'];
+        $output['otherFieldLabel'] = $fieldsArray[OTHER_OP]['FIELD_LABEL'];
+        $output['otherUrl'] = $fieldsArray[OTHER_OP]['OTHER_URL'];
+         
+    }
+    return array_values($output);
+}
+  /*
+  * This function is used to decorated EDIT cells
+  */
+  public function decorateDataTableEditCells($fieldsArray,$aRow){
+  	list($editLabel,$noEditColumn,$noEditColumnValue,$editAction,
+       $editType,$editId) = $this->getDataTableEditDeleteRefs($fieldsArray,1);
+  	$editText = FALSE;
+    if(!empty($editId)){
+    	if(!$noEditColumn){
+    		$editText = TRUE;
+    	}else{
+    		$editText = TRUE;
+    		if(in_array($aRow[$noEditColumn],
+             $noEditColumnValue)){
+              $editText = FALSE;
+      }
+  }
+}
+if($editText){
+    $editDomId = 'DTED_'.$editId.'-'.$aRow[$editId];
+    $editText = $editType == URL_BASED ?
+    link_create(t($editLabel),
+        array(
+            'id'=>$editDomId,
+            'href'=>$editAction.'&'.$editId.'='.$aRow[$editId],
+            'class' => 'editCell')
+        )
+    : link_create($editLabel,
+        array(
+            'id'=>$editDomId,
+            'href'=>'javascript:'.
+            $editAction."('".$aRow[$editId]."','".$editDomId."')"),
+        JAVASCRIPT_LINK);
+}else{
+    $editText = EDIT_NA_TEXT;
+}
+return $editText;
+}
+  /*
+  * This function is used to decorated DELETE cells
+  */
+  public function decorateDataTableDeleteCells($fieldsArray,$aRow){
+    list($deleteLabel,$noDeleteColumn,$noDeleteColumnValue,$deleteAction,
+        $deleteType,$deleteId) = $this->getDataTableEditDeleteRefs($fieldsArray,
+        2);
+    $deleteText = FALSE;
+    if(!empty($deleteId)){
+        if(!$noDeleteColumn){
+            $deleteText = TRUE;
+        }else{
+          $deleteText = TRUE;
+          if(in_array($aRow[$noDeleteColumn],
+              $noDeleteColumnValue)){
+            $deleteText = FALSE;
+    }
+}
+}
+if($deleteText){
+ $delDomId = 'DTDEL-'.$deleteId.'-'.$aRow[$deleteId];
+ $deleteText = $deleteType == URL_BASED ?
+ link_create($deleteLabel,
+  array(
+      'id'=>$delDomId,
+      'href'=>$deleteAction.'&'.$deleteId.'='.$aRow[$deleteId],
+      'target' => '_blank'
+      )
+  )
+ : link_create(t($deleteLabel),
+  array(
+      'id'=>$delDomId,
+      'href'=>'javascript:'.
+      $deleteAction."('".$aRow[$deleteId]."','".$delDomId."')"),
+  JAVASCRIPT_LINK);
+}else{
+    $deleteText = DELETE_NA_TEXT;
+}
+return $deleteText;
+}
+
+ /*
+  * This function is used to decorated Other cells
+  */
+  public function decorateDataTableModelPopupCells($fieldsArray,$aRow){
+
+  	list($otherLabel,
+             $otherAction,
+             $otherType,
+             $otherId,
+             $otherFieldLabel,
+             $otherUrl) = $this->getDataTableEditDeleteRefs($fieldsArray,3);
+    
+  	$otherText = FALSE;
+    if(!empty($otherId)){
+    		$otherText = TRUE;
+  
+}
+if($otherText){
+    $otherDomId = 'DTOD_'.$otherId.'-'.$aRow[$otherId];
+    $otherText = $otherType == URL_BASED ?
+    link_create(t($otherFieldLabel),
+        array(
+            'id'=>$otherDomId,
+            'href'=>$otherUrl.'&'.$otherId.'='.$aRow[$otherId],
+        	'class' => 'showCell')
+        )
+    : link_create($otherFieldLabel,
+        array(
+            'id'=>$otherDomId,
+            'href'=>'javascript:'.
+            $otherAction."('".$aRow[$otherId]."','".$otherUrl."')"),
+        JAVASCRIPT_LINK);
+}else{
+    $otherText = EDIT_NA_TEXT;
+}
+return $otherText;
+}
+
+  /*
+  * This function is used to prepare data for DataTable
+  * @resultSet : Data from model
+  * @page : $totalRecords of the result
+  * @page : current page number
+  * @recordsPerPage : Number of records to be shown in a page
+  * @aColumns : columns to be displayed
+  * @return : $output array
+  */
+  public function prepareDataTableRows($resultSet,$totalRecords,$page,
+     $recordsPerPage,$fieldsArray){
+   $sEcho = 1;
+   if(isset($_REQUEST['sEcho'])){
+     $sEcho = $_REQUEST['sEcho'];
+ }
+ $output = array(
+    "sEcho" => intval($sEcho),
+    "iTotalRecords" => $totalRecords,
+    "iTotalDisplayRecords" => $totalRecords,
+    "aaData" => array()
+    );
+ $aColumns = array_keys($fieldsArray);/*building the columns*/
+ $aCnt  = count($aColumns);
+ $page = $this->currentPageNumber;
+ $startRecord = $recordsPerPage * $page;
+ if(is_array($resultSet) && count($resultSet)){
+   foreach ($resultSet as $key=>$aRow){
+    $row = array();
+    $srNo = $key + $startRecord + 1;
+    for ( $i=0 ; $i<$aCnt ; $i++ ){
+        if ( $aColumns[$i] != ' ' ){
+            switch ($aColumns[$i]) {
+                case 'srNo':
+                $row[] = $srNo;
+                break;
+                case EDIT_OP:
+                $row[] = $this->decorateDataTableEditCells($fieldsArray
+                    ,$aRow);
+                break;
+                case DELETE_OP:
+                $row[] =
+                $this->decorateDataTableDeleteCells($fieldsArray,$aRow);
+                break;
+                case OTHER_OP:
+                $row[] =
+                $this->decorateDataTableModelPopupCells($fieldsArray,$aRow);
+                break;
+                default:
+                $row[] = $aRow[$aColumns[$i] ];
+                break;
+            }
+        }else{
+            $row[] = '';
+        }
+    }
+    $output['aaData'][] = $row;
+}
+}
+return $output;
+}
+  /*
+  * This function is used to get limit params to be applied on a query
+  */
+  public function getDataTableLimit($recordsPerPage){
+    if ( isset( $_REQUEST['iDisplayStart'] ) && $_REQUEST['iDisplayLength']
+    != '-1' ){
+        $start =  $_REQUEST['iDisplayStart'];
+    }
+    if(empty($start)){
+        $start = 0;
+        $page = 0;
+    }else{
+        $page = $_REQUEST['iDisplayStart']/$_REQUEST['iDisplayLength'];
+    }
+    $this->currentPageNumber = $page;
+    return "LIMIT ".$start.", ".$recordsPerPage;
+}
+  /*
+  * This function is used to get sort order to be applied on a query
+  */
+  public function getDataTableOrderBy($fieldsArray,$sortField,$sortOrder){
+  	$aColumns = array_keys($fieldsArray);
+    $sOrder = "";
+    if ( isset( $_REQUEST['iSortCol_0'] ) ){
+        $cnt = intval($_REQUEST['iSortingCols']);
+        for ( $i=0 ; $i<=$cnt ; $i++ ){
+            if ( $_REQUEST[ 'bSortable_'.intval($_REQUEST['iSortCol_'.$i]) ]
+            == "true" ){
+                $sOrder .= $aColumns[ intval( $_REQUEST['iSortCol_'.$i] ) ]." "
+                .( $_REQUEST['sSortDir_'.$i] ) .", ";
+            }
+        }
+        $sOrder = substr_replace( $sOrder, "", -2 );
+    }
+    if ( $sOrder == "" ){
+      $sOrder = ' '.$sortField.' '.$sortOrder;
+  }
+  return $sOrder;
+}
+
+  /* This function is used to get sort order to be applied on a
+   * query for export
+  */
+  public function getExportDataOrderBy($fieldsArray,$sortIndex,$sortOrder,
+    $defSortField,$defSortOrder ){
+  	$aColumns = array_keys($fieldsArray);
+    $sOrder = "";
+    if ( isset($aColumns[$sortIndex]) ){
+        $sOrder = $aColumns[$sortIndex].' '.$sortOrder;
+    }
+    if ( $sOrder == "" ){
+      $sOrder = ' '.$defSortField.' '.$defSortOrder;
+  }
+  return $sOrder;
+}
+  /*
+   * THIS FUNCTION IS USED TO SEND MAIL TO USER AFTER HIS/HER ACCOUNT CREATED
+   * */
+  public function send_user_creation_mail($data){
+   if(SEND_MAIL && isset($data['email_id']) && !empty($data['email_id'])) {
+      include_once 'Email.php';
+      //$toEmailId = $data['email_id'];
+      $toEmailId = 'abcd1646@gmail.com';
+      $mail = new Email();
+      $mail->mailtype = 'html';
+      $mail->from(SITE_EMAIL, SITE_NAME);
+      $mail->to($toEmailId);
+      $mail->subject(t('Account has been created.'));
+      $message  = $this->getMailHeader();
+      $message .='<tr>';
+      $message .='<td align="left" valign="top"
+      style="padding:0 7px !important;">';
+	  $message .= '<p style="color:#367fa9 !important;
+	  margin:0 !important; padding:10px 0 0 !important;
+    font:normal 12px Arial !important;">'.t('Hi').'&nbsp;'.$data['full_name'].',
+    </p>';
+    $message .='<p style="color:#367fa9 !important;padding:10px 0 0 !important; margin:0 !important;
+    font:normal 12px Arial !important;">';
+    $message .=  t('Your account has been created successfully.');
+    $message .=' </p>';
+    $message .='<p style="color:#367fa9 !important; padding:10px 0 0 !important;
+    margin:0 !important; font:normal 12px Arial !important;">';
+    $message .= t('Account details are as follows').':';
+    $message .= '</p><p style="color:#367fa9 !important;
+    padding:10px 0 0 !important; margin:0 !important;
+    font:normal 12px Arial !important;">
+    <strong>'.t('Username').': </strong>'.$data['user_name'];
+    $message .= '</p><p style="color:#367fa9 !important;
+    padding:10px 0 0 !important; margin:0 !important;
+    font:normal 12px Arial !important;">';
+    $message .= '<strong>'.t('Password').': </strong>'.$data['user_password'];
+    $message .='</p>';
+     $message .='<p style="color:#367fa9 !important;
+    padding:10px 0 0 !important; margin:0 !important;
+    font:normal 12px Arial !important;">';
+    $message .= '<strong>'.t('Name').': </strong>'.$data['full_name'];
+    $message .='</p>';
+    $message .='<p style="color:#367fa9 !important;
+    padding:10px 0 0 !important; margin:0 !important;
+    font:normal 12px Arial !important;">';
+    $message .= '<strong>'.t('Email').': </strong>'.$data['email_id'];
+    $message .='</p>';
+    $message .='<p style="color:#367fa9 !important;
+    padding:10px 0 0 !important; margin:0 !important;
+    font:normal 12px Arial !important;">';
+	$message .= ''.t('Regards').',<br/>'.SITE_NAME;
+	$message .='</p>';
+	$message .='</td>';
+	$message .='</tr>';
+	$message .= $this->getMailFooter();
+	$mail->message($message);
+	$mail->send();
+  }
+}
+  /*
+  * THIS FUNCTION IS USED TO CREATE THUMBNAIL IMAGE
+  * SOURCE : http://davidwalsh.name/create-image-thumbnail-php
+  */
+  public function makeThumbnailImage($src, $dest, $desired_width) {
+    /* read the source image */
+    $info = pathinfo($dest);
+    switch (strtolower($info['extension'])) {
+        case 'png':
+        $source_image = imagecreatefrompng($src);
+        break;
+        case 'gif':
+        $source_image = imagecreatefromgif($src);
+        break;
+        case 'jpg':
+        case 'jpeg':
+        $source_image = imagecreatefromjpeg($src);
+        break;
+        case 'bmp':
+        $source_image = imagecreatefromwbmp($src);
+        break;
+    }
+    $width = imagesx($source_image);
+    $height = imagesy($source_image);
+    
+    /* find the "desired height" of this thumbnail, relative to the desired
+     width  */
+    $desired_height = floor($height * ($desired_width / $width));
+    
+    /* create a new, "virtual" image */
+    $virtual_image = imagecreatetruecolor($desired_width, $desired_height);
+    
+    /* copy source image at a resized size */
+    imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0,
+        $desired_width, $desired_height, $width, $height);
+    /* create the physical thumbnail image to its destination */
+    imagejpeg($virtual_image, $dest);
+    return true;
+}
+
+  /*
+  * THIS FUNCTION IS USED TO ADD SYSTEM WIDE LOG
+  */
+  public function add_system_log($logData){
+   include_once './model/common/common.php';
+   $mObj = new common($this->db_connection);
+   $mObj->add_system_log_data($logData);
+}
+
+  /*
+  * THIS FUNCTION IS USED TO DISPLAY CHECKBOX in GRID
+  */
+  public function showCheckBox($options=array()){
+   
+  	$html = "";
+  	if(!empty($options['class'])){
+  		$class = "class=".$options['class'];
+  	}
+  	if(!empty($options['value'])){
+  		$value = "value=".$options['value'];
+  	}
+  	if(!empty($options['id'])){
+  		$id = "id=".$options['id'];
+  	}
+  	$html .= '<input type="checkbox" '.$class.' '.$value.' '.$id.'
+  	name="chkSelect">';
+  	return $html;
+   
+  }
+  
+  /*
+  * THIS FUNCTION IS USED TO DISPLAY Image in GRID
+  */
+  public function showImage($options=array()){
+   
+  	$html = "";
+  	$src = "src=".IMAGE_URL.'/'.DEFAULT_IMAGE_NAME;
+  	if(!empty($options['class'])){
+  		$class = "class=".$options['class'];
+  	}
+  	if(!empty($options['src'])){
+  		if(file_exists(PRODUCT_THUMB_IMG_PHYSICAL_PATH.'/'.$options['src'])){
+  		 	$src = "src=".PRODUCT_THUMB_IMG_WEB_PATH.'/'.$options['src'];
+  		}
+  	}
+  	if(!empty($options['bigsrc'])){
+  		$bigsrc = "bigsrc=".$options['bigsrc'];
+  		$html .= '<img '.$src.' '.$bigsrc.'
+  	border="0" class="largeImage"
+  	onmouseover="javascript:showLargeImage(this,event);"
+  	onmouseout="javascript:closeBiggerImage();">';
+  	}else{
+  		$html .= '<img '.$src.' >';
+  	}
+  	
+  	return $html;
+   
+  }
+  
+ /*
+  * THIS FUNCTION IS USED TO DISPLAY Image in GRID
+  */
+  public function showAvailibility($options=array()){
+   
+  	$html = "";
+  	$src_green = "src=".IMAGE_URL.'/'.AVAILIBILITY_GREEN;
+  	$src_red = "src=".IMAGE_URL.'/'.AVAILIBILITY_RED;
+  	if(!empty($options['class'])){
+  		$class = "class=".$options['class'];
+  	}
+  	$id = $options['id'];
+  	$url = $options['url'];
+  	$html .= "<a ".$class." href=".$url.">Change</a>";
+  	$html .="<br>";
+  	if($options['is_available'] == 1){
+  			$html .= '<img '.$src_green.' border="0" >';
+  	}else{
+  		$html .= '<img '.$src_red.' border="0">';
+  	}
+  	return $html;
+   
+  }
+  /**
+  * Display dynamic filters across pages
+  * @param $filterType string Type of filter eg. Product,stocks
+  * * @param $pageId string   CSS Id of the container for individual styling
+  * @return string Returns the html of the filters
+  */
+  public function displayDynamicFilters($filterType,$pageId = 'products'){
+   $filterType = $filterType;
+   $pageId     = $pageId;
+   include_once ('./view/common/dynamic-filters.php');
+}
+
+
+}
+?>

@@ -1,0 +1,211 @@
+<?php
+/*THIS FILE IS USED TO DEFINE CONSTANTS*/
+
+DEFINE('SITE_LANGUAGE','EN');
+DEFINE('DEFAULT_TRANSLATION_LANGUAGE','DE');
+DEFINE("CACHE_SITE",FALSE);
+
+DEFINE('SUPER_ADMIN_ID',1);
+DEFINE('SUPER_ADMIN_ROLE',1);
+DEFINE('DELETED_ROLE',2);
+
+define('PHPVERSION', '5.3');
+define('MYSQLIVERSION', 50530);
+define('MYSQLIVERSION_MAJOR_MINOR', '5.5.30');
+define('OPERATING_SYSTEM', 'Linux');
+define('DEPENDENCY_CHECK', FALSE);
+
+DEFINE('DASHBOARD_MENU',0);//group dashboard items under this menu
+DEFINE('TOP_MENU',1);
+DEFINE('GROUPED_MENU',2);
+DEFINE('ACTUAL_MENU',3);
+DEFINE('SUB_ACTUAL_MENU',4);
+DEFINE('MENU_USAGE_LINK',1);
+DEFINE('MENU_USAGE_BUTTON',2);
+DEFINE('PRODUCT_MENU_ID',8);
+DEFINE('MENU_CODE', 'EXPORT-TEMPLATE-BUTTON-');
+DEFINE('MENU_URL', 'products/export-templates-buttons/export-template-button');
+DEFINE('EXPORT_SEARCH_ERROR_LABEL','<div class="expELabel">'.
+t('Error during export').'</div>');
+DEFINE('EXPORT_TEMPLATE_DOWNLOAD_DIR',CUSTOMDIR.'/downloads');
+define("EXPORT_TEMPLATE_DOWNLOAD_URL",URLADDR.'downloads/');
+DEFINE('PRODUCT_THUMB_PATH', CUSTOMDIR.'/products/product_thumbs/');
+DEFINE('CHAIN_MENU_URL', 'products/chain-data/chain-data');
+DEFINE('UNLINK_LOGO_URL', 'configuration/unlink-logo');
+DEFINE('VAR_SAMPLE_FILE',URLADDR.'uploads/variation/variation_sample.csv');
+DEFINE('SUP_SAMPLE_FILE',URLADDR.'uploads/supplier/suppliers_sample.csv');
+DEFINE('EAN_SAMPLE_FILE',URLADDR.'uploads/ean/ean_sample.csv');
+DEFINE('LOG_SAMPLE_FILE',URLADDR.'uploads/log/log_sample.csv');
+DEFINE('PRODUCT_SAMPLE_FILE',URLADDR.'uploads/product/sample_ product.csv');
+
+define('SEND_MAIL', TRUE);
+
+// SEND MAIL BY
+define('MAIL_SEND_BY', 'smtp');
+
+
+define('ENABLE_IDLE_TIME_OUT',FALSE);
+define('INFINITE_RECORDS_PER_PAGE',1000000);
+//################## THIS IS FOR MEMCACHE #######################
+define('MEMCACHE_SERVER', 'localhost');
+define('MEMCACHE_PORT', '11211');
+define('MEMCACHE_FLAG', 0);
+define('MEMCACHE_EXPIRE_TIME', 5*60*60);
+//################## THIS IS FOR MEMCACHE #######################
+
+//################## THIS IS FOR REMEMBER ME FEATURE #######################
+define('REMEMBER_ME_COOKIE', 'SiteAuth');
+define('REMEMBER_ME_TIME', 3600 * 24 * 10);
+//################## THIS IS FOR REMEMBER ME FEATURE #######################
+
+
+//################## THIS IS FOR FILE UPLOAD FEATURE #######################
+
+define('IMAGE_MAX_UPLOAD_MB', 2);
+define('IMAGE_MAX_UPLOAD_KB', (IMAGE_MAX_UPLOAD_MB*1024));
+define('IMAGE_MAX_UPLOAD_B', (IMAGE_MAX_UPLOAD_MB*1048576));
+
+$global_allowed_file_types = array("image/gif", "image/png", "image/jpeg","video/mp4","image/pjpeg");
+
+//################## THIS IS FOR FILE UPLOAD FEATURE #######################
+
+DEFINE('ACCESS_DENIED_MESSAGE','<div class="accessdenied">'.t("You are not allowed to access this page.").'</div>');
+
+
+/*Unique string RELATED CONSTANTS*/
+DEFINE('UNIQUE_STRING_LENGTH',9);
+
+DEFINE('INTERNAL_LINK',1);
+DEFINE('EXTERNAL_LINK',2);
+DEFINE('JAVASCRIPT_LINK',3);
+DEFINE('NO_RECORDS_TEXT',t('No Records Found'));
+DEFINE('TOGGLE_COLUMNS_TEXT',t('Show/Hide Columns'));
+
+
+DEFINE('DELETE_WARNING_MSG',utf8_decode(t('Do you want to delete this record ?')));
+DEFINE('DATAGRID_LOADING_TEXT',t('Loading data from server'));
+
+DEFINE('EDIT_OP','EDIT');
+DEFINE('EDIT_NA_TEXT','---');
+DEFINE('DELETE_OP','DELETE');
+DEFINE('DELETE_NA_TEXT','---');
+DEFINE('URL_BASED',1);
+DEFINE('JS_BASED',2);
+DEFINE('OTHER_OP','OTHER');
+DEFINE('DESCRIPTION_NA_TEXT','---');
+DEFINE('DEFAULT_IMAGE_NAME','dummy.jpeg');
+DEFINE('AVAILIBILITY_GREEN','green.png');
+DEFINE('AVAILIBILITY_RED','red.png');
+
+DEFINE('ACCESS_DENIED_MESSAGE','<div class="accessdenied">'.t('You are not
+allowed to access this page.').'</div>');
+
+DEFINE('PWD_RESET_TIME_SPAN',24*60*60);
+
+DEFINE('ERROR_SYMBOL','<span class="glyphicon
+glyphicon-warning-sign"></span>');
+DEFINE('SUCCESS_SYMBOL','<span class="glyphicon
+glyphicon-thumbs-up"></span>');
+
+
+/*DASHBOARD WIDGETS*/
+DEFINE('DASHBOARD_AB1_GRAPH','DASHBOARD_AB1_GRAPH');
+DEFINE('DASHBOARD_AB2_GRAPH','DASHBOARD_AB2_GRAPH');
+DEFINE('DASHBOARD_LOG_HISTORY','DASHBOARD_LOG_HISTORY');
+DEFINE('DASHBOARD_QUICK_LINKS','DASHBOARD_QUICK_LINKS');
+DEFINE('DASHBOARD_NO_ITEMS',t('Sorry,no dashboard widget is assigned to you'));
+DEFINE('DASHBOARD_MENU_NO_ITEMS',t('Sorry,no dashboard widget or menu is
+assigned to you'));
+DEFINE('DASHBOARD_NO_MENUS',t('Sorry,no menu is assigned to you'));
+
+
+/*TRANSLATION MODULE CONSTANTS*/
+DEFINE('MAX_SOURCE_LABEL',255);
+DEFINE('MAX_TRANSLATED_LABEL',255);
+DEFINE('TRANSLATION_FILE_PREFIX','TRANS');
+DEFINE('TRANSLATION_UPLOAD_DIR',CUSTOMDIR.'/uploads/translation');
+
+
+
+
+/*LOG MODULE CONSTANTS*/
+DEFINE('DATA_EXPORT',1);
+DEFINE('DATA_IMPORT',2);
+DEFINE('USER_LOGIN',3);
+$glbLogTypes = array(
+                     USER_LOGIN => t('User Login'),
+                     DATA_IMPORT=>t('Import Data'),
+                     DATA_EXPORT=>t('Export Data')
+                    );
+DEFINE('LOG_EXPORT_FILE_NAME','view-logs.csv');
+DEFINE('VIEW_LOG_MODULE_NAME','Export Logs');
+DEFINE('IMPORT_LOG_MODULE_NAME','Import Logs');
+DEFINE('LOG_UPLOAD_DIR',CUSTOMDIR.'/uploads/log');
+DEFINE('LOG_UPLOAD_FILE_PREFIX','log_');
+
+/*CONSTANTS FOR PRODUCT DATA IMPORT*/
+DEFINE('CHK_NUMERIC',1);
+DEFINE('CHK_ALPNUMERIC',2);
+DEFINE('CHK_ALPHABETIC',3);
+DEFINE('CHK_PHONE_NO',4);
+DEFINE('CHK_EMAIL',5);
+DEFINE('CHK_DATE',6);
+DEFINE('CHK_ALPNUMERIC_SPECIAL',8);
+DEFINE('CHK_IMG_URL',9);
+DEFINE('CHK_FLOAT',10);
+DEFINE('CHK_TIME',11);
+DEFINE('ENDUSER_ROLE_ID', '52');
+
+
+/*Accurate Image : Wall Design*/
+DEFINE('CURRENT_CSS_VERSION', '2');
+DEFINE('CURRENT_JS_VERSION', '2');
+
+DEFINE('USER_MANAGEMENT_PATH', 'user-management/');
+DEFINE('FRONTEND_LOGIN', USER_MANAGEMENT_PATH.'FLogin');
+DEFINE('FRONTEND_LOGOUT', USER_MANAGEMENT_PATH.'FLogout');
+DEFINE('FRONTEND_REGISTER', USER_MANAGEMENT_PATH.'FRegistration');
+
+DEFINE('WALL_PATH', 'create-wall/');
+DEFINE('WALL_URL', WALL_PATH.'design');
+DEFINE('WALL_IMAGE_URL', WALL_PATH.'DesignImage');
+
+DEFINE('DESIGN_PATH', 'design/');
+DEFINE('GET_DESIGN', DESIGN_PATH.'GetDesign');
+DEFINE('LIST_DESIGNS', DESIGN_PATH.'ListDesigns');
+DEFINE('SAVE_DESIGN', DESIGN_PATH.'SaveDesign');
+DEFINE('SAVE_IMAGE', DESIGN_PATH.'SaveImage');
+
+DEFINE('PRODUCT_MANAGEMENT_PATH', 'product-management/');
+
+DEFINE('COLOR_IMAGE_PHYSICAL_PATH', CUSTOMDIR.'/media/color');
+DEFINE('COLOR_IMAGE_ROOT_PATH', URLADDR.'media/color');
+DEFINE('COLOR_IMAGE_WIDTH', '350');
+
+DEFINE('PLANT_IMAGE_PHYSICAL_PATH', CUSTOMDIR.'/media/plant');
+DEFINE('PLANT_IMAGE_ROOT_PATH', URLADDR.'media/plant');
+DEFINE('PLANT_IMAGE_WIDTH', '350');
+
+DEFINE('MANUFACTURER_IMAGE_PHYSICAL_PATH', CUSTOMDIR.'/media/manufacturer');
+DEFINE('MANUFACTURER_IMAGE_ROOT_PATH', URLADDR.'media/manufacturer');
+DEFINE('MANUFACTURER_IMAGE_WIDTH', '350');
+
+DEFINE('MORTAR_IMAGE_PHYSICAL_PATH', CUSTOMDIR.'/media/mortar');
+DEFINE('MORTAR_IMAGE_ROOT_PATH', URLADDR.'media/mortar');
+DEFINE('MORTAR_IMAGE_WIDTH', '350');
+
+DEFINE('SIZE_IMAGE_PHYSICAL_PATH', CUSTOMDIR.'/media/size');
+DEFINE('SIZE_IMAGE_ROOT_PATH', URLADDR.'media/size');
+DEFINE('SIZE_IMAGE_WIDTH', '350');
+
+DEFINE('TEXTURE_IMAGE_PHYSICAL_PATH', CUSTOMDIR.'/media/texture');
+DEFINE('TEXTURE_IMAGE_ROOT_PATH', URLADDR.'media/texture');
+DEFINE('TEXTURE_IMAGE_WIDTH', '350');
+
+DEFINE('PRODUCT_IMAGE_PHYSICAL_PATH', CUSTOMDIR.'/media/product');
+DEFINE('PRODUCT_IMAGE_ROOT_PATH', URLADDR.'media/product');
+DEFINE('PRODUCT_IMAGE_WIDTH', '350');
+
+DEFINE('ADD_FANCY_BOX_WIDTH', '50%');
+DEFINE('ADD_FANCY_BOX_HEIGHT', '100%');
+?>

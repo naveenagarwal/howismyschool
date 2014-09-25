@@ -1,0 +1,176 @@
+<?php
+
+/**
+ * Plant Class provides functions that simply perform the actions
+ * like get total plants, get plant list, load plant details, check duplicate 
+ * plant name, delete plant, etc.
+ * @author     	: rasingh - Q3tech
+ * @created on  : Aug 29, 2014
+ * @modified on : Aug 29, 2014
+ */
+class Plant {
+	
+	private $db_connection = NULL;
+    private $table_plant = '';
+	
+	/**
+	 * This is a constructor function where variables are intialized automatically
+	 * when object is created of this class
+	 * @param object $db_obj
+	 * @return null
+	 */
+	public function __construct($db_obj) {
+		$this->db_connection = $db_obj;
+        $this->table_plant = $this->db_connection->get_table_mapping('plants');
+	}
+	
+	/**
+     * This function is used to get count of total plants
+	 * @param string $search
+     * @return int
+     */
+    public function get_total_plants($search = '') {
+		$table_manufacturer = $this->db_connection->get_table_mapping('manufacturers');
+		$query  = "SELECT COUNT(plt.id) as cnt FROM ".$this->table_plant ." as plt JOIN ".$table_manufacturer
+		." as mnfr ON plt.manufacturer_id = mnfr.id";
+		if($search!=''){
+			$query .= ' WHERE (plt.plant_name LIKE "%'.$search.'%"
+			OR
+				mnfr.company LIKE "%'.$search.'%"
+			OR
+                IF(plt.is_active=1,"'.t('Yes').'","'.t('No').'") 
+                LIKE "%'.$search.'%" )';
+		}
+		
+		$result = $this->db_connection->sql_single_query($query);
+		return $result['cnt'];
+	}
+
+	/**
+     * This function is used to get plant list
+	 * @param string $order_by_clause
+	 * @param int $limit
+	 * @param string $search
+     * @return object
+     */
+    public function get_plant_list($order_by_clause = ' id ASC',
+    	$limit = '', $search = '') {
+		$table_manufacturer = $this->db_connection->get_table_mapping('manufacturers');
+		$query = "SELECT plt.id, plt.manufacturer_id, plt.plant_name, 
+		IF(plt.image_path = '', '--', CONCAT('<img src=".'"'.PLANT_IMAGE_ROOT_PATH."/',plt.image_path,'" .'" '. "width=".'"200"'." />') ) as image_path,
+		plt.plant_longitude, plt.plant_latitude,
+		IF(plt.is_active = 1,'".t("Yes")."','".t("No")."') as IsActive, mnfr.company as manufacturer_name
+		FROM ".$this->table_plant ." as plt JOIN ".$table_manufacturer
+		." as mnfr ON plt.manufacturer_id = mnfr.id";
+		if($search!=''){
+			$query .= ' WHERE (plt.plant_name LIKE "%'.$search.'%"			 		
+			OR
+				mnfr.company LIKE "%'.$search.'%"
+			OR
+                IF(plt.is_active=1,"'.t('Yes').'","'.t('No').'") 
+                LIKE "%'.$search.'%" )';	
+			
+		}
+		$query .= " ORDER BY $order_by_clause $limit";
+
+		return $this->db_connection->select($query);
+	}
+
+	/**
+     * This function is used to get plant detail based on plant id
+	 * @param int $id
+     * @return object
+     */
+    public function load_plant_details($id = '') {
+		$query = 'SELECT * FROM '.$this->table_plant;
+		if($id!=''){
+			$query .= ' WHERE id='.$this->db_connection->mysql_data_encode($id);
+		}
+		return $this->db_connection->sql_single_query($query);
+	}
+
+	/**
+     * This function is used to check duplicate plant name
+	 * @param string $column_name
+	 * @param string $data
+	 * @param int $id
+     * @return int
+     */
+    public function check_duplicate_column($column_name, $data, $id = '') {
+		$query = 'SELECT COUNT(*) AS cnt FROM '.$this->table_plant.' 
+			WHERE '.$column_name.'="'
+			.$this->db_connection->mysql_data_encode($data).'"';
+		if($id!=''){
+			$query .= ' AND id != '
+				.$this->db_connection->mysql_data_encode($id);
+		}
+		$result = $this->db_connection->sql_single_query($query);
+		return $result['cnt'];
+	}
+	
+	/**
+     * This function is used to save data into the database
+	 * @param string $data_array
+     * @return int
+     */
+    public function save_plant_data($data_array) {
+		if(isset($data_array['pk'])){
+		    $query = 'UPDATE '.$this->table_plant.' SET
+            plant_name="'.$this->db_connection
+		    	->mysql_data_encode($data_array['plant_name']).'",
+            manufacturer_id="'.$this->db_connection
+		    	->mysql_data_encode($data_array['manufacturer_id']).'",
+			image_path="'.$this->db_connection
+		    	->mysql_data_encode($data_array['image_path']).'",
+			plant_longitude="'.$this->db_connection
+		    	->mysql_data_encode($data_array['plant_longitude']).'",
+			plant_latitude="'.$this->db_connection
+		    	->mysql_data_encode($data_array['plant_latitude']).'",
+            is_active="'.$this->db_connection
+		    	->mysql_data_encode($data_array['is_active']).'",
+            modified_by = '.$_SESSION['USER_ID'].',
+            modified_at ="'.time().'"
+			WHERE id='.$this->db_connection->mysql_data_encode($data_array['pk']);
+			return $this->db_connection->edit($query);
+		}else{
+			echo $query = 'INSERT INTO '.$this->table_plant.' (manufacturer_id,plant_name,image_path,plant_longitude,
+			plant_latitude,is_active,created_by,created_at)
+			VALUES("'.$this->db_connection
+		  	->mysql_data_encode($data_array['manufacturer_id']).'","'
+			.$this->db_connection->mysql_data_encode($data_array['plant_name']).'","'
+			.$this->db_connection->mysql_data_encode($data_array['image_path']).'","'
+			.$this->db_connection->mysql_data_encode($data_array['plant_longitude']).'","'
+			.$this->db_connection->mysql_data_encode($data_array['plant_latitude']).'",'
+			.$this->db_connection->mysql_data_encode($data_array['is_active']).','
+			.$_SESSION['USER_ID'].',"'.time().'")';
+		  return $this->db_connection->insert($query);
+		}
+	}
+	
+	/**
+     * This function is used to delete plant
+	 * @param int $id
+     * @return null
+     */
+	public function delete_Plant($id){
+		$query  = 'DELETE FROM '.$this->table_plant;
+		$query .= ' WHERE id = "'.$id.'"';
+		$this->db_connection->delete($query);
+	}
+	
+	/**
+     * This function is used to check all active product
+	 * based on plant id
+	 * @param int $plant_id
+     * @return null
+     */
+	public function check_active_product($plant_id){
+		$table_name = $this->db_connection->get_table_mapping('product_references');
+		$query  = 'SELECT COUNT(product_id) AS cnt FROM '.$table_name;
+		$query .= ' WHERE plant_id = "'.$plant_id.'"';
+		$result = $this->db_connection->sql_single_query($query);
+		return $result['cnt'];
+	}
+	
+}
+?>

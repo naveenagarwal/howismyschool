@@ -1,0 +1,16 @@
+
+<!-- This file used to display when ever error ocured : Q3 Technologies  -->
+<table
+	style="width: 35em; padding: 0 4em; margin: 4em auto 0 auto; 
+	border: 1px solid #ccc; border-right-color: #999; border-bottom-color: #999;">
+	<tr>
+		<td
+			style="padding: 0 0 0 10px; display: inline; color: red; 
+			font-weight: bold;"><?php echo t("We're
+		sorry, but something went wrong.");?></td>
+	</tr>
+	<tr>
+		<td><?php echo t("We've been notified about this issue and we'll take a look at
+		it shortly.");?></td>
+	</tr>
+</table>

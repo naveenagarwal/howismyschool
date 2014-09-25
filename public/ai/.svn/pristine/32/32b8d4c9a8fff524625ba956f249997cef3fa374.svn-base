@@ -1,0 +1,397 @@
+    <!-- Fixed header -->
+    <div class="stickheader">
+      <div class="container-fluid">
+        <div class="row">
+          <div  class="col-xs-2 text-center">
+            <table>
+              <td><a href="#" class="btn-leftbar" id="left-boxDiv" data-toggle="#manufacturers_list"><i class="fa fa-ellipsis-v"></i></a> </td>
+              <td> <img src="../assets/images/accurate-image/logo.png"/> </td>
+            </table>
+          </div>
+          <div  class="col-xs-9">
+            <div id="wrapper">
+              <div id="scroller">
+                <ul id="thelist" class="main-nav">
+                  <li> <i class="stack-icon"></i>Stack </li>
+                  <li> <i class="runing-icon"></i>Running </li>
+                  <li> <i class="third-icon"></i>Third </li>
+                  <li> <i class="coursing-icon"></i>Coursing </li>
+                  <li> <i class="reset-icon"></i>Reset </li>
+                  <li> <i class="undo-icon"></i>Undo </li>
+                  <li> <i class="redo-icon"></i>Redo </li>
+                  <li> <i class="zoomin-icon"></i>Zoom In </li>
+                  <li>  <i class="zoomout-icon"></i>Zoom Out </li>
+                  <li> <i class="sizetool-icon"></i>Size Tool </li>
+                  <li> <i class="advSearch-icon"></i>Search </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div  class="col-xs-1 text-right">
+            <a href="#"  class="dropdown-toggle right-menu"  ><i class="fa fa-bars"></i></a>
+            <div class="dropdown-menu" role="menu">
+              <div id='cssmenu'>
+                <ul>
+                  <li class='has-sub '>
+                    <a href='#'><span> <i class="fa fa-pencil-square-o"></i> File</span></a>
+                    <ul>
+                      <li><a href='javascript:void(0);' id='file-new-design'><span>New</span></a></li>
+                      <li><a href='javascript:void(0);' id-'file-save-design'><span>Save as...</span></a></li>
+                    </ul>
+                  </li>
+                  <li class='has-sub'>
+                    <a href='#'><span><i class="fa fa-eye"></i> View</span></a>
+                    <ul>
+                      <li><a href='#'><span>menu 1</span></a></li>
+                      <li><a href='#'><span>menu 2</span></a></li>
+                    </ul>
+                  </li>
+                  <li class='has-sub'>
+                    <a href='#'><span><i class="fa fa-picture-o"></i>  Image</span></a>
+                    <ul>
+                      <li><a href='#'><span>menu 1</span></a></li>
+                      <li><a href='#'><span>menu 2</span></a></li>
+                    </ul>
+                  </li>
+                  <li class='has-sub'>
+                    <a href='#'><span><i class="fa fa-th"></i> Products</span></a>
+                    <ul>
+                      <li><a href='#'><span>menu 1</span></a></li>
+                      <li><a href='#'><span>menu 2</span></a></li>
+                    </ul>
+                  </li>
+                  <li class='has-sub'>
+                    <a href='#'><span><i class="fa fa-question-circle"></i> Help</span></a>
+                    <ul>
+                      <li><a href='#'><span>menu 1</span></a></li>
+                      <li><a href='#'><span>menu 2</span></a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sepreater-window"></div>
+    <!-- Left panel -->
+    <div class="hiddenDiv" id="leftpanelDiv">
+    <!-- Nav tabs -->
+      <ul class="nav nav-tabs left-tabs" role="tablist">
+        <li class="active"><a href="#manufacturers" class="tabs" role="tab" data-toggle="tab">Manufacturers</a></li>
+        <li><a href="#manufacturer_prodcuts" class="tabs" role="tab" data-toggle="tab">Products</a></li>
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane active" id="manufacturers">
+          <div class="accordion innerContainer" id="manufacturers_list">
+          </div>
+        </div>
+        <div class="tab-pane" id="manufacturer_prodcuts">
+          <div class="accordion innerContainer" id="manufacturers_prodcuts_list">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Begin page content -->
+    <div class="container-fluid" >
+      <div class="row">
+        <div  class="col-sm-12">
+          <div class="brick-container" id="full-wall">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container-fluid">
+        <div class="row">
+          <div  class="col-xs-9">
+            <table class="table ">
+              <tr>
+                <td><a href=""><img src="../assets/images/accurate-image/acme-tilestone-logo.png"/></a></td>
+                <td><a href=""><img src="../assets/images/accurate-image/american-tilestone-logo.png"/></a></td>
+                <td><a href=""><img src="../assets/images/accurate-image/featherlite-logo.png"/></a></td>
+                <td><a href=""><img src="../assets/images/accurate-image/ibg-logo.png"/></a></td>
+                <td><a href=""><img src="../assets/images/accurate-image/texasquerries-logo.png"/></a></td>
+              </tr>
+            </table>
+          </div>
+          <div  class="col-xs-3">
+            <ul class="social-icon-list">
+              <li><a href=""> <i class="fa fa-facebook-square"></i></a></li>
+              <li><a href=""> </a></li>
+              <li><a href=""><i class="fa fa-instagram"></i> </a></li>
+              <li><a href=""> <i class="fa fa-pinterest-square"></i></a></li>
+              <li><a href=""><i class="fa fa-twitter-square"></i> </a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- bottom property content panel -->
+    <div class="bottom-panel">
+      <button type="submit"  id="btnBottom"><i class="fa fa-chevron-up" id="test"></i> </button>
+      <div id="bottom-container">
+        <div class="container-fluid">
+          <div class="col-xs-11">
+            <div class="product-property-cont">
+              <h2> Product Property</h2>
+              <p>LoreumLoreum ipsum dummy text.Loreum ipsum dummy text.Loreum ipsum dummy text.Loreum ipsum dummy text.Loreum  ipsum dummy text. ipsum dummy text.</p>
+              <div class="row">
+                <div class="col-xs-3">
+                  <strong>Material(s)</strong>
+                  <p>Abita springs</p>
+                </div>
+                <div class="col-xs-3">
+                  <strong>Size</strong>
+                  <p>Builder special</p>
+                </div>
+                <div class="col-xs-3">
+                  <strong>Color Family</strong>
+                  <p>Red, Browns</p>
+                </div>
+                <div class="col-xs-3">
+                  <strong>Manufacturer</strong>
+                  <p>ACME Brick</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-1"> <button class="popup-icon show-popup"   data-showpopup="1"><i class="fa fa-ellipsis-v"></i> </button></div>
+        </div>
+      </div>
+    </div>
+    <div class="overlay-bg">
+    <div class="overlay-content popup1" >
+      <div class="inner-box " id="lightbox-content">
+      </div>
+      <button class="close-btn"><i class="fa fa-times"></i></button>
+    </div>
+    <!-- Core JavaScript -->
+
+    
+    <script type="text/javascript">
+      var myScroll;
+      function loaded() {
+        myScroll = new iScroll('wrapper');
+      }
+
+      document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+      document.addEventListener('DOMContentLoaded', loaded, false);
+
+    </script>
+    
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accurate Image</title>
+
+
+    <link href="css/accurate_image.css" media="all" rel="stylesheet" />
+    <link href="css/jquery.contextMenu.css" media="all" rel="stylesheet" />
+
+
+  </head>
+  <body>
+      <h3 class="heading">Accurate Image</h3>
+      <br />
+      <div class="center">
+        <form id="customWallForm">
+          Custom Units
+          <input type="number" id="x" value="10" min="1" required>
+          &nbsp; by &nbsp;
+          <input type="number" id="y" value="10" min="1" required>
+          <input type="submit" id="customWallBtn" value="Draw">
+        </form>
+      </div>
+      <div class="inline-div span2 set-border left">
+        <div>
+          <a href="javascript:void(0);" data-toggle="#products_list" id="products_toggle"> + </a>
+          Select Product
+        </div>
+        <div id="products_list" class="left-munu-item-list">
+        </div>
+        <div>
+          <a href="javascript:void(0);" data-toggle="#mortars_list" id="mortars_toggle"> + </a>
+          Select Mortar
+        </div>
+        <div id="mortars_list" class="left-munu-item-list">
+        </div>
+        <div>
+          <a href="javascript:void(0);" data-toggle="#bricks_type_list" id="bricks_type_toggle"> + </a>
+          Select Brick Size
+        </div>
+        <div id="bricks_type_list" class="left-munu-item-list">
+        </div>
+        <div>
+          <a href="javascript:void(0);" data-toggle="#bricks_list" id="bricks_toggle"> + </a>
+          Select Brick
+        </div>
+        <div id="bricks_list" class="left-munu-item-list">
+        </div>
+      </div>
+    </div>
+    <div class="span8 inline-div">
+      <div class="controls set-border" id="controlls">
+        <div class="inline-div">
+          <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="10x10">4x4</a>
+
+          | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="5x5">5x5</a>
+
+          | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="6x6">6x6</a>
+
+          | <a href="javascript:void(0);" class="select-wall-type wall-default-dimensions" data-wall_type="7x7">7x7</a>
+
+          | <a href="javascript:void(0);" class="save-as-image" id="save_as_image">Save as Image</a>
+        </div>
+        <div class="inline-div">
+          | Stagger
+          <a href="javascript:void(0);" class="select-stagger" data-stagger="0">None</a>
+
+          | <a href="javascript:void(0);" class="select-stagger" data-stagger="2">Half</a>
+
+          | <a href="javascript:void(0);" class="select-stagger" data-stagger="3">One Third</a>
+
+        </div>
+        <div class="inline-div">
+          | Zoom
+          <a href="javascript:void(0);" class="zoom" data-zoom="1">1x</a>
+          | <a href="javascript:void(0);" class="zoom" data-zoom="2">2x</a>
+          | <a href="javascript:void(0);" class="zoom" data-zoom="3">3x</a>
+        </div>
+        <div class="inline-div">
+          | Edit
+          <a href="javascript:void(0);" class="undo" id="undo">Undo</a>
+          | <a href="javascript:void(0);" class="redo" id="redo">Redo</a>
+        </div>
+        <div>
+          Coursing
+          <a href="javascript:void(0);" class="coursing" data-coursing="standard">Standard</a>
+          | <a href="javascript:void(0);" class="coursing" data-coursing="running">Running</a>
+          | <a href="javascript:void(0);" class="coursing" data-coursing="headers">Headers</a>
+        </div>
+      </div>
+      <div class="wall set-border wrapper" id="wall">
+        <div class="full-wall scale" id="full-wall">
+        </div>
+      </div>
+    </div>
+    <div class="inline-div span2 set-border left">
+      <a href="javascript:void(0);">Login</a><br />
+      <a href="javascript:void(0);">Logout</a><br />
+      My Walls <br />
+      1 .Wall 1 <a href="javascript:void(0);">Show</a> | <a href="javascript:void(0);">Edit</a><br />
+      2. Wall 2 <a href="javascript:void(0);">Show</a> | <a href="javascript:void(0);">Edit</a><br />
+      3. Wall 3 <a href="javascript:void(0);">Show</a> | <a href="javascript:void(0);">Edit</a><br />
+    </div>
+
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="js/jquery.contextMenu.js"></script>
+
+    <script src="js/json_data.js"></script>
+    <script src="js/accurate_image_events.js"></script>
+    <script src="js/accurate_image.js"></script>
+    <script src="js/initialize.js"></script>
+    <script src="js/html2canvas.js"></script>
+
+    <div class="scale full-wall hide " id="full-wall-copy">
+    </div>
+
+    <ul id="AIMenu" class="contextMenu">
+      <li><a href="#fillRow">Fill Row</a></li>
+      <li><a href="#fillEven">Fill Even</a></li>
+      <li><a href="#staggerRowNone" class="select-stagger-right-click" data-stagger="0">Stagger None</a></li>
+      <li><a href="#staggerRowHalf" class="select-stagger-right-click" data-stagger="2">Stagger Half</a></li>
+      <li><a href="#staggerRowOneThird" class="select-stagger-right-click" data-stagger="3">Stagger One Third</a></li>
+      <li>
+        <a href="#set-1" class="select-stagger-right-click" data-stagger="2">
+          Set 1
+        </a>
+      </li>
+      <li>
+        <a href="#set-2" class="select-stagger-right-click" data-stagger="2">
+          Set 2
+        </a>
+      </li>
+      <li>
+        <a href="#set-3" class="select-stagger-right-click" data-stagger="2">
+          Set 3
+        </a>
+      </li>
+      <li>
+        <a href="#set-4" class="select-stagger-right-click" data-stagger="2">
+          Set 4
+        </a>
+      </li>
+      <li>
+        <a href="#set-5" class="select-stagger-right-click" data-stagger="2">
+          Set 5
+        </a>
+      </li>
+      <li>
+        <a href="#set-6" class="select-stagger-right-click" data-stagger="2">
+          Set 6
+        </a>
+      </li>
+      <li>
+        <a href="#set-7" class="select-stagger-right-click" data-stagger="2">
+          Set 7
+        </a>
+      </li>
+      <li>
+        <a href="#set-8" class="select-stagger-right-click" data-stagger="2">
+          Set 8
+        </a>
+      </li>
+      <li>
+        <a href="#set-9" class="select-stagger-right-click" data-stagger="2">
+          Set 9
+        </a>
+      </li>
+      <li>
+        <a href="#set-10" class="select-stagger-right-click" data-stagger="2">
+          Set 10
+        </a>
+      </li>
+      <li>
+        <a href="#set-11" class="select-stagger-right-click" data-stagger="2">
+          Set 11
+        </a>
+      </li>
+      <li>
+        <a href="#set-12" class="select-stagger-right-click" data-stagger="2">
+          Set 12
+        </a>
+      </li>
+      <li>
+        <a href="#set-13" class="select-stagger-right-click" data-stagger="2">
+          Set 13
+        </a>
+      </li>
+      <li>
+        <a href="#set-14" class="select-stagger-right-click" data-stagger="2">
+          Set 14
+        </a>
+      </li>
+      <li>
+        <a href="#set-15" class="select-stagger-right-click" data-stagger="2">
+          Set 15
+        </a>
+      </li>
+      <li>
+        <a href="#set-16" class="select-stagger-right-click" data-stagger="2">
+          Set 16
+        </a>
+      </li>
+    </ul>
+  </body>
+</html> -->

@@ -1,0 +1,22 @@
+<?php
+
+/**
+ *
+ * Creates the model object.
+ *
+ * @author rasingh - Q3tech
+ * @param   object  a database object
+ * @param   string  folder name where the class exists
+ * @param   string  a class name of which object has to be created
+ * @return  object
+ */
+if( !function_exists('create_model_object') ) {
+
+	function create_model_object($db_obj, $folder_name, $class_name) {
+		require_once('./model/'.$folder_name.$class_name.'.php');
+		$class_obj = new $class_name($db_obj);
+		return $class_obj;
+	}
+	
+}
+?>

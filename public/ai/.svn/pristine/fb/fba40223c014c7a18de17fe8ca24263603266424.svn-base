@@ -1,0 +1,184 @@
+<?php
+
+/**
+ * Mortar Class provides functions that simply perform the actions
+ * like get total mortars, get mortar list, load mortar details, check duplicate
+ * mortar name, delete mortar, etc.
+ * @author     	: rasingh - Q3tech
+ * @created on  : Aug 29, 2014
+ * @modified on : Sep 02, 2014
+ */
+class Mortar {
+
+	private $db_connection 			= NULL;
+    private $table_mortar 			= '';
+    private $table_manufacturer     = '';
+
+	/**
+	 * This is a constructor function where variables are intialized automatically
+	 * when object is created of this class
+	 * @param object $db_obj
+	 * @return null
+	 */
+	public function __construct($db_obj) {
+		$this->db_connection = $db_obj;
+        $this->table_mortar = $this->db_connection->get_table_mapping('mortars');
+        $this->table_manufacturer = $this->db_connection->get_table_mapping('manufacturers');
+	}
+
+	/**
+     * This function is used to get count of total mortars
+	 * @param string $search
+     * @return int
+     */
+    public function get_total_mortars($search = '') {
+		$query  = "SELECT COUNT(*) as cnt FROM ".$this->table_mortar ." as mrt 
+		INNER JOIN ".$this->table_manufacturer." as m ON mrt.manufacturer_id = m.id";
+		if($search!=''){
+			$query .= ' WHERE (mrt.name LIKE "%'.$search.'%"
+			OR
+				mrt.thickness LIKE "%'.$search.'%"
+			OR
+				mrt.thickness_unit LIKE "%'.$search.'%"
+			OR
+              	m.name LIKE "%'.$search.'%" 
+            OR
+                IF(mrt.is_active=1,"'.t('Yes').'","'.t('No').'")
+                LIKE "%'.$search.'%" )';
+		}
+		$result = $this->db_connection->sql_single_query($query);
+		return $result['cnt'];
+	}
+
+	/**
+     * This function is used to get mortar list
+	 * @param string $order_by_clause
+	 * @param int $limit
+	 * @param string $search
+     * @return object
+     */
+    public function get_mortar_list($order_by_clause = ' id ASC',
+    	$limit = '', $search = '') {
+		$query = "SELECT mrt.id, mrt.name, mrt.manufacturer_id,
+		IF(mrt.image_path = '', '--',CONCAT('<img src=".'"'.MORTAR_IMAGE_ROOT_PATH
+		."/',mrt.image_path,'" .'" '. "width=".'"200"'." />') ) as image_path,
+		CONCAT(mrt.thickness, ' ', mrt.thickness_unit) as thickness,
+		IF(mrt.is_active = 1,'".t("Yes")."','".t("No")."') as IsActive, 
+		m.company as manufacturer
+		FROM ".$this->table_mortar ." as mrt 
+		LEFT JOIN ".$this->table_manufacturer." as m ON mrt.manufacturer_id = m.id";
+		if($search!=''){
+			$query .= ' WHERE (name LIKE "%'.$search.'%"
+			OR
+				thickness LIKE "%'.$search.'%"
+			OR
+				thickness_unit LIKE "%'.$search.'%"
+			OR
+              	m.name LIKE "%'.$search.'%" 
+			OR
+                IF(is_active=1,"'.t('Yes').'","'.t('No').'")
+                LIKE "%'.$search.'%" )';
+
+		}
+		$query .= " ORDER BY $order_by_clause $limit";
+
+		return $this->db_connection->select($query);
+	}
+
+	/**
+     * This function is used to get mortar detail based on mortar id
+	 * @param int $id
+     * @return object
+     */
+    public function load_mortar_details($id = '') {
+		$query = 'SELECT * FROM '.$this->table_mortar;
+		if($id!=''){
+			$query .= ' WHERE id='.$this->db_connection->mysql_data_encode($id);
+		}
+		return $this->db_connection->sql_single_query($query);
+	}
+
+	/**
+     * This function is used to check duplicate mortar name
+	 * @param string $column_name
+	 * @param string $data
+	 * @param int $id
+     * @return int
+     */
+    public function check_duplicate_column($column_name, $data, $id = '') {
+		$query = 'SELECT COUNT(*) AS cnt FROM '.$this->table_mortar.'
+			WHERE '.$column_name.'="'
+			.$this->db_connection->mysql_data_encode($data).'"';
+		if($id!=''){
+			$query .= ' AND id != '
+				.$this->db_connection->mysql_data_encode($id);
+		}
+		$result = $this->db_connection->sql_single_query($query);
+		return $result['cnt'];
+	}
+
+	/**
+     * This function is used to save data into the database
+	 * @param string $data_array
+     * @return int
+     */
+    public function save_mortar_data($data_array) {
+		if(isset($data_array['pk'])){
+		    $query = 'UPDATE '.$this->table_mortar.' SET
+            name="'.$this->db_connection
+		    	->mysql_data_encode($data_array['name']).'",
+            manufacturer_id="'.$this->db_connection
+		    	->mysql_data_encode($data_array['manufacturer_id']).'",
+            image_path="'.$this->db_connection
+		    	->mysql_data_encode($data_array['image_path']).'",
+			thickness="'.$this->db_connection
+		    	->mysql_data_encode($data_array['thickness']).'",
+			thickness_unit="'.$this->db_connection
+		    	->mysql_data_encode($data_array['thickness_unit']).'",
+            is_active="'.$this->db_connection
+		    	->mysql_data_encode($data_array['is_active']).'",
+            modified_by = '.$_SESSION['USER_ID'].',
+            modified_at ="'.time().'"
+			WHERE id='.$this->db_connection->mysql_data_encode($data_array['pk']);
+			return $this->db_connection->edit($query);
+		}else{
+		  $query = 'INSERT INTO '.$this->table_mortar.'(name,manufacturer_id,image_path,
+		  is_active,thickness,thickness_unit,created_by,created_at)
+          VALUES("'.$this->db_connection
+		  	->mysql_data_encode($data_array['name']).'","'
+          .$this->db_connection->mysql_data_encode($data_array['manufacturer_id']).'","'
+          .$this->db_connection->mysql_data_encode($data_array['image_path']).'","'
+          .$this->db_connection->mysql_data_encode($data_array['is_active']).'",'
+		  .$this->db_connection->mysql_data_encode($data_array['thickness']).',"'
+		  .$this->db_connection->mysql_data_encode($data_array['thickness_unit']).'",'
+          .$_SESSION['USER_ID'].',"'.time().'")';
+		  return $this->db_connection->insert($query);
+		}
+	}
+
+	/**
+     * This function is used to delete mortar
+	 * @param int $id
+     * @return null
+     */
+	public function delete_mortar($id){
+		$query  = 'DELETE FROM '.$this->table_mortar;
+		$query .= ' WHERE id = "'.$id.'"';
+		$this->db_connection->delete($query);
+	}
+
+	/**
+     * This function is used to check all active product
+	 * based on mortar id
+	 * @param int $mortar_id
+     * @return null
+     */
+	public function check_active_product($mortar_id){
+		$table_name = $this->db_connection->get_table_mapping('product_references');
+		$query  = 'SELECT COUNT(product_id) AS cnt FROM '.$table_name;
+		$query .= ' WHERE mortar_id = "'.$mortar_id.'"';
+		$result = $this->db_connection->sql_single_query($query);
+		return $result['cnt'];
+	}
+}
+?>

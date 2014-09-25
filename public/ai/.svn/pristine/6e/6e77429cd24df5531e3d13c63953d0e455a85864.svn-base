@@ -1,0 +1,953 @@
+<?php
+/**
+ * This class used for common function
+ * @author 		: rasingh - Q3tech
+ * @created on 	: Aug 25, 2014
+ * @modified on : Aug 25, 2014
+ */
+
+class Utility {
+
+	private $db_connection = NULL;
+    protected $_allowedFileTypes;
+    /*Used for current page nubmer in listing*/
+    protected $current_page_number = 0;
+
+    /**
+     * Constructor, loads either a pre-serialized form structure or an
+     * incoming POST form
+     * @param null
+     */
+    public function __construct($db_obj){
+		$this->db_connection = $db_obj;
+        $this->_allowedFileTypes = array("image/gif", "image/png",
+            "image/jpeg","video/mp4","image/pjpeg");
+        $this->current_page_number = 0;
+    }
+
+    /*
+     * This function is used to validate file upload
+     * @param $file_array: Array consists of file uploading information
+     * @return bool
+     */
+    public function check_file_upload($file_array){
+        $max_size = ini_get('upload_max_filesize');
+        $max_size_array = explode('M',$max_size);
+        $flag = false;
+        if(count($max_size_array) == 2){
+            $flag = true;
+            $max_file_size = $max_size_array[0]*1024*1024;
+        }
+        if(!$flag){
+            $max_size_array = explode('G',$max_size);
+            if(count($max_size_array) == 2){
+                $flag = true;
+                $max_file_size = $max_size_array[0]*1024*1024*1024;//in GB
+            }
+        }
+        if(!$flag){
+            $max_file_size = 2*1024*1024;
+        }
+
+        $type = $file_array['type'];
+        $size = $file_array['size'];
+        $error = $file_array['error'];
+        if(!in_array($type, $this->_allowedFileTypes)){
+            return '2';
+        }
+        if($size > $max_file_size){
+            return '3';
+        }
+        if($error){
+            return '4';
+        }
+        return '1';
+    }
+
+    /*
+     *This function is used to validate numeric value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function check_numeric_value($value){
+        return is_numeric($value);
+    }
+
+    /*
+     *This function is used to validate alphanumeric value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function check_alphanumeric_value($value){
+        $value = str_replace(' ', '', $value);
+        return ctype_alnum($value);
+    }
+
+    /*
+     *This function is used to validate alphabetic value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function check_alphabetic_value($value){
+        $value = str_replace(' ', '', $value);
+        return ctype_alpha($value);
+    }
+
+    /*
+     *This function is used to validate phone number value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function check_phone_number_value($value){
+        return preg_match("/^([1]-)?[0-9]{3}-[0-9]{3}-[0-9]{4}$/i", $value);
+    }
+
+    /*
+     *This function is used to validate email id value
+     * @param $value: Input value to validate
+     * @return bool
+     */
+    public function check_email_value($value){
+        if(!empty($value)) {
+        	return filter_var($value, FILTER_VALIDATE_EMAIL);
+        } else {
+            return TRUE;
+        }
+    }
+
+    /*
+     *This function is used to generate mandatory sign
+     * @param $required: value to check
+     * @return string
+     */
+    public function load_mandatory_sign($required){
+        if($required == ' required' or $required == '1'){
+            return '<span class="reqField">*</span>&nbsp;';
+        }else{
+            return '';
+        }
+    }
+
+	/*
+     *This function is used to validate form fields
+     * @param $validation_array: Array consists of rules of validation
+     * @param $data_array : Array consists of actual data
+     * @param $column_name : Name of the field
+     * @return bool
+	 * vtype = 1 : Numeric value,vtype = 2 : Alphanumeric value,
+	 * vtype = 3 : Alphabetic value,vtype = 4 : Phone number value,
+	 * vtype = 5 : Email value,vtype = 6 : date value,
+	 * vtype = 8 : multi-phone number
+     */
+    public function validate_form_field($validation_array,$data_array,$column_name){
+        $field_name = $validation_array['value'];
+        $field_type = $validation_array['type'];
+        $required  = $validation_array['required'];
+        $vtype = $validation_array['vtype'];
+        $vmax = $validation_array['vmax'];
+        $enum = $validation_array['enum'];
+        if($required){
+            if($data_array[$column_name] == ''){
+                $_SESSION['errorMessage'] = $field_name.'&nbsp;'.t('is required');
+                return false;
+            }
+            if($enum!=''){
+                $enum_array = explode('~',$enum);
+                foreach ($enum_array as &$value) {
+                    $value = trim(strtolower($value));
+                }
+                if(is_array($data_array[$column_name])){
+                    $temp_arr = $data_array[$column_name];
+                    $flag = false;
+                    foreach ($temp_arr as &$value) {
+                        $value = trim(strtolower($value));
+                        if(in_array($value, $enum_array)){
+                            $flag = true;
+                            break;
+                        }
+                    }
+                    if(!$flag){
+                     $_SESSION['errorMessage'] = t('Invalid choice detected for').'&nbsp;'.$field_name;
+                     return false;
+                    }
+                }else{
+                    if(!in_array(trim(strtolower($data_array[$column_name])), $enum_array)){
+                        $_SESSION['errorMessage'] = t('Invalid choice detected for').'&nbsp;'.$field_name;
+                        return false;
+                    }
+                }
+            }
+        }
+        if($vtype){
+            $error_array = array('1'=>array('fun'=>'check_numeric_value',
+                'em'=>t('Please enter only numeric values for').' '),
+            '2'=>array('fun'=>'check_alphanumeric_value',
+                'em'=>t('Please enter only alpha-numeric values for ').' '),
+            '3'=>array('fun'=>'check_alphabetic_value',
+                'em'=>t('Please enter only alphabetic values for ').' '),
+            '4'=>array('fun'=>'check_phone_number_value',
+                'em'=>t('Please enter a valid value for ').' '),
+            '5'=>array('fun'=>'check_email_value',
+                'em'=>t('Please enter a valid email id for').' '),
+            '6'=>array('fun'=>'validate_date_value',
+                'em'=>t('Please enter a valid ').' '),
+            '7'=>array('fun'=>'validate_url',
+                'em'=>t('Please enter a valid ').' '),
+			'8'=>array('fun'=>'check_multi_phone_number_value',
+                'em'=>t('Please enter a valid value for ').' '),
+            );
+            if($error_array[$vtype]['fun'] == 'check_email_value') {
+                $validation_res = call_user_func($error_array[$vtype]['fun'],$data_array[$column_name], 2);
+            } else {
+                $validation_res = call_user_func($error_array[$vtype]['fun'],$data_array[$column_name]);
+            }
+            if(isset($error_array[$vtype]) && !$validation_res){
+                $_SESSION['errorMessage'] = $error_array[$vtype]['em'].$field_name;
+                return false;
+            }
+        }
+        if($field_type == 'input_text' or $field_type == 'textarea'){
+            if(strlen(trim($data_array[$column_name]))>$vmax and $vmax!=''){
+                $_SESSION['errorMessage'] = t('Maximum length exceeds for').' : '.$field_name;
+                return false;
+            }
+            if(strlen(trim($data_array[$column_name]))<$vmin and $vmin!=''){
+                $_SESSION['errorMessage'] = t('Minimum length not reached for').' : '.$field_name;
+                return false;
+            }
+        }
+        if($field_type == 'file_upload'){
+            if(!empty($data_array[$column_name]) and $data_array[$column_name]['name']!=''){
+                $r = $this->check_file_upload($data_array[$column_name]);
+                if($r == '2'){
+                    $_SESSION['errorMessage'] = t('Invalid file type found for ').$field_name;
+                    return false;
+                }
+                if($r == '3'){
+                    $_SESSION['errorMessage'] = t('Maximum file size exceeds for ').$field_name;
+                    return false;
+                }
+                if($r == '3'){
+                    $_SESSION['errorMessage'] = t('Error occured during uploading');
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /*
+     *This function is used to redirect user from one location to another
+     * location
+     * @param $url: User will be redirected to thie url
+     * @return null
+     */
+    public function redirect_user($url){
+        header("Location: ".$url);
+    }
+
+	/*
+     *This function is used to set flash message
+     * @param string $message: This message will be set
+     * @param string $type: Type of message
+     * @return null
+     */
+    public function set_flash_message($message,$type){
+        if($type == 'error'){
+            $message_body = '<div class="errormessage">'.$message.'</div>';
+        }
+        if($type == 'success'){
+            $message_body = '<div class="successmessage">'.$message.'</div>';
+        }
+        $_SESSION['FLASH_MESSAGE'] = $message_body.'<div class="clr"></div>';
+    }
+
+    /*
+     *This function is used to get flash message
+     * @param null
+     * @return null
+     */
+    public function get_flash_message(){
+        $message = $_SESSION['FLASH_MESSAGE'];
+        unset($_SESSION['FLASH_MESSAGE']);
+        return $message;
+    }
+
+    /*
+     *This function is used to format date display
+     * @param $value : date value in integer
+     * @param $time : whether to display time component as well
+     * @return null
+     */
+    public function format_date_value($value,$time = 0){
+        if($time){
+            return date('d M, Y h:i A',$value);
+        }else{
+            return date('d M, Y',$value);
+        }
+    }
+
+
+
+    /*
+     * This function is used to get site configuration settings
+     * @param : null
+     * @return Array
+     */
+    public function get_site_configuration(){
+        $db_obj  = $GLOBALS['db_obj'];
+        $query = 'SELECT * FROM '.DB_DATABASE.'.site_configurations';
+        $result = $db_obj->select($query);
+        $return_array = array();
+        if(is_array($result) and count($result)){
+            $config_array = $result[0];
+            foreach ($config_array as $key => $value) {
+                if(is_string($key)){
+                    $return_array[$key] = $value;
+                }
+            }
+        }
+        return $return_array;
+    }
+
+
+	/*
+	* This function used to create thumbnail image
+	* @param string $src
+	* @param string $dest
+	* @param int $desired_width
+	* @return true / false
+	*/
+	public function make_thumbnail_image($src, $dest, $desired_width) {
+		/* read the source image */
+		$info = pathinfo($dest);
+		switch (strtolower($info['extension'])) {
+			case 'png':
+			$source_image = imagecreatefrompng($src);
+			break;
+			case 'gif':
+			$source_image = imagecreatefromgif($src);
+			break;
+			case 'jpg':
+			case 'jpeg':
+			$source_image = imagecreatefromjpeg($src);
+			break;
+			case 'bmp':
+			$source_image = imagecreatefromwbmp($src);
+			break;
+		}
+		$width = imagesx($source_image);
+		$height = imagesy($source_image);
+
+		/* find the "desired height" of this thumbnail, relative to the desired
+		 width  */
+		$desired_height = floor($height * ($desired_width / $width));
+
+		/* create a new, "virtual" image */
+		$virtual_image = imagecreatetruecolor($desired_width, $desired_height);
+
+		/* copy source image at a resized size */
+		imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0,
+			$desired_width, $desired_height, $width, $height);
+		/* create the physical thumbnail image to its destination */
+		imagejpeg($virtual_image, $dest);
+		return true;
+	}
+
+	/*
+	* This function is used to display checkbox in grid
+	* @param array $options
+	* @return string
+	*/
+	public function show_check_box($options=array()){
+		$html = "";
+		if(!empty($options['class'])){
+			$class = "class=".$options['class'];
+		}
+		if(!empty($options['value'])){
+			$value = "value=".$options['value'];
+		}
+		if(!empty($options['id'])){
+			$id = "id=".$options['id'];
+		}
+		$html .= '<input type="checkbox" '.$class.' '.$value.' '.$id.'
+		name="chkSelect">';
+		return $html;
+	}
+
+	/*
+     *This function is used to get page name
+     * @param $page_url : URL of the page
+     * @return string
+     */
+    public function get_page_name($page_url = '',$mode = 1){
+        $page_url = ltrim(str_replace(URL,'', $page_url),'/');
+        $menu_names_array = $_SESSION['MENU_NAMES_ARRAY'];
+        $pageURLArray = explode('&',$page_url);
+        $pageName = '';
+
+        if(isset($menu_names_array[$page_url])){
+            $pageName = trim(t($menu_names_array[$page_url]));
+        }
+        else if(isset($menu_names_array[$pageURLArray[0]])){
+            $pageName = trim(t($menu_names_array[$pageURLArray[0]]));
+        }
+        else if($page_url == 'login'){
+            $pageName = t('Login');
+        }
+        else if($page_url == 'registration'){
+            $pageName = t('Registration');
+        }
+        else if($page_url == 'dashboard'){
+            $pageName = t('Dashboard');
+        }
+        else if($page_url == 'profile-edit'
+            or stripos($page_url, 'user-roles/users/profile-edit') !== FALSE){
+            $pageName = t('Edit Profile');
+		}
+		else if($page_url == 'missing'){
+			$pageName = t('Page Not Found');
+		}
+		else if($page_url == ABOUT_US_LINK){
+			$pageName = t('About Us');
+		}
+		else if($page_url == CENSUS_TREE_PAGE){
+			$pageName = t(CENSUS_TREE_PAGE_NAME);
+		}
+		else if($page_url == HORIZONTAL_COMPARE_PAGE){
+			$pageName = t(HORIZONTAL_COMPARE_PAGE_NAME);
+		}
+		else if($page_url == ''){
+			$pageName = t('Home');
+		}
+		else if($page_url == 'NO_ACCESS'){
+			$pageName = t('Access Denied');
+		}
+		if($mode == '1'){
+			return $pageName == '' ? SITE_NAME : SITE_NAME .' : '.$pageName;
+		}else{
+			return $pageName ;
+		}
+	}
+
+	/*
+	* THIS FUNCTION IS USED TO ADD SYSTEM WIDE LOG
+	*/
+	public function add_system_log($log_data){
+		include_once './model/common/common.php';
+		$m_obj = new common($this->db_connection);
+		$m_obj->add_system_log_data($log_data);
+	}
+
+	  /*
+  * This function is used to get data grid with DataTable support
+  * @input : input
+  * @return : HTML & JS script code
+  */
+  public function display_data_table_listing($input){
+    $fields_array = $input['FIELDS'];
+    $input['FORM_ID'] = !isset($input['FORM_ID']) ? 'commonSearchFrm'
+    : $input['FORM_ID'];
+    $nosort_fields = $table_html = $sort_field = $exclude_toggle_columns = '';
+    $visible_columns = '';
+    $colspan = count($fields_array);
+    $table_html  = $this->create_data_table_header($input,$sort_field,
+    $nosort_fields,$exclude_toggle_columns,$visible_columns);
+    $table_html .= $this->create_data_table_body($colspan);
+    $table_html .= $this->create_data_table_footer($input);
+    $script = PHP_EOL.'<script type="text/javascript">'.PHP_EOL;
+    $script .= "\t".'$(function() {'.PHP_EOL;
+    $script .= "\t\t".'fancyDTID = '.$input['TABLE_ID'].PHP_EOL;
+    $script .= "\t\t".'fancyDTIDURL = "'.$input['RECORD_URL'].'"'.PHP_EOL;
+    $script .= "\t".'jQuery.fn.dataTableExt.oPagination.iFullNumbersShowPages = '
+        .$input['LINKS_PER_PAGE'].PHP_EOL;
+    $script .= "\t\t".PHP_EOL.$input['TABLE_ID'].' = $("#'.$input['TABLE_ID'].'").dataTable({'.PHP_EOL;
+    $script .= "\t\t".'"bPaginate": true,'.PHP_EOL;
+    $script .= "\t\t".'"bLengthChange": false,'.PHP_EOL;
+    $script .= "\t\t".'"bFilter": false,'.PHP_EOL;
+            $script .= "\t\t".'"bSort": true,'.PHP_EOL;
+            $script .= "\t\t".'"bInfo": true,'.PHP_EOL;
+            $script .= "\t\t".'"bAutoWidth": false,'.PHP_EOL;
+            $script .= "\t\t".'"bServerSide": true,'.PHP_EOL;
+            $script .= "\t\t".'"bDeferRender": true,'.PHP_EOL;
+            if(isset($input['SHOW_SCROLLER']) && $input['SHOW_SCROLLER']){
+             $script .= "\t\t".'"sScrollX": "110%",'.PHP_EOL;
+            }
+            $script .= "\t\t".'"fnInitComplete": function(){'.PHP_EOL;
+            $script .= "\t\t\t".'addJSScrollPaneDelayed('.$input["SHOW_SCROLLER"].')'.PHP_EOL;
+            $script .= "\t\t".'},'.PHP_EOL;
+            $script .= "\t\t".'"bDeferRender": true,'.PHP_EOL;
+            //add show/hide column feature
+            $script .= $this->colvis_data_table($input,$exclude_toggle_columns);
+            if($sort_field!=''){
+               $script .= "\t\t".'"aaSorting": [['.PHP_EOL;
+               $script .= "\t\t\t\t".$sort_field.',"'.
+               strtolower($input['DEFAULT_SORT_ORDER']).'",'.PHP_EOL;
+               $script .= "\t\t".']],'.PHP_EOL;
+           }
+       if($nosort_fields!=''){
+        $script .= "\t\t".'"aoColumnDefs": ['.PHP_EOL;
+        if($visible_columns!=''){
+           $script .= "\t\t\t\t".$visible_columns.",".PHP_EOL;
+       }
+       $script .= "\t\t\t".'{'.PHP_EOL;
+       $script .= "\t\t\t\t".'"bSortable": false,'.PHP_EOL;
+       $script .= "\t\t\t\t".'"aTargets": [ '.$nosort_fields.' ]'.PHP_EOL;
+       $script .= "\t\t\t".'}'.PHP_EOL;
+       $script .= "\t\t".'],'.PHP_EOL;
+        }else if($visible_columns!=''){//if all fields are sortable
+            $script .= "\t\t".'"aoColumnDefs": ['.PHP_EOL;
+            $script .= "\t\t\t\t".$visible_columns.PHP_EOL;
+            $script .= "\t\t".'],'.PHP_EOL;
+        }
+        $script .= "\t\t".'"oLanguage": {'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sZeroRecords": "'.t(NO_RECORDS_TEXT).'",'.PHP_EOL;
+        $script .= "\t\t".'"oPaginate": {'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sFirst": "'.t('First').'",'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sPrevious": "'.t('Previous').'",'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sNext": "'.t('Next').'",'.PHP_EOL;
+        $script .= "\t\t\t\t".'"sLast": "'.t('Last').'",'.PHP_EOL;
+        $script .= "\t\t".'}'.PHP_EOL;
+        $script .= "\t\t".'},'.PHP_EOL;
+
+        $script .= "\t\t".'"iDisplayLength" : '.$input['RECORDS_PER_PAGE'].','.PHP_EOL;
+        $script .= "\t\t".'"sAjaxSource": "'.$input['RECORD_URL'].'",'.PHP_EOL;
+        $script .= "\t\t".'"sServerMethod": "POST",'.PHP_EOL;
+        $script .= "\t\t".'"fnServerParams": function ( aoData ) {';
+        $script .= "\t\t".'addSearchParams(aoData,"'.$input['FORM_ID'].'")';
+        $script .= "\t\t".'},';
+        $script .= "\t\t".'"fnDrawCallback": function ( oSettings ) {';
+        $script .= "\t\t".'dataDatableDrawComplete("'.$input['TABLE_ID'].'");';
+        if(isset($input['FANCY_FUNC']) && $input['FANCY_FUNC']!=''){
+          $script .= "\t\t\t".'eval('.$input['FANCY_FUNC'].')'.PHP_EOL;
+        }
+        $script .= "\t\t".'}';
+        $script .= "\t".'});'.PHP_EOL;
+        $script .= "\t".'});'.PHP_EOL;
+        $script .= '</script>'.PHP_EOL;
+        return $table_html.PHP_EOL.$script;
+    }
+
+	/*
+   * THIS FUNCTION IS USED TO CREATE HEADER SECTION OF THE DATA-TABLE GRID
+   * */
+	public function create_data_table_header($input,&$sort_field,&$nosort_fields,
+    &$exclude_toggle_column,&$visible_columns){
+		$fields_array = $input['FIELDS'];
+		$nosort_fields = '';
+		$table_html = '';
+		$sort_field = '';
+		$toggle_class = isset($input['COLUMN_TOGGLE'])
+		&& $input['COLUMN_TOGGLE'] ? ' toggleDT' : '';
+		$table_html  = '<section class="content">'.PHP_EOL;
+		$table_html .= "\t".'<div class="row">'.PHP_EOL;
+		$table_html .= "\t".'<div class="col-md-12">'.PHP_EOL;
+		$table_html .= "\t".'<div class="listdata box">'.PHP_EOL;
+		$table_html .= "\t".'<div class="box-header">'.PHP_EOL;
+		$table_html .= "\t\t".'<h3 class="box-title">'.$input['LIST_HEADING']
+		.'</h3>'.PHP_EOL;
+		if(isset($input['ADDITIONAL_BUTTION']) && $input['ADDITIONAL_BUTTION']!=''){
+		   $table_html .= "\t\t".$input['ADDITIONAL_BUTTION'].PHP_EOL;
+		}
+		$table_html .= "\t".'</div>'.PHP_EOL;
+		$table_html .= "\t".'<div class="box-body table-responsive'.$toggle_class.'">'
+		.PHP_EOL;
+		$table_html .= "\t\t".'<table id="'.$input['TABLE_ID'].'" class="table
+		table-bordered table-hover table-striped fixed-table wrdrap">'.PHP_EOL;
+		$table_html .= "\t\t\t".'<thead>'.PHP_EOL;
+		$table_html .= "\t\t\t\t".'<tr>'.PHP_EOL;
+		$index = 0;
+		foreach($fields_array as $key=>$field){
+		   $table_html .= "\t\t\t\t\t".'<th style="'.$field['style'].'">'.
+		   $field['label'].'<span class="asc-desc"></span></th>'.PHP_EOL;
+		   if($key == $input['DEFAULT_SORT_FIELD']){
+			  $sort_field = $index;
+		  }
+		  if(!isset($field['sorting']) || !$field['sorting']){
+			if($nosort_fields!=''){
+			 $nosort_fields .= ',';
+		 }
+		 $nosort_fields .= $index;
+		 }
+		 if(!isset($field['toggle']) || !$field['toggle']){
+			if($exclude_toggle_column!=''){
+			 $exclude_toggle_column .= ',';
+		 }
+		 $exclude_toggle_column .= $index;
+		}
+		if(!isset($field['visible']) || $field['visible']){
+			if($visible_columns!=''){
+			 $visible_columns .= ','.PHP_EOL;
+		 }
+		 $visible_columns .= '{"bVisible": true, "aTargets": [ '.$index.' ] }';
+		}else{
+			if($visible_columns!=''){
+			 $visible_columns .= ','.PHP_EOL;
+		 }
+		 $visible_columns .= '{"bVisible": false, "aTargets": [ '.$index.' ] }';
+		}
+		$index++;
+		}
+		$table_html .= "\t\t\t\t".'</tr>'.PHP_EOL;
+		$table_html .= "\t\t\t".'</thead>'.PHP_EOL;
+
+		return $table_html;
+	}
+
+	public function create_data_table_body($colspan){
+		$table_html  = "\t\t\t".'<tbody>'.PHP_EOL;
+		$table_html .= "\t\t\t\t".'<tr>'.PHP_EOL;
+		$table_html .= "\t\t\t\t\t".'<td colspan="'.$colspan.'"
+		style="text-align:center;">'.DATAGRID_LOADING_TEXT
+		.'</td>'.PHP_EOL;
+		$table_html .= "\t\t\t\t".'</tr>'.PHP_EOL;
+		$table_html .= "\t\t\t".'</tbody>'.PHP_EOL;
+		return $table_html;
+	}
+
+	public function create_data_table_footer($input){
+		$table_html  = "\t\t".'</table>'.PHP_EOL;
+		$table_html .= "\t".'</div>'.PHP_EOL;
+		$table_html .= '</div>'.PHP_EOL;
+		$table_html .= '</div>'.PHP_EOL;
+		$table_html .= '</div>'.PHP_EOL;
+		$table_html .= '</section>'.PHP_EOL;
+		return $table_html;
+	}
+
+	/*
+   * THIS FUNCTION IS USED TO ADD SHOW/HIDE COLUMN FEATURE
+   * */
+	public function colvis_data_table($input,$exclude_toggle_columns){
+	$script = '';
+	if($input['COLUMN_TOGGLE'] &&
+	(substr_count($exclude_toggle_columns,',')+ 1) != count($input['FIELDS'])){
+		$script  = "\t\t".'"sDom": "C<\"clear\">lfrtip",'.PHP_EOL;
+		$script .= "\t\t".'"oColVis": {'.PHP_EOL;
+		$script .= "\t\t\t".'"buttonText": "'.t(TOGGLE_COLUMNS_TEXT).'",'.PHP_EOL;
+		if($exclude_toggle_columns != ''){
+			$script .= "\t\t\t\t".'"aiExclude": [ '.$exclude_toggle_columns.' ],'.PHP_EOL;
+		}
+		$script .= "\t\t\t".'"fnLabel": function ( index, title, th ) {';
+		$script .= "\t\t\t".'return title;';
+		$script .= "\t\t\t".'}';
+		$script .= "\t\t".'},'.PHP_EOL;
+		}
+		return $script;
+	}
+
+	/*
+	* This function is used to get limit params to be applied on a query
+	*/
+	public function get_data_table_limit($records_per_page){
+		if ( isset( $_REQUEST['iDisplayStart'] ) && $_REQUEST['iDisplayLength']
+		!= '-1' ){
+			$start =  $_REQUEST['iDisplayStart'];
+		}
+		if(empty($start)){
+			$start = 0;
+			$page = 0;
+		}else{
+			$page = $_REQUEST['iDisplayStart']/$_REQUEST['iDisplayLength'];
+		}
+		$this->current_page_number = $page;
+		return "LIMIT ".$start.", ".$records_per_page;
+	}
+	/*
+	* This function is used to get sort order to be applied on a query
+	*/
+	public function get_data_table_order_by($fields_array,$sort_field,$sort_order){
+		$a_columns = array_keys($fields_array);
+		$s_order = "";
+		if ( isset( $_REQUEST['iSortCol_0'] ) ){
+			$cnt = intval($_REQUEST['iSortingCols']);
+			for ( $i=0 ; $i<=$cnt ; $i++ ){
+				if ( $_REQUEST[ 'bSortable_'.intval($_REQUEST['iSortCol_'.$i]) ]
+				== "true" ){
+					$s_order .= $a_columns[ intval( $_REQUEST['iSortCol_'.$i] ) ]." "
+					.( $_REQUEST['sSortDir_'.$i] ) .", ";
+				}
+			}
+			$s_order = substr_replace( $s_order, "", -2 );
+		}
+		if ( $s_order == "" ){
+		  $s_order = ' '.$sort_field.' '.$sort_order;
+	  }
+	  return $s_order;
+	}
+
+	 /*
+	  * This function is used to prepare data for DataTable
+	  * @result_set : Data from model
+	  * @page : $total_records of the result
+	  * @page : current page number
+	  * @records_per_page : Number of records to be shown in a page
+	  * @a_columns : columns to be displayed
+	  * @return : $output array
+	  */
+	public function prepare_data_table_rows($result_set,$total_records,$page,
+		$records_per_page,$fields_array){
+		$s_echo = 1;
+		if(isset($_REQUEST['sEcho'])){
+			$s_echo = $_REQUEST['sEcho'];
+		}
+		$output = array(
+		"sEcho" => intval($s_echo),
+		"iTotalRecords" => $total_records,
+		"iTotalDisplayRecords" => $total_records,
+		"aaData" => array()
+		);
+		$a_columns = array_keys($fields_array);/*building the columns*/
+		$a_cnt  = count($a_columns);
+		$page = $this->currentPageNumber;
+		$start_record = $records_per_page * $page;
+		if(is_array($result_set) && count($result_set)){
+		foreach ($result_set as $key=>$a_row){
+		$row = array();
+		$sr_no = $key + $start_record + 1;
+		for ( $i=0 ; $i<$a_cnt ; $i++ ){
+			if ( $a_columns[$i] != ' ' ){
+				switch ($a_columns[$i]) {
+					case 'sr_no':
+					$row[] = $sr_no;
+					break;
+					case EDIT_OP:
+					$row[] = $this->decorate_data_table_edit_cells($fields_array
+						,$a_row);
+					break;
+					case DELETE_OP:
+					$row[] =
+					$this->decorate_data_table_delete_cells($fields_array,$a_row);
+					break;
+					case OTHER_OP:
+					$row[] =
+					$this->decorate_data_table_model_popup_cells($fields_array,$a_row);
+					break;
+					default:
+					$row[] = $a_row[$a_columns[$i] ];
+					break;
+				}
+			}else{
+				$row[] = '';
+			}
+		}
+		$output['aaData'][] = $row;
+	}
+	}
+	return $output;
+	}
+
+	  /*
+  * This function is used to decorated EDIT cells
+  */
+  public function decorate_data_table_edit_cells($fields_array,$a_row){
+  	list($edit_label,$no_edit_column,$no_edit_column_value,$edit_action,
+	$editType,$editId) = $this->get_data_table_edit_delete_refs($fields_array,1);
+  	$edit_text = FALSE;
+    if(!empty($editId)){
+    	if(!$no_edit_column){
+    		$edit_text = TRUE;
+    	}else{
+    		$edit_text = TRUE;
+    		if(in_array($a_row[$no_edit_column],
+             $no_edit_column_value)){
+              $edit_text = FALSE;
+			  }
+		  }
+		}
+		if($edit_text){
+			$editDomId = 'DTED_'.$editId.'-'.$a_row[$editId];
+			$edit_text = $editType == URL_BASED ?
+			link_create(t($edit_label),
+				array(
+					'id'=>$editDomId,
+					'href'=>$edit_action.'&'.$editId.'='.$a_row[$editId],
+					'class' => 'editCell')
+				)
+			: link_create($edit_label,
+				array(
+					'id'=>$editDomId,
+					'href'=>'javascript:'.
+					$edit_action."('".$a_row[$editId]."','".$editDomId."')"),
+				JAVASCRIPT_LINK);
+		}else{
+			$edit_text = EDIT_NA_TEXT;
+		}
+		return $edit_text;
+	}
+
+	 /*
+  * This function is used to decorated DELETE cells
+  */
+  public function decorate_data_table_delete_cells($fields_array,$a_row){
+    list($delete_label,$no_delete_column,$no_delete_column_value,$delete_action,
+        $delete_type,$delete_id) = $this->get_data_table_edit_delete_refs($fields_array,
+        2);
+    $delete_text = FALSE;
+    if(!empty($delete_id)){
+        if(!$no_delete_column){
+            $delete_text = TRUE;
+        }else{
+          $delete_text = TRUE;
+          if(in_array($a_row[$no_delete_column],
+              $no_delete_column_value)){
+            $delete_text = FALSE;
+		}
+		}
+	}
+	if($delete_text){
+	 $del_dom_id = 'DTDEL-'.$delete_id.'-'.$a_row[$delete_id];
+	 $delete_text = $delete_type == URL_BASED ?
+	 link_create($delete_label,
+	  array(
+		  'id'=>$del_dom_id,
+		  'href'=>$delete_action.'&'.$delete_id.'='.$a_row[$delete_id],
+		  'target' => '_blank'
+		  )
+	  )
+	 : link_create(t($delete_label),
+	  array(
+		  'id'=>$del_dom_id,
+		  'href'=>'javascript:'.
+		  $delete_action."('".$a_row[$delete_id]."','".$del_dom_id."')"),
+	  JAVASCRIPT_LINK);
+	}else{
+		$delete_text = DELETE_NA_TEXT;
+	}
+	return $delete_text;
+	}
+
+	 /*
+  * This function is used to decorated Other cells
+  */
+	public function decorate_data_table_model_popup_cells($fields_array,$a_row){
+
+		list($other_label,
+				 $other_action,
+				 $other_type,
+				 $other_id,
+				 $other_field_label,
+				 $other_url) = $this->get_data_table_edit_delete_refs($fields_array,3);
+
+		$other_text = FALSE;
+		if(!empty($other_id)){
+				$other_text = TRUE;
+
+		}
+		if($other_text){
+			$other_dom_id = 'DTOD_'.$other_id.'-'.$a_row[$other_id];
+			$other_text = $other_type == URL_BASED ?
+			link_create(t($other_field_label),
+				array(
+					'id'=>$other_dom_id,
+					'href'=>$other_url.'&'.$other_id.'='.$a_row[$other_id],
+					'class' => 'editCell')
+				)
+			: link_create($other_field_label,
+				array(
+					'id'=>$other_dom_id,
+					'href'=>'javascript:'.
+					$other_action."('".$a_row[$other_id]."','".$other_url."')"),
+				JAVASCRIPT_LINK);
+		}else{
+			$other_text = EDIT_NA_TEXT;
+		}
+		return $other_text;
+	}
+
+	/*
+	* This function is used to retrieve reference of edit & delete columns
+	* @$fields_array : Fields to scan
+	* @type : 1 : Edit,2: Delete
+	* @return : $output array
+	*/
+	public function get_data_table_edit_delete_refs($fields_array,$type){
+		  $output = array();
+		  if(isset($fields_array[EDIT_OP]) && $type == 1){
+			$output['edit_label'] = $fields_array[EDIT_OP]['label'];
+			$output['no_edit_column'] = $fields_array[EDIT_OP]['NO_EDIT_COLUMN'];
+			$output['no_edit_column_value'] =
+			$fields_array[EDIT_OP]['NO_EDIT_COLUMN_VALUE'];
+			$output['edit_action'] = $fields_array[EDIT_OP]['EDIT_ACTION'];
+			$output['editType'] = $fields_array[EDIT_OP]['EDIT_TYPE'];
+			$output['editId'] = $fields_array[EDIT_OP]['PK_FIELD'];
+		}
+		if(isset($fields_array[DELETE_OP]) && $type == 2){
+			$output['delete_label'] = $fields_array[DELETE_OP]['label'];
+			$output['no_delete_column'] =
+			$fields_array[DELETE_OP]['NO_DELETE_COLUMN'];
+			$output['no_delete_column_value'] =
+			$fields_array[DELETE_OP]['NO_DELETE_COLUMN_VALUE'];
+			$output['delete_action'] = $fields_array[DELETE_OP]['DELETE_ACTION'];
+			$output['delete_type'] = $fields_array[DELETE_OP]['DELETE_TYPE'];
+			$output['delete_id'] = $fields_array[DELETE_OP]['PK_FIELD'];
+		}
+		if(isset($fields_array[OTHER_OP])){
+			$output['other_label'] = $fields_array[OTHER_OP]['label'];
+			$output['other_action'] = $fields_array[OTHER_OP]['OTHER_ACTION'];
+			$output['other_type'] = $fields_array[OTHER_OP]['OTHER_TYPE'];
+			$output['other_id'] = $fields_array[OTHER_OP]['PK_FIELD'];
+			$output['other_field_label'] = $fields_array[OTHER_OP]['FIELD_LABEL'];
+			$output['other_url'] = $fields_array[OTHER_OP]['OTHER_URL'];
+
+		}
+		return array_values($output);
+	}
+
+    /**
+     * This function is used to validate the image files to be uploaded
+     * @param string $temp_file
+     * @param string $temp_name
+     * @param string $file_size
+     * @return string
+     */
+    public function validate_image_file($temp_file, $temp_name, $file_size) {
+        if( $temp_name !='' && $temp_file == '' ) {
+            $message = t('Maximum file size exceeds');
+        }
+        else if($file_size>IMAGE_MAX_UPLOAD_B) {
+            $message = t('Maximum file size exceeds');
+        }
+        else {
+            $message = t('Invalid image file type');
+        }
+    }
+
+    /**
+     * This function is used to save product images data into the database
+     * @param array $image_data_arr
+     * @return null
+     */
+    public function upload_image($image_data_arr) {
+        $file_types = array('jpg','jpeg','gif','png');
+        $extension  = $image_data_arr['extension'];
+        $target_path= $image_data_arr['image_path'];
+        $temp_file  = $image_data_arr['temp_file'];
+        $image_name = $image_data_arr['image_name'];
+        $image_width= $image_data_arr['image_width'];
+        $thumbnail  = $image_data_arr['thumbnail'];
+        $old_image  = $image_data_arr['old_image'];
+        $type       = $image_data_arr['type'];
+
+        if (!file_exists($target_path)) {
+            mkdir($target_path, 0755, true);
+        }
+
+        $target_file = rtrim($target_path,'/') . '/' . $image_name;
+        if( in_array(strtolower($extension), $file_types) ) {
+            if( isset($type) && $type == 'edit' ) {
+                if( isset($old_image) && !empty($old_image) && file_exists($target_path.'/'.$old_image) ) {
+                    @unlink($target_path.'/'.$old_image); // delete previous logo
+                }
+            }
+
+            if( $thumbnail ) {
+                $this->make_thumbnail_image($temp_file, $target_file, $image_width);
+            }
+            else {
+                move_uploaded_file($temp_file, $target_file);
+            }
+        }
+    }
+}
+?>

@@ -1,0 +1,41 @@
+<?php
+
+// Declare the interface 'iModelclass'
+interface imodelclass
+{	
+	public function close();
+	public function error($text);
+	public function sql_start($sql);
+	public function sql_end($sql);
+	public function display_sql_log($lastRecordOnly = false);
+	public function select($sql="",$mode = 1);
+	public function countOf($sql="");
+	public function selectunion($sql="");
+	public function newselect($sql="");
+	public function affected($sql="");
+	public function insert ($sql="",$throwException = TRUE);
+	public function adder($sql="");
+	public function edit($sql="",$throwException = TRUE);
+	public function sql_query($sql="");
+	public function sql_query_special($sql="");
+	public function sql_query_structure($sql="");
+	public function mysqlDataEncode($data, $check = false);
+	public function sql_single_query($sql="",$throwException = true,$mode = 1);
+	public function call_procedure($sql="");
+	public function delete($sql="",$throwException = TRUE);
+	public function create_database($sql="");
+	public function create_table($sql="");
+	public function drop_table($sql="",$throwException = true);
+	public function rename_table($sql="");
+	public function alter_table($sql="",$throwException = true);
+	public function start_transaction();
+	public function commit_transaction();
+	public function rollback_savepoint($msg);
+	public function get_table_mapping($table_name,$database = '',$mode = 1);
+	public function memcache_select_query($functionName,$query);
+	public function get_sql_string($data, $saperator = ', ');
+	public function get_mysql_version();
+	public function get_mysql_version_info();
+}
+
+?>

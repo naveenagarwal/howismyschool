@@ -1,0 +1,21 @@
+
+@media all and  (max-width: 1023px)  {
+
+  .main-nav a 		{ font-size: 0px;}
+  .main-nav a i 	{ margin-top: 10px;}
+
+}
+
+@media all and  (max-width: 1023px)  {
+
+	.close-btn {right: -15px;top: -25px;}
+}
+
+@media all and  (max-width: 767px)  {
+
+  .footer			{ display: none;}
+  .bottom-panel		{ bottom: 0px;}
+  a.btn-leftbar		{ width: auto;margin: -5px 0 0 4px;background: none; color: #000; }
+  a.right-menu 		{ width: auto; background: none; margin-right: 5px; color: #000; font-size: 24px; font-weight: bold;}
+  #wall				{ padding: 0px;}
+}

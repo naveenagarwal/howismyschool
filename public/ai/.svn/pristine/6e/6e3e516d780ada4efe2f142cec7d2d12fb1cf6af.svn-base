@@ -1,0 +1,127 @@
+.overflow-auto{
+  overflow: auto;
+}
+.seamless-links {
+  text-align: center;
+  margin: 10px;
+}
+.seamless-span-row, .span-row {
+  overflow: hidden;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.seamless-item, .item {
+  float: left
+}
+
+.seamless-item > span, .item > span {
+  display: inline-block;
+}
+
+.seamless-item > span > img, .item > span > img {
+  overflow: hidden;
+}
+
+.clear {
+  clear: both;
+}
+
+#wall {
+  height: 500px;
+}
+
+.full-wall, #full-wall-copy {
+  height: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  float: left;
+}
+
+.wrapper {
+  width: auto;
+  height: auto;
+  overflow: auto;
+  position: relative;
+}
+
+.scale {
+  position: relative;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1);
+  -webkit-transform-origin: 0 0;
+  -moz-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  -o-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+
+.center {
+  margin: 10px 0;
+  text-align: center;
+}
+
+form#customWallForm{
+  /*text-align: center;*/
+}
+
+form#customWallForm input, form#login_form input{
+/*  width: 200px;
+  margin-left:10px;*/
+}
+
+form#customWallForm div, form#login_form div{
+  margin-bottom: 5px;
+
+}
+
+#login_container{
+ /* text-align: center;*/
+}
+
+li.list-menu > ul.sub-menu{
+  display: none;
+  background-color: #eee;
+  display: none;
+  left: 201px;
+  list-style-type: disc;
+  position: absolute;
+  top: 0;
+  width: 100px;
+}
+
+li.list-menu:hover > .sub-menu{
+  display: block;
+  background-color: #eee;
+}
+
+.contextMenu li.list-menu:hover > a {
+  background-color: #eee;
+  color: #333;
+}
+
+li.list-menu:hover ul.sub-menu li:hover {
+  background-color: #3399FF;
+}
+
+.lightbox {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+  background: 'grey';
+  display: none;
+}
+
+#user_designs_list_container{
+  height: 400px;
+  overflow: auto;
+  margin-top: 10px;
+}

@@ -1,0 +1,21 @@
+<?php
+  $jsonResult  = array();
+  $ai_obj = create_model_object($db_obj, AI_PATH, 'CreateWall');
+
+  $seamless_design_id = $ai_obj->save_seamless_design($db_obj->mysql_data_encode($_POST["html"]));
+
+  require_once('../class/DesignImage.php');
+  $design_image_obj = new DesignImage();
+
+
+
+  $image_obj = $design_image_obj->create_design_image($seamless_design_id);
+  print_r($image_obj);die;
+  if($image_obj['design_created']){
+    $jsonResult = $image_obj;
+  }else{
+    $jsonResult['message'] = "Failed to create the image try after some time";
+  }
+
+die(json_encode($jsonResult));
+?>

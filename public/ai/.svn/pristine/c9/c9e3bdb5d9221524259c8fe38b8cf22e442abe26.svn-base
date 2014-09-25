@@ -1,0 +1,9 @@
+<?php
+
+$response = file_get_contents('http://192.168.13.57/masonry_designer/assets/js/accurate-image/json_data.js');
+$response = str_replace('var products;', '', $response);
+$response = str_replace('products = ', '', $response);
+$response = str_replace(';', '', $response);
+die($response);
+
+?>

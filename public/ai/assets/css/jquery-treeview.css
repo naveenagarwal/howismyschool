@@ -1,0 +1,445 @@
+.treeview,.treeview ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.treeview ul {
+	background-color: white;
+	margin-top: 4px;
+}
+
+.treeview .hitarea {
+	background: url(../images/treeview-default.gif) -64px -25px no-repeat;
+	height: 16px;
+	width: 16px;
+	margin-left: -16px;
+	float: left;
+	cursor: pointer;
+}
+
+/* fix for IE6 */
+* html .hitarea {
+	display: inline;
+	float: none;
+}
+
+.treeview li {
+	margin: 0;
+	padding: 3px 0pt 3px 16px;
+}
+
+.treeview a.selected {
+	background-color: #eee;
+}
+
+#treecontrol {
+	margin: 1em 0;
+	display: none;
+}
+
+.treeview .hover {
+	color: red;
+	cursor: pointer;
+}
+
+.treeview li {
+	background: url(../images/treeview-default-line.gif) 0 0 no-repeat;
+}
+
+.treeview li.collapsable,.treeview li.expandable {
+	background-position: 0 -176px;
+}
+
+.treeview .expandable-hitarea {
+	background-position: -80px -3px;
+}
+
+.treeview li.last {
+	background-position: 0 -1766px
+}
+
+.treeview li.lastCollapsable,.treeview li.lastExpandable {
+	background-image: url(../images/treeview-default.gif);
+}
+
+.treeview li.lastCollapsable {
+	background-position: 0 -111px
+}
+
+.treeview li.lastExpandable {
+	background-position: -32px -67px
+}
+
+.treeview div.lastCollapsable-hitarea,.treeview div.lastExpandable-hitarea
+	{
+	background-position: 0;
+}
+
+.treeview-red li {
+	background-image: url(../images/treeview-red-line.gif);
+}
+
+.treeview-red .hitarea,.treeview-red li.lastCollapsable,.treeview-red li.lastExpandable
+	{
+	background-image: url(../images/treeview-red.gif);
+}
+
+.treeview-black li {
+	background-image: url(../images/treeview-black-line.gif);
+}
+
+.treeview-black .hitarea,.treeview-black li.lastCollapsable,.treeview-black li.lastExpandable
+	{
+	background-image: url(../images/treeview-black.gif);
+}
+
+.treeview-gray li {
+	background-image: url(../images/treeview-gray-line.gif);
+}
+
+.treeview-gray .hitarea,.treeview-gray li.lastCollapsable,.treeview-gray li.lastExpandable
+	{
+	background-image: url(../images/treeview-gray.gif);
+}
+
+.treeview-famfamfam li {
+	background-image: url(../images/treeview-famfamfam-line.gif);
+}
+
+.treeview-famfamfam .hitarea,.treeview-famfamfam li.lastCollapsable,.treeview-famfamfam li.lastExpandable
+	{
+	background-image: url(../images/treeview-famfamfam.gif);
+}
+
+.treeview .placeholder {
+	background: url(../images/ajax-loader.gif) 0 0 no-repeat;
+	height: 16px;
+	width: 16px;
+	display: block;
+}
+
+.filetree li {
+	padding: 3px 0 2px 16px;
+}
+
+.filetree span.folder,.filetree span.file {
+	padding: 1px 0 1px 16px;
+	display: block;
+}
+
+.filetree span.folder {
+	background: url(../images/folder.gif) 0 0 no-repeat;
+}
+
+.filetree li.expandable span.folder {
+	background: url(../images/folder-closed.gif) 0 0 no-repeat;
+}
+
+.filetree span.file {
+	background: url(../images/file.gif) 0 0 no-repeat;
+}
+
+/***CSS for Structure***/
+#main {
+	padding: 1em;
+}
+
+a img {
+	border: none;
+}
+
+#leftdiv {
+	border: 1px solid #BBBBBB;
+	width: 20%;
+	float: left;
+	position: relative;
+	height: 656px;
+	z-index: 2;
+	overflow: auto;
+}
+
+#rightDiv {
+	border: 1px solid #BBBBBB;
+	width: 79%;
+	float: left;
+}
+
+#dropZone {
+	height: 530px;
+	overflow: auto;
+	width: 100%;
+	position: relative;
+}
+
+#conditionsDiv {
+	height: 125px;
+	overflow: auto;
+	position: relative;
+	/*z-index: 99999;*/
+	z-index: 1000;
+	overflow: auto;
+	border-top: 1px solid #BBBBBB;
+}
+
+#conditionsTable #headerRow th {
+	background: #EDEDED;
+	padding: 3px;
+	font-weight: bold;
+}
+
+#conditionsTable .dataRow td {
+	border: 1px solid #EDEDED;
+}
+
+#conditionsDiv a {
+	text-decoration: none;
+}
+
+#qDiv {
+	width: 95%;
+}
+
+.divTables ul {
+	list-style: none;
+	padding: 0px;
+}
+
+.divTables li {
+	color: #313b3b;
+	height: 18px;
+}
+
+.odd {
+	background-color: #F0F0F0;
+}
+
+.divTables {
+	float: left;
+	width: 175px;
+}
+
+.innerDivTable {
+	height: 60px;
+	width: 140px;
+	padding-top: 5px;
+}
+
+#svgbasics {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	border: solid 0px #484;
+}
+
+.ui-dialog {
+	width: 175px;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+	padding: 1px;
+}
+
+.db {
+	background: url(../images/db.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 1px;
+}
+
+.table {
+	background: url(../images/table1.png) no-repeat scroll 0 0 transparent;
+}
+
+#navigation {
+	font-size: 10px;
+}
+
+#navigation a {
+	text-decoration: none;
+	padding-left: 5px;
+}
+
+.innerDivTable a {
+	text-decoration: none;
+	padding-left: 5px;
+}
+
+#showQueryPane {
+	margin: 10px 0px 10px 0px;
+}
+
+#reportOptions {
+	margin: 5px 0px 5px 0px;
+}
+
+#reportOptions #reportName {
+	width: 400px;
+}
+
+#reportNameDiv {
+	width: 81%;
+	float: left;
+}
+
+#generateReportDiv {
+	width: 18%;
+	float: right;
+	text-align: right;
+	padding-bottom: 5px;
+}
+
+td.showDragHandle {
+	background-image: url(../images/updown2.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	cursor: move;
+}
+
+tr.alt td {
+	background-color: #ecf6fc;
+}
+
+tr.myDragClass td {
+	background-color: #ecf6fc;
+}
+
+.reportBtnClass {
+	text-align: right;
+	padding: 5px;
+}
+
+.lp {
+	background: url(../images/lp.jpg) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 14px;
+}
+
+.lp {
+	background: url(../images/lp.jpg) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 18px;
+}
+.houses {
+	background: url(../images/houseicon.jpg) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+.nr {
+	background: url(../images/shopicon.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.migration {
+	background: url(../images/migrationicon.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.pregnancy {
+	background: url(../images/pregnancyicon.jpg) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.birth {
+	background: url(../images/birthicon.jpg) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.death {
+	background: url(../images/deathicon.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.marriage {
+	background: url(../images/marriageicon.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.hohchange {
+	background: url(../images/hohicon.jpg) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.evtlist {
+	background: url(../images/event_list.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.tick {
+	background: url(../images/tick.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.good_form {
+	background: url(../images/good_form.png) no-repeat scroll 0 -3px transparent;
+	padding-bottom: 7px;
+	padding-left: 2px;
+}
+
+.bad_form {
+	background: url(../images/bad_form.png) no-repeat scroll 0 -3px transparent;
+	padding-bottom: 7px;
+	padding-left: 2px;
+}
+
+.pending_form {
+	background: url(../images/pending.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.custom_object {
+	background: url(../images/objects-icon.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+.custom_form {
+	background: url(../images/form_icon.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.processed_form {
+	background: url(../images/processed.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+}
+
+.move_s2 {
+	background: url(../images/move_s2.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+	cursor: pointer;
+	margin-left: 18px;
+}
+
+.compare {
+	background: url(../images/compare.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+	cursor: pointer;
+	margin-left: 18px;
+}
+
+.hideradio input[type="radio"]{
+	display: none;
+}
+.hidecheck input[type="checkbox"]{
+	display: none;
+}
+
+.rejectForm {
+	background: url(../images/reject.png) no-repeat scroll 0 0 transparent;
+	padding-bottom: 5px;
+	padding-left: 2px;
+	cursor: pointer;
+	margin-left: 18px;
+}

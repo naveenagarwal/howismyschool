@@ -1,0 +1,49 @@
+$(document).ready(function() {
+  function hidePopUp(){
+    $(".close-btn").trigger("click");
+    $(".dropdown-menu").hide();
+  }
+
+  $(document).on('click', '#logout', function() {
+    User.logout();
+  });
+
+  $(document).on('click', '#open_list', function() {
+    User.openList();
+  });
+
+  $(document).on('click', '#file-save-design', function() {
+    User.saveDesign();
+  });
+
+  $(document).on("submit", "form#login_form", function(evt){
+    evt.preventDefault();
+    if(User.validateLogin()) {
+      User.login();
+      hidePopUp();
+    }
+    return false;
+  });
+
+  $(document).on("click", "#user_register", function(){
+    $("#login_form_input_container").append('<input type="password" name="confirm_password" required placeholder="Re type password" id="confirm_password">');
+    $("#user_register").hide();
+    $("#user_login").removeClass("hide");
+    $("#login_btn").val("Register");
+  });
+
+  $(document).on("click", "#user_login", function(){
+    $("#user_register").show();
+    $("#user_login").addClass("hide");
+    $("#confirm_password").next().remove();
+    $("#confirm_password").remove();
+    $("#login_btn").val("Login");
+  });
+
+  $(document).on("click", ".open-design-for-edit", function(){
+    var designId = $(this).data("design_id");
+    User.openDesignForEdit(designId);
+    hidePopUp();
+  })
+
+});

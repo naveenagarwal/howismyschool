@@ -1,0 +1,14 @@
+
+@media all and  (max-width: 1023px)  {
+
+  .main-nav a 		{ font-size: 0px;}
+  .main-nav a i 	{ margin-top: 10px;}
+
+}
+
+@media all and  (max-width: 767px)  {
+
+  .footer			{ display: none;}
+  .bottom-panel		{ bottom: 0px;}
+
+}

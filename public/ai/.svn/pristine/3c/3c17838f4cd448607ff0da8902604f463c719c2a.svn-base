@@ -1,0 +1,168 @@
+<?php
+error_reporting(0);
+require_once('../lib/configuration.php');
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+
+////////////CHECK HACKERSAFE FOR CSS//////////////////
+function CheckXSS($xssarr) {
+	/* foreach($xssarr as $key =>$val) */
+	foreach ($xssarr as $val) {
+		if (is_array($val)) {
+			CheckXSS($val);
+		} else {
+			if (substr_count(strtolower($val), "%3cscript") > 0 ||
+			substr_count(strtolower($val), "&ltscript") > 0 ||
+			substr_count(strtolower($val), "%3ciframe") > 0 ||
+			substr_count(strtolower($val), "<iframe") > 0 ||
+			substr_count(strtolower($val), "&ltiframe") > 0) {
+				print "<font color='#ff0000' size='4'>".t('Sorry ! Please contact Administrator.')."</font>";
+				die;
+			}
+			if (substr_count(strtolower($val), "%3cstyle") > 0 ||
+			substr_count(strtolower($val), "&ltstyle") > 0) {
+				if (!strpos($_SERVER['PHP_SELF'], 'panel') &&
+				!strpos($_SERVER['PHP_SELF'], 'adminpanel')
+				&& !strpos($_SERVER['PHP_SELF'], 'adminwork')
+				&& !strpos($_SERVER['PHP_SELF'], 'admin')) {
+					print "<font color='#ff0000' size='4'>".t('Sorry ! Please contact Administrator.')."</font>";
+					die;
+				}
+			}
+		}
+	}
+}
+
+CheckXSS($_REQUEST);
+$isTrue = checkDependency();
+if (!$isTrue) {
+	$dependency_res = $_SESSION['dependency_res'];
+	pr($dependency_res['error']);
+	unset($_SESSION['dependency_res']);
+	die;
+}
+require_once '../lib/helpers/form_helper.php';
+require_once '../lib/helpers/include_file_helper.php';
+
+$requestedScript = urldecode(trim($_REQUEST['pg']));
+$isAjaxRequest = trim($_REQUEST['ajax']);
+
+$pageURL = str_ireplace('pg=', '', $_SERVER['QUERY_STRING']);
+
+$top_script = "view/include/header.php";
+$bottom_script = "view/include/footer.php";
+$include_script = 'controller/' . $requestedScript . '.php';
+
+
+$missingFlag = false;
+if ($requestedScript == 'missing') {
+	$missingFlag = true;
+}
+
+if (!file_exists($include_script)) {
+	if ($requestedScript != '') {
+		$pageURL = 'missing';
+		$include_script = show404Page();
+		$missingFlag = true;
+	} else {
+		$include_script = "controller/index.php";
+	}
+}
+require_once('../class/login.php');
+$login = new Login($dbObj, $utilityObj);
+
+if ($requestedScript != '' and !$missingFlag) {
+	$scriptArr = array('login', 'registration');
+	$wallScriptArr = array(WALL_URL, AI_FLOGIN, AI_SAVE_DESIGN);
+	if ( in_array($requestedScript, $scriptArr) ) {
+		if ($login->is_user_logged_in()) {
+			header('Location: ' . URL . 'dashboard');
+		}
+	}
+	elseif( in_array($requestedScript, $wallScriptArr) ) {
+		// do nothing
+	}
+	else {
+		if (!$login->is_user_logged_in()) {
+			if ($requestedScript == FORGOT_PASSWORD_LINK) {
+				$include_script = 'controller/' . FORGOT_PASSWORD_LINK . '.php';
+				$pageURL = FORGOT_PASSWORD_LINK;
+			} else if ($requestedScript == RESET_PASSWORD_LINK) {
+				$include_script = 'controller/' . RESET_PASSWORD_LINK . '.php';
+				$pageURL = RESET_PASSWORD_LINK;
+			}else if ($requestedScript == ABOUT_US_LINK) {
+				$include_script = 'controller/' . ABOUT_US_LINK . '.php';
+				$pageURL = ABOUT_US_LINK;
+			}else if ($requestedScript == REGISTRATION_LINK) {
+				$include_script = 'controller/' . REGISTRATION_LINK . '.php';
+				$pageURL = REGISTRATION_LINK;
+			}else {
+				$pageURL = 'login';
+				$include_script = 'controller/login.php';
+			}
+		}
+	}
+}
+
+//set translation values for annon user as well
+if(!isset($_SESSION['TRANSLATION_SET'])){
+    $login->set_translation_values();
+}
+require_once('../class/menu.php');
+$menu_obj = new Menu($login);
+$topMenuHTML = '';
+
+if ($login->is_user_logged_in()) {
+	$topMenuHTML = $menu_obj->build_menu_items();
+}
+
+/*CHECK FOR SITE'S OFFLINE STATUS.$configArray popuplated
+ in configuration.php*/
+$siteStatus = $configArray['site_status'];
+if(!$siteStatus and $_SESSION['USER_SPECIAL_ROLE'] != 1
+and ($include_script!='controller/login.php' and
+$include_script!='controller/user-roles/users/forgot-password.php')){
+	include_once('controller/offline.php');
+	include_once($bottom_script);
+	return;
+}
+
+if ($isAjaxRequest == '1') {
+	$pageURL = $_REQUEST['pg'];
+}
+//for export template buttons
+if($pageURL == MENU_URL || $pageURL == '/'.MENU_URL){
+    $pageURL .= '&id='.$_REQUEST['id'];
+    $isAccessAllowed = $login->verify_module_access($pageURL,1);
+}else{
+    $isAccessAllowed = $login->verify_module_access($pageURL);
+}
+if (!$isAccessAllowed) {
+	$pageURL = 'NO_ACCESS';
+}
+if ($isAjaxRequest != '1') {
+	$requestedScriptArray = explode('/', $requestedScript);
+	if (is_array($requestedScriptArray) and isset($requestedScriptArray[2])) {
+		if (trim($requestedScriptArray[2]) == 'cforms') {
+			$requestedScript .= '&id=' . $_GET['id'];
+		}
+	}
+	include_once($top_script);
+} else { //if ajax request
+	$pageURL = $_REQUEST['pg'];
+}
+if ($isAccessAllowed) {
+        include_once($include_script);
+} else {
+	if($isAjaxRequest != '1'){
+	  echo ACCESS_DENIED_MESSAGE;
+	}else{
+		die(json_encode(array('success'=>false,'message'=>ACCESS_DENIED_MESSAGE,
+		'CustomError'=>true,'ErrMsg'=>ACCESS_DENIED_MESSAGE)));
+	}
+}
+if ($isAjaxRequest != '1') {
+	include_once($bottom_script);
+}
+?>

@@ -1,0 +1,43 @@
+<?php
+
+require_once('./model/user-roles/users.php');
+$userObj = new users($dbObj);
+
+$jsonResult = array();
+if( !empty($_POST) ) {
+  $username = trim($_POST['username']);
+  $password = trim($_POST['password']);
+  $confirm_password = trim($_POST['confirm_password']);
+  if( empty($username) ) $jsonResult['message'] = t('Please enter username');
+  if( empty($password) ) $jsonResult['message'] = t('Please enter password');
+  if( empty($confirm_password) ) $jsonResult['message'] = t('Please enter confirm password');
+
+  if ($password != $confirm_password) {
+    $jsonResult['message'] = t('Passwords do not match');
+  }
+
+  if ($userObj->check_duplicate_username('user_name', $username)) {
+    $jsonResult['message'] = t('This username already exists');
+  }
+
+  if( empty($jsonResult['message']) ) {
+
+    $data['user_name']    = $username;
+    $data['user_password']  = $password;
+    $data['role_id']    = ENDUSER_ROLE_ID;
+    $data['is_active']    = 1;
+    $_SESSION['USER_ID']  = 0; // It shows that no admin user created this account as this is an end user
+
+    $result = $userObj->save_user_data($data);
+    if( $result ) {
+      $_SESSION['USER_LOGGED_IN']      = 1;
+      $_SESSION['USER_ID'] = $result;
+      $jsonResult['message'] = t('Success');
+    }
+    else $jsonResult['message'] = t('Registration not successful');
+  }
+}
+else $jsonResult['message'] = t('Invalid method detected');
+
+die(json_encode($jsonResult));
+?>

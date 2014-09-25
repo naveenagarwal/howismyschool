@@ -1,0 +1,323 @@
+************** Log created at : 01/05/2014 14:06:26 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 01/05/2014 14:07:36 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 01/05/2014 17:23:35 **************
+
+Exception 'CustomException' with message 'Error occured due to an invalid UPDATE query :  WHERE id = "3"'<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '362'
+
+******************************* LOG END *****************************
+
+************** Log created at : 01/05/2014 19:02:37 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 14:42:17 **************
+
+Exception 'CustomException' with message 'Error occured while updating data into database : 1054 SQL :UPDATE users SET LPCDate='1399021937' WHERE Id=1'<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '373'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 14:52:29 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 15:02:38 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 15:07:54 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 15:08:20 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 15:08:22 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 15:08:38 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 15:08:45 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 15:11:30 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 02/05/2014 15:11:48 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                        COUNT(*) AS cnt 
+                  FROM 
+                       users AS user_table,
+                       user_details AS user_details,
+                       roles AS user_role
+                  WHERE 
+                       user_table.Id = user_details.UserId
+                       AND user_table.UTypeId = user_role.Id
+                '<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 05/05/2014 10:15:22 **************
+
+Exception 'CustomException' with message 'Error occured while updating data into database : 1054 SQL :UPDATE users SET LPCDate='1399265122' WHERE Id=1'<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '373'
+
+******************************* LOG END *****************************
+
+************** Log created at : 05/05/2014 12:24:48 **************
+
+Exception 'CustomException' with message 'Error occured while updating data into database : 1054 SQL :UPDATE users SET LPCDate='1399272888' WHERE Id=1'<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '373'
+
+******************************* LOG END *****************************
+
+************** Log created at : 12/05/2014 17:54:36 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                      l.id AS UserId,l.last_login_date,
+                      d.full_name,d.address,d.contact_no,d.email_id,
+                      r.id AS RoleId,r.role_name,
+                      l.is_active AS userActive , r.is_active AS roleActive,
+                      l.is_deleted as userDeleted,
+                      r.is_deleted as roleDeleted,
+                FROM
+                users l,
+                user_details d,
+                roles r
+                WHERE
+                     l.id = d.user_id
+                     AND l.role_id = r.id
+                     AND l.user_name = 'testuser'
+                AND l.user_password = md5('demo')'<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 12/05/2014 17:55:02 **************
+
+Exception 'CustomException' with message 'Error occured while firing SQL query to database. SQL :SELECT
+                      l.id AS UserId,l.last_login_date,
+                      d.full_name,d.address,d.contact_no,d.email_id,
+                      r.id AS RoleId,r.role_name,
+                      l.is_active AS userActive , r.is_active AS roleActive,
+                      l.is_deleted as userDeleted,
+                      r.is_deleted as roleDeleted,
+                FROM
+                users l,
+                user_details d,
+                roles r
+                WHERE
+                     l.id = d.user_id
+                     AND l.role_id = r.id
+                     AND l.user_name = 'testuser'
+                AND l.user_password = md5('demo')'<br />Source filename of exception : D:\xampp\htdocs\lisa2\codebase\class\modelclass.php : at line no. '576'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 17:20:51 **************
+
+Exception 'CustomException' with message 'Error occured while connecting to 
+                the server.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '25'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 17:20:51 **************
+
+Exception 'CustomException' with message 'Error occured while retrieving 
+                database object.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '130'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 17:20:51 **************
+
+Exception 'CustomException' with message 'Error occured while retrieving 
+                database object.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '130'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 17:20:52 **************
+
+Exception 'CustomException' with message 'Error occured while connecting to 
+                the server.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '25'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 17:20:52 **************
+
+Exception 'CustomException' with message 'Error occured while retrieving 
+                database object.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '130'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 18:00:53 **************
+
+Exception 'CustomException' with message 'Error occured while connecting to 
+                the server.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '25'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 18:00:53 **************
+
+Exception 'CustomException' with message 'Error occured while retrieving 
+                database object.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '130'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 18:24:28 **************
+
+Exception 'CustomException' with message 'Error occured while connecting to 
+                the server.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '25'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 18:24:28 **************
+
+Exception 'CustomException' with message 'Error occured while retrieving 
+                database object.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '130'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 18:24:29 **************
+
+Exception 'CustomException' with message 'Error occured while connecting to 
+                the server.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '25'
+
+******************************* LOG END *****************************
+
+************** Log created at : 21/07/2014 18:24:29 **************
+
+Exception 'CustomException' with message 'Error occured while retrieving 
+                database object.'<br />Source filename of exception : D:\xampp\htdocs\accurate_image\class\modelclass.php : at line no. '130'
+
+******************************* LOG END *****************************
+

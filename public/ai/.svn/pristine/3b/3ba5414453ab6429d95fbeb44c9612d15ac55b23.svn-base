@@ -1,0 +1,42 @@
+<?php
+
+/**
+ *
+ * This is a library which
+ * like save design, edit design.
+ * @author      : dbaveja - Q3tech
+ * @created on  : Sep 05, 2014
+ * @modified on : Sep 05, 2014
+ */
+class DesignImage {
+
+  public function create_design_image($id) {
+    $design = array();
+    $link = $this->create_image_from_html($id);
+    if($link){
+      $design["design_created"] = true;
+      $design["design_image_link"] = $link;
+    }else{
+      $design["design_created"] = false;
+      $design["message"] = "failed to create image";
+    }
+    return $design;
+  }
+
+  private function create_image_from_html($id) {
+    $phantomjs = "/var/www/html/phantomjs/bin/phantomjs";
+    $rasterizejs = "/var/www/html/masonry_designer/assets/js/accurate-image/rasterize.js";
+    $url = "http://localhost/masonry_designer/create-wall/design_image?id=".$id;
+    $image_path = "/var/www/html/masonry_designer/media/designs/seamless/";
+    $image_name = time().".png";
+    $image_full_path = $image_path.$image_name;
+
+    $phantom_screen_capture_command = $phantomjs." ".$rasterizejs." ".$url." ".$image_full_path;
+    //die($phantom_screen_capture_command);
+    $chk = system($phantom_screen_capture_command);
+
+    return "/masonry_designer/media/designs/seamless/".$image_name. '/' . $chk;
+  }
+}
+
+?>

@@ -1,0 +1,17 @@
+<?php
+$json_result = array();
+if( !empty($_POST) ) {
+	if( empty($_POST['username']) ) $json_result['message'] = t('Please enter username');
+	if( empty($_POST['password']) ) $json_result['message'] = t('Please enter password');
+
+	if( empty($json_result['message']) ) {
+		$return = $login->verify_user_login_attemp(trim($_POST['username']), $_POST['password'], '');
+		if( $return ) $json_result['message'] = t('Success');
+		else $json_result['message'] = t('Invalid username or password');
+	}
+}
+elseif( $login->is_user_logged_in() ) $json_result['message'] = t('Already Logged in');
+else $json_result['message'] = t('Invalid method detected');
+
+die(json_encode($json_result));
+?>

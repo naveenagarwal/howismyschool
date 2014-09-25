@@ -1,0 +1,1394 @@
+<?php
+
+
+/*
+ Desc : This is configuration file which used all script.
+ Created At : April 28, 2014
+ Modified At : April 28, 2014
+ Created By: Q3
+ */
+
+// This function to check bad word in the query string.
+
+function checkQueryString()
+{
+    return false;
+}
+
+/*THIS FUNCTION WILL BE USED FOR TRANSLATION PURPOSE*/
+function t($string,$debug = false){
+	$langCode       = SITE_LANGUAGE;
+	$translationSet = $_SESSION['TRANSLATION_SET']; //set during login
+	$string         = trim($string);
+	$string = preg_replace('/\s+/', ' ', trim($string));
+	if($langCode == ''){
+		$langCode = 'en';
+	}
+	if($debug){
+	  echo strtolower($string).'--'.$string.'--'.SITE_LANGUAGE.'--'.
+	  isset($translationSet[$langCode][strtolower(($string))]).'---'.
+	  trim(utf8_encode($translationSet[$langCode][strtolower($string)]));
+	  die;
+	}
+	if(isset($translationSet[$langCode][strtolower($string)])){
+	 return trim(utf8_encode($translationSet[$langCode][strtolower($string)]));
+	}
+	return $string ;
+}
+
+
+
+/*THIS FUNCTION IS USED FOR DEBUGGIN PURPOSE*/
+function pr($val){
+	if(is_array($val) or is_object($val)){
+		echo '<pre>';
+		print_r($val);
+		echo '</pre>';
+	}
+	else{
+		echo '<pre>'.$val.'</pre>';
+	}
+}
+
+function show404Page(){
+	return 'controller/missing.php';
+}
+/*
+* THIS FUNCTION RETURNS TIME EQUIVALENT
+* OF A DATE
+*/
+function strtotimeQ3($val){
+	if(strpos($val, '-') !== FALSE){
+		return strtotime($val);
+	}else{
+	 $arr = explode('/', $val);
+	 if(count($arr) != 3){
+		 return false;
+	 }
+	 $date = $arr[2].'-'.$arr[1].'-'.$arr[0];
+	 return strtotime($date);
+	}
+}
+
+
+function checkNumericValue($value) {
+    return is_numeric($value);
+}
+
+function checkAlphanumericValue($value) {
+    $value = preg_replace('!\s+!', '', $value);
+    return ctype_alnum($value);
+}
+
+function checkAlphabeticValue($value) {
+    $value = preg_replace('!\s+!', '', $value);
+    return ctype_alpha($value);
+}
+
+function checkPhoneNumberValue($value) {
+    return preg_match("/^([1]-)?[0-9]{3}-[0-9]{3}-[0-9]{4}$/i", $value);
+}
+
+/**
+ *
+ * @param type $value
+ * @param type $mode (1 = to not check empty $value, 2 = to check emptiness of $value)
+ * @return type
+ */
+function checkEmailValue($value, $mode=1) {
+    if($mode == 2) {
+        if(empty($value)) {
+            return TRUE;
+        }
+    }
+	return filter_var($value, FILTER_VALIDATE_EMAIL);
+}
+
+function checkFileUpload($fileArray) {
+    $global_allowed_file_types = $GLOBALS['global_allowed_file_types'];
+    $maxSize = ini_get('upload_max_filesize');
+    $maxSizeArray = explode('M', $maxSize);
+    $flag = false;
+    if (count($maxSizeArray) == 2) {
+        $flag = true;
+        $maxFileSize = $maxSizeArray[0] * 1024 * 1024;
+    }
+    if (!$flag) {
+        $maxSizeArray = explode('G', $maxSize);
+        if (count($maxSizeArray) == 2) {
+            $flag = true;
+            $maxFileSize = $maxSizeArray[0] * 1024 * 1024 * 1024;
+        }
+    }
+    if (!$flag) {
+        $maxFileSize = 2 * 1024 * 1024;
+    }
+
+    $type = $fileArray['type'];
+    $size = $fileArray['size'];
+    $error = $fileArray['error'];
+    if (!in_array($type, $global_allowed_file_types)) {
+        return '2';
+    }
+    if ($size > $maxFileSize) {
+        return '3';
+    }
+    if ($error) {
+        return '4';
+    }
+    return '1';
+}
+
+function validateDateValue($value) {
+    $date_explode = explode('/', $value);
+    if (count($date_explode) == 3) {
+    	if(is_numeric($date_explode[1]) && is_numeric($date_explode[2])
+    	&& is_numeric($date_explode[0])){
+    	return checkdate($date_explode[1], $date_explode[0], $date_explode[2]);
+    	}else{
+    		return FALSE;
+       	}
+    } else {
+        return FALSE;
+    }
+    return FALSE;
+}
+
+function validateURL($url) {
+	if(!filter_var($url, FILTER_VALIDATE_URL))
+	  {
+	   return FALSE;
+	  }
+	else
+	  {
+	  return true;
+	  }
+}
+
+function validateIMGURL($url) {
+	if(!filter_var($url, FILTER_VALIDATE_URL)){
+	   return FALSE;
+	 }
+	else{
+	 $fileName = basename($url);
+	 if(strpos($fileName, '.') !== FALSE){
+	   return true;
+	 }else{
+	   return false;
+	 }
+    }
+}
+
+if (!function_exists('checkDependency')) {
+
+    function checkDependency() {
+        if (DEPENDENCY_CHECK === FALSE) {
+            return TRUE;
+        }
+        $dbObj = $GLOBALS['dbObj'];
+        $return = TRUE;
+        $errors = '';
+        if (strstr(PHP_OS, 'Linux') == FALSE) {
+            $err_str = '<p>Your current operating system is
+                ' . PHP_OS . '.
+                    Required Operating System: ' . OPERATING_SYSTEM . '.</p>';
+            if (empty($errors)) {
+                $errors = $err_str;
+            } else {
+                $errors .= $err_str;
+            }
+        }
+        $current_php_version = floatval(phpversion());
+        $need_php_version = floatval(PHPVERSION);
+        if (version_compare($need_php_version, $current_php_version) < 0) {
+            $err_str = '<p>Your current PHP version is
+                ' . $current_php_version . '.
+                    Required PHP Version: ' . $need_php_version . '
+                        or greater.</p>';
+            if (empty($errors)) {
+                $errors = $err_str;
+            } else {
+                $errors .= $err_str;
+            }
+            $return = FALSE;
+        }
+        if (!class_exists('Memcache')) {
+            $err_str = '<p>Memcache is not enabled on your server.</p>';
+            if (empty($errors)) {
+                $errors = $err_str;
+            } else {
+                $errors .= $err_str;
+            }
+            $return = FALSE;
+        }
+        if (_is_curl_enabled() == false) {
+            $err_str = '<p>Curl is not enabled on your server.</p>';
+            if (empty($errors)) {
+                $errors = $err_str;
+            } else {
+                $errors .= $err_str;
+            }
+            $return = FALSE;
+        }
+        $current_mysqli_version = intval($dbObj->get_mysql_version());
+        if ($current_mysqli_version < MYSQLIVERSION) {
+            $err_str = '<p>Your current MySqli version is
+                ' . $dbObj->get_mysql_version_info() . '.
+                    Required Mysqli Version: ' . MYSQLIVERSION_MAJOR_MINOR . '
+                        or greater.</p>';
+            if (empty($errors)) {
+                $errors = $err_str;
+            } else {
+                $errors .= $err_str;
+            }
+            $return = FALSE;
+        }
+        if (_check_mod_rewrite_enabled() == false) {
+            $err_str = '<p>Enable Mod rewrite.</p>';
+            if (empty($errors)) {
+                $errors = $err_str;
+            } else {
+                $errors .= $err_str;
+            }
+            $return = FALSE;
+        }
+        if (_is_zip_loaded() == false) {
+            $err_str = '<p>Zip extension is not enabled.</p>';
+            if (empty($errors)) {
+                $errors = $err_str;
+            } else {
+                $errors .= $err_str;
+            }
+            $return = FALSE;
+        }
+
+        $session = array(
+            'error' => $errors,
+            'return' => $return
+        );
+        $_SESSION['dependency_res'] = $session;
+        return $return;
+    }
+
+}
+
+if (!function_exists('_is_curl_enabled')) {
+    /*
+     * Function to check curl is enabled on the server
+     * @param none
+     * @return Bool
+     */
+
+    function _is_curl_enabled() {
+        if (in_array('curl', get_loaded_extensions())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+if (!function_exists('_is_zip_loaded')) {
+    /*
+     * Function to check curl is enabled on the server
+     * @param none
+     * @return Bool
+     */
+
+    function _is_zip_loaded() {
+        if (in_array('zip', get_loaded_extensions())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+if (!function_exists('_check_mod_rewrite_enabled')) {
+
+    function _check_mod_rewrite_enabled() {
+        if (function_exists('apache_get_modules')) {
+            $modules = apache_get_modules();
+            if (in_array('mod_rewrite', $modules)) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return getenv('HTTP_MOD_REWRITE') == 'On' ? true : false;
+        }
+    }
+
+}
+
+if (!function_exists('convertStrToDate')) {
+
+    function convertStrToDate($str) {
+        $date_str = trim($str);
+        list($d, $m, $y) = explode('/', $date_str);
+        $mk = mktime(0, 0, 0, intval($m), intval($d), intval($y));
+        $date = strftime('%Y-%m-%d', $mk);
+        return $date;
+    }
+
+}
+
+if (!function_exists('getFormattedDwellingUnitNo')) {
+
+    function getFormattedDwellingUnitNo($plot_number) {
+        $len = strlen($plot_number);
+        if ($len >= 3) {
+            return $plot_number;
+        } else if ($len == 2) {
+            return '0' . $plot_number;
+        } else {
+            return '00' . $plot_number;
+        }
+    }
+
+}
+
+
+function validateMobileNo($mobile, $mode = 1) {
+    if ($mode == '2') {
+        if (preg_match('/^((\+){0,1}91(\s){0,1}(\-){0,1}(\s){0,1})?([0-9]{10})$/', $mobile, $matches)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    $response = commaSaperatedMobileNumber($mobile);
+    if ($response !== TRUE) {
+        return FALSE;
+    } else {
+        return TRUE;
+    }
+}
+
+function mr($msg = '*', $class="reqField") {
+    return '<span class="'.$class.'">' . $msg . '</span>';
+}
+
+
+function getUserId() {
+    return $_SESSION['USER_ID'];
+}
+
+function convertH_I($time) {
+    $time_explode = explode(':', $time);
+    if (count($time_explode) == 3) {
+        return $time_explode[0] . ':' . $time_explode[1];
+    } else {
+        return $time;
+    }
+}
+
+function isPositiveInteger($i, $mode = 1) {
+    if ($mode == '1') {
+        if (is_numeric($i) && intval($i) >= 1) {
+            $i_expl = explode('.', $i);
+            if (count($i_expl) > 1) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    } else {
+        if (is_numeric($i)) {
+            $i_expl = explode('.', $i);
+            if (count($i_expl) > 1) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+}
+
+function isPositiveIntegerWithZero($i) {
+    if (is_numeric($i) && intval($i) >= 0) {
+        $i_expl = explode('.', $i);
+        if (count($i_expl) > 1) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        if (empty($i)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+/**
+ *
+ * @param integer $i
+ * @return boolean
+ */
+function isPositiveNumeric($i) {
+    if (is_numeric($i) && intval($i) >= 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function getArrayValue($arr, $key) {
+    if (isset($arr[$key])) {
+        if (empty($arr[$key]) && $arr[$key] != 0) {
+            return FALSE;
+        } else {
+            return $arr[$key];
+        }
+    } else {
+        return FALSE;
+    }
+}
+
+function valid_date($date) {
+    return (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/", $date));
+}
+
+
+
+/**
+ * Is a Natural number, but not a zero  (1,2,3, etc.)
+ *
+ * @access	public
+ * @param	string
+ * @return	bool
+ */
+function is_natural_no_zero($str) {
+    if (!preg_match('/^[0-9]+$/', $str)) {
+        return FALSE;
+    }
+
+    if ($str == 0) {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+/*
+ * Is a Natural number  (0,1,2,3, etc.)
+ *
+ * @access	public
+ * @param	string
+ * @return	bool
+ */
+function is_natural($str) {
+    return (bool) preg_match('/^[0-9]+$/', $str);
+}
+
+/*
+ * Set to do popup on
+ */
+function setToDoPopup() {
+    $_SESSION['SHOW_POPUP'] = 1;
+}
+/**
+ * Set to do popup off
+ */
+function unSetToDoPopup() {
+    $_SESSION['SHOW_POPUP'] = 0;
+}
+/**
+ * Check to do popup
+ * @return boolean
+ */
+function isSetToDoPopup() {
+    if(isset($_SESSION['SHOW_POPUP']) && $_SESSION['SHOW_POPUP'] == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+ 
+/*THIS FUNCTION IS USED TO CREATE COMMA SEPARATED LIST*/
+function create_comma_separated_list($arr,$column,$mode = 1,$quotes = 1){
+  $return = '';
+
+  if(is_array($arr) and count($arr)){
+    foreach ($arr as $value) {
+        if($return!=''){
+            $return .= ',';
+        }
+        if($mode == '2'){
+          $value = (array)$value;
+          if($quotes){
+           $return .= '"'.$value[$column].'"';
+          }else{
+            $return .= $value[$column];
+          }
+        }else{
+            if($quotes){
+             $return .= '"'.$value.'"';
+            }else{
+             $return .= $value;
+            }
+        }
+    }
+  }
+  return $return;
+}
+
+/*THIS IS FUNCTION IS USED TO CONVERT OBJECT INTO ARRAY*/
+function convert_to_array(&$object,$key){
+    $key = $key;
+  (array)$object;
+}
+
+
+/**
+ * Alternator
+ *
+ * Allows strings to be alternated.
+ *
+ * @access	public
+ * @param	string (as many parameters as needed)
+ * @return	string
+ */
+if ( ! function_exists('alternator'))
+{
+	function alternator()
+	{
+		static $i;
+
+		if (func_num_args() == 0)
+		{
+			$i = 0;
+			return '';
+		}
+		$args = func_get_args();
+		return $args[($i++ % count($args))];
+	}
+}
+
+// $dt1 and $dt2 can be any valid date string that DateTime accepts
+// the time zone shouldn't affect anything (since $dt1 and $dt2 use
+// same zone),
+// but you can override the default
+function daysdiff($dt1, $dt2, $timeZone = 'Europe/Dublin') {
+  $tZone = new DateTimeZone($timeZone);
+   
+  $dt1 = new DateTime($dt1, $tZone);
+  $dt2 = new DateTime($dt2, $tZone);
+   
+  // use the DateTime datediff function IF we have a non-buggy version
+  // there is a bug in many Windows implementations that diff() always
+  // returns 6015
+  if( $dt1->diff($dt1)->format("%a") != 6015 ) {
+    return $dt1->diff($dt2)->format("%a");
+  }
+ 
+  $y1 = $dt1->format('Y');
+  $y2 = $dt2->format('Y');
+  $z1 = $dt1->format('z');
+  $z2 = $dt2->format('z');
+   
+  $diff = intval($y1 * 365.2425 + $z1) - intval($y2 * 365.2425 + $z2);
+ 
+  return $diff;
+}
+
+
+
+function getkeypath($arr, $lookup)
+{
+    if (array_key_exists($lookup, $arr))
+    {
+        return array($lookup);
+    }
+    else
+    {
+        foreach ($arr as $key => $subarr)
+        {
+            if (is_array($subarr))
+            {
+                $ret = getkeypath($subarr, $lookup);
+
+                if ($ret)
+                {
+                    $ret[] = $key;
+                    return $ret;
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+
+function error_rate($value){
+  return number_format($value,1);
+}
+
+function writeLogFile($data = null) {
+    $mypath= CUSTOMDIR."/log";
+    @chmod($mypath, 0777,TRUE);
+    $filename = $mypath.'/log2.txt';
+    $somecontent = "************** Log created at : "
+    .date("d/m/Y H:i:s")." **************\n\n";
+    if(!empty($data)) {
+        if(is_array($data)) {
+         $somecontent .= serialize($data);
+        } else if(isBoolean($data) === TRUE) {
+            $somecontent .= print_r($data, true);
+        }
+        else {
+            $somecontent .= $data;
+        }
+    }
+
+    $somecontent .= "\n\n******************************* LOG END ******
+    ***********************\n\n";
+    if ($handle = fopen($filename, 'a')) {
+        @fwrite($handle, $somecontent);
+        fclose($handle);
+    }
+}
+
+/*THIS FUNCTION IS USED TO TAKE BACK-UP OF DATABASE*/
+function take_db_backup($dbName,$storageDir){
+  $fileName = $storageDir.'/'.$dbName.'.sql';
+  $systemCall = 'mysqldump --host='.DB_SERVER.' --user='.DB_USERNAME.' --password='.DB_PASSWORD.' --port='.DB_PORT.' --protocol=TCP --routines '.$dbName.' > '.$fileName;
+  exec($systemCall);
+}
+
+
+function isBoolean($var) {
+    if(is_bool($var)) {
+        if($var === TRUE || $var === FALSE) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    } else {
+        return FALSE;
+    }
+}
+
+/*THIS FUNCTION IS USED TO CHECK EXISTENCE OF A SPECIFIC VALUE
+IN MULTI-DIMENTIONAL ARRAY*/
+function checkNestedArrayValue($arr,$column,$value,$typeCol = '',$typeVal = ''){
+    if(is_array($arr) && count($arr)){
+        foreach ($arr as $record) {
+            if(strtolower($record[$column]) == strtolower($value)){
+               if($typeCol != '' && $typeVal != '') {
+                 if($record[$typeCol] == $typeVal){
+                    return $record;
+                 }
+               }else{
+                 return $record;
+               }
+            }
+        }
+    }
+    return false;
+}
+
+
+function getPHPVersion() {
+    return phpversion();
+}
+
+function validatePHPVersion($php_version) {
+    if(REQUIRED_PHP_VERSION <= $php_version) {
+        return TRUE;
+    } else {
+        return ERROR_MSG_201;
+    }
+}
+
+function getMysqlInfo() {
+    return mysqli_get_server_info();
+}
+
+function validateWritableFileFolder($value) {
+    $path = $value;
+    if(is_writable('../'.$path)) {
+        return TRUE;
+    } else {
+        $component_expl = explode('/', $value);
+        $component_name = end($component_expl);
+        return $component_name.' should be writable';
+    }
+}
+
+function validateCurl(){
+    $status = function_exists('curl_version');
+    if($status !== TRUE) {
+       $status = 'Curl should be enable';
+    }
+    return $status;
+}
+
+function validatePHPCli() {
+    $return = exec('PHP -f "'.getcwd().'\check-cli.php"');
+    if($return == 'ok') {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+function setTempSession($key, $value) {
+    $_SESSION[$key] = $value;
+}
+
+function getTempSession($key) {
+    if(isset($_SESSION[$key]) && isAjaxRequest() == FALSE) {
+        $value = $_SESSION[$key];
+        unset($_SESSION[$key]);
+        return $value;
+    } else {
+        return '';
+    }
+}
+
+function isAjaxRequest() {
+    if(!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+    && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+	return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Session Value
+ *
+ * Get the value of session if it is set
+ *
+ * @access  public
+ * @param   session_name    string
+ * @return  string
+ */
+if (!function_exists('getSessionValue')) {
+
+    function getSessionValue($session_name) {
+        if(isset($_SESSION[$session_name])) {
+            return $_SESSION[$session_name];
+        } else {
+            return NULL;
+        }
+    }
+
+}
+
+function encode_items_to_UTF8(&$item, $key){
+    $key = $key;
+ if(!preg_match('!!u', $item)){
+  $item = utf8_encode($item);
+ }
+}
+
+function encode_json_array($input){
+ array_walk_recursive($input, 'encode_items_to_UTF8');
+ return $input;
+}
+/*THIS FUNCTION IS USED TO SHOW "..." IF MAX LENGTH EXCEEDS*/
+function show_ellipse($value,$maxLength,$truncate = 3){
+    if(strlen($value)<=$maxLength){
+        return $value;
+    }else{
+        return substr($value,0, $maxLength - $truncate).'...';
+    }
+    
+}
+
+function is_timestamp($timestamp){
+    if(strtotime(date('Y-m',$timestamp))<0){
+        return false;
+    }
+    return true;
+}
+
+/*
+* THIS FUNCTION IS USED TO ADD  CSS & JS FILES REQUIRED FOR BLUEIMP OPERATION
+*/
+function add_blueimp_css_js(){
+    $cssArray   = array();
+    $cssArray[] = VENDOR_URL.'blueimp/css/jquery.fileupload.css';
+    echo include_css_file($cssArray);
+    $jsArray   = array();
+    $jsArray[] = VENDOR_URL.'blueimp/js/vendor/jquery.ui.widget.js';
+    $jsArray[] = VENDOR_URL.'blueimp/js/jquery.iframe-transport.js';
+    $jsArray[] = VENDOR_URL.'blueimp/js/jquery.fileupload.js';
+    echo cache_js_files($jsArray,'blueimp.js.php',VENDOR_URL,
+    VENDOR_PHYSICAL_PATH);
+}
+
+  /**
+  * Delete old cached files
+  * @param $file string File name to be deleted
+  * @return void
+  */
+  function delete_old_cache_file($file) {
+      @unlink($file);
+  }
+      
+  /**
+  * Cache JS files
+  * @param $jsFilesArray array Name of files
+  * @param $singleFileName string Name of cached file
+  * @param $webURL string Web URL of the file
+  * @param $physicalPath string Physical location
+  * @return string  Returns script tags of files
+  */
+  function cache_js_files($jsFilesArray,$singleFileName = '',
+  $webURL = JS_URL,$physicalPath = JS_PHYSICAL_PATH){
+    if(!CACHE_SITE){
+        return include_js_file($jsFilesArray);
+    }else{
+    //delete previous cache files if clear cache request found
+     if(isset($_REQUEST['clear-cc']) && $_REQUEST['clear-cc'] == '1'){
+       delete_old_cache_file(CACHE_PHYSICAL_PATH.'/'.$singleFileName);
+     }
+     if(@file_exists(CACHE_PHYSICAL_PATH.'/'.$singleFileName)){
+         return include_js_file(CACHE_WEB_PATH.'/'.$singleFileName);
+     }
+     else{
+      if(!is_dir(CACHE_PHYSICAL_PATH)){
+		mkdir(CACHE_PHYSICAL_PATH, 0777 );
+	  }
+      $js = '';
+
+      foreach ($jsFilesArray as $file) {
+        $file = str_replace($webURL, $physicalPath, $file);
+        $js .= file_get_contents($file).PHP_EOL;
+      }
+      include_once VENDOR_PHYSICAL_PATH.'minifier/JShrink.php';
+      $js = Minifier::minify($js);
+      delete_old_cache_file(CACHE_PHYSICAL_PATH.'/'.$singleFileName);
+      file_put_contents(CACHE_PHYSICAL_PATH.'/'.$singleFileName,
+      add_gz_string('text/javascript').$js);
+      return include_js_file(CACHE_WEB_PATH.'/'.$singleFileName);
+     }
+    }
+  }
+  
+  /**
+  * Cache CSS files
+  * @param $cssFilesArray array Name of files
+  * @param $singleFileName string Name of cached file
+  * @param $webURL string Web URL of the file
+  * @param $physicalPath string Physical location
+  * @return string  Returns link tag of files
+  */
+  function cache_css_files($cssFilesArray,$singleFileName = '',
+  $webURL = CSS_URL,$physicalPath = CSS_PHYSICAL_PATH){
+    if(!CACHE_SITE || is_IE_browser()){
+        return include_css_file($cssFilesArray);
+    }else{
+    //delete previous cache files if clear cache request found
+     if(isset($_REQUEST['clear-cc']) && $_REQUEST['clear-cc'] == '1'){
+       delete_old_cache_file(CACHE_PHYSICAL_PATH.'/'.$singleFileName);
+     }
+     if(@file_exists(CACHE_PHYSICAL_PATH.'/'.$singleFileName)){
+         return include_css_file(CACHE_WEB_PATH.'/'.$singleFileName);
+     }
+     else{
+      if(!is_dir(CACHE_PHYSICAL_PATH)){
+		mkdir(CACHE_PHYSICAL_PATH, 0777 );
+	  }
+      $css = '';
+      foreach ($cssFilesArray as $file) {
+        $file = str_replace($webURL, $physicalPath, $file);
+        $css .= file_get_contents($file).PHP_EOL;
+      }
+      include_once VENDOR_PHYSICAL_PATH.'minifier/cssmin-v3.0.1-minified.php';
+      $css = CssMin::minify($css);
+      delete_old_cache_file(CACHE_PHYSICAL_PATH.'/'.$singleFileName);
+      file_put_contents(CACHE_PHYSICAL_PATH.'/'.$singleFileName,
+      add_gz_string('text/css').$css);
+      return include_css_file(CACHE_WEB_PATH.'/'.$singleFileName);
+     }
+    }
+  }
+  
+  function add_gz_string($type = 'text/css'){
+      $gzStr  = '<?php '.PHP_EOL;
+      $gzStr .= 'ob_start ("ob_gzhandler");'.PHP_EOL;
+      $gzStr .= 'header("Content-type: '.$type.'; charset: UTF-8");'.PHP_EOL;
+      $gzStr .= '//get the last-modified-date of this very file'.PHP_EOL;
+      $gzStr .= '$lastModified = filemtime(__FILE__);'.PHP_EOL;
+      $gzStr .= '//get a unique hash of this file (etag)'.PHP_EOL;
+      $gzStr .= '$etagFile = md5_file(__FILE__);'.PHP_EOL;
+      $gzStr .= '$etagHeader=(isset($_SERVER["HTTP_IF_NONE_MATCH"]) ?
+      trim($_SERVER["HTTP_IF_NONE_MATCH"]) : false);'.PHP_EOL;
+      $gzStr .= '//set last-modified header'.PHP_EOL;
+      $gzStr .= 'header("Last-Modified: ".gmdate("D, d M Y H:i:s", $lastModified)." GMT");'.PHP_EOL;
+      $gzStr .= '//set etag-header'.PHP_EOL;
+      $gzStr .= 'header("Etag: $etagFile");'.PHP_EOL;
+      $gzStr .= '//make sure caching is turned on'.PHP_EOL;
+      $gzStr .= 'header("Cache-Control: public");'.PHP_EOL;
+
+      $gzStr .= '//check if page has changed. If not, send 304 and exit'.PHP_EOL;
+      $gzStr .= 'if (@strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])==$lastModified ||
+      $etagHeader == $etagFile){'.PHP_EOL;
+       $gzStr .= 'header("HTTP/1.1 304 Not Modified");'.PHP_EOL;
+       $gzStr .= 'exit;'.PHP_EOL;
+      $gzStr .= '}'.PHP_EOL;
+      $gzStr .= '?> '.PHP_EOL;
+      return $gzStr;
+  }
+  
+  function include_css_file($files){
+     $css = '';
+     if(is_array($files) && count($files)){
+         foreach ($files as $file) {
+           $css .= '<link
+           rel="stylesheet" type="text/css" href="'.$file.'" />'.PHP_EOL;
+         }
+     }else{
+        $css .= '<link
+           rel="stylesheet" type="text/css" href="'.$files.'" />'.PHP_EOL;
+     }
+     return $css;
+  }
+  
+  function include_js_file($files){
+     $script = '';
+     if(is_array($files) && count($files)){
+         foreach ($files as $file) {
+           $script .= '<script
+           src="'.$file.'" type="text/javascript"></script>'.PHP_EOL;
+         }
+     }else{
+        $script = '<script
+        	src="'.$files.'" type="text/javascript"></script>'.PHP_EOL;
+     }
+     return $script;
+  }
+
+  /**
+  * VALIDATE & PARSE & RETURN SQL PARTS BASED ON DYNAMIC SEARCH FILTERS
+  * @param filterType string Type of Filter
+  * @param dynSearch array User submitted values
+  * @param errorLabel string Master label for displaying error summaries
+  * @return array  Returns error/sql parts
+  */
+  function validate_parse_dyn_search_filters($filterType,$dynSearch,
+  $errorLabel = DYN_SEARCH_ERROR_LABEL){
+        $currentDate = strtotime(date('Y-m-d'));
+        $dbObj = $GLOBALS['dbObj'];
+	    $includeDBRecords = FALSE;
+	    include_once './controller/common/filters/product.php';
+	    $productFilter = $filter[$filterType];
+	    $newFilter = $sqlArray = $errorArray = array();
+	    $userInputKeys = array_keys($dynSearch);
+	    $userInput = $dynSearch;
+	    foreach ($productFilter as $value){
+         if(in_array($value['OPTVALUE'],$userInputKeys)){
+          $newFilter[$value['OPTVALUE']] = $value;
+         }
+	    }
+	    foreach ($userInputKeys as $kvalue){
+	        $fieldLabel = $newFilter[$kvalue]['LABEL'];
+	        $fieldType  = $newFilter[$kvalue]['FIELDTYPE'];
+	        $sign       = $queryStr = $joinStr  = '';
+	        $table      = $newFilter[$kvalue]['DB_TABLE'];
+	        $column     = $newFilter[$kvalue]['DB_FIELD'];
+	        $start      = urldecode(trim($userInput[$kvalue]['start']));
+	        $end        = urldecode(trim($userInput[$kvalue]['end']));
+	        $not        = trim($userInput[$kvalue]['not']);
+	        if($fieldType == 'SELECT' || $fieldType == 'TEXTBOX'){
+	            $start = $dbObj->mysqlDataEncode($start);
+	            $sign = $not == '' ? ' = ' :' != ';
+	            if($fieldType == 'TEXTBOX'){
+	               $sign = $not == '' ? ' IN ' :' NOT IN ';
+	            }
+	        }else{
+	            $sign = $not == '' ? ' BETWEEN ' : ' NOT BETWEEN ';
+	        }
+	        switch ($fieldType) {
+            case 'SELECT':
+                if($start == ''){
+                    $errorArray[] = $fieldLabel.DYN_EMPTYTEXT;
+                }else if($start != ALL_VALUES_SELECT){
+                  $queryStr = '('.$table.'.'.$column.$sign.' "'.$start.'" )';
+                }
+                if($start == ALL_VALUES_SELECT && $not == '1'){
+                    $errorArray[] = $fieldLabel.DYN_NOTEQUALSELECT;
+                }
+            break;
+            case 'TEXTBOX':
+                if($start == '' && $not == '1'){
+                    $errorArray[] = $fieldLabel.DYN_EMPTYTEXT;
+                }
+                if($start != ''){
+                  $start =  str_replace('"', "'",create_comma_separated_list(explode(',' , $start),' ',1,1));
+                  $queryStr = '('.$table.'.'.$column.$sign.' ('.$start.'))';
+                }
+            break;
+            case 'DATEPICKER':
+                if($start != '' && $end == ''){
+                    $errorArray[] = DYN_EMPTYTEXTENDDATE.$fieldLabel;
+                }
+                if($start == '' && $end != ''){
+                    $errorArray[] = DYN_EMPTYTEXTSTARTDATE.$fieldLabel;
+                }
+                if(($start == '' && $end == '') && $not == '1'){
+                    $errorArray[] = DYN_EMPTYTEXTSEDATE.$fieldLabel;
+                }
+                if($start != '' && $end != ''){
+                   $sDate1 = strtotimeQ3($start);
+                   $eDate1 = strtotimeQ3($end);
+                   if($sDate1 > $eDate1){
+                      $errorArray[] = DYN_INVALIDSEDATE.$fieldLabel;
+                   }
+                   $queryStr = '('.$table.'.'.$column.' '.$sign.'"'.$sDate1.'" AND "'.$eDate1.'")';
+                }
+                if($start != '' && strtotimeQ3($start)>$currentDate){
+                  $errorArray[] = DYN_INVALIDSDATE.$fieldLabel;
+                }
+                if($end != '' && strtotimeQ3($end)>$currentDate){
+                  $errorArray[] = DYN_INVALIDEDATE.$fieldLabel;
+                }
+                break;
+	        }
+	        if(isset($sqlArray[$table]) && $queryStr!=''){
+	            $sqlArray[$table] .= ' AND '.$queryStr;
+	        }else{
+	           if($queryStr != ''){
+	            $sqlArray[$table] = $queryStr;
+	           }
+	        }
+	    }
+	    if(count($errorArray)){
+	        $errorArray = design_dyn_error_string($errorArray);
+	        $masterArray['CustomError'] = 1;
+	        $masterArray['ErrorDesc'] = DYN_SEARCH_ERROR_LABEL.'<br/><ol>'
+	        .implode(PHP_EOL,$errorArray).'</ol>';
+	    }else{
+            $masterArray['Error'] = 0;
+	        $masterArray['SQLDesc'] = $sqlArray;
+	    }
+	    return $masterArray;
+  }
+function design_dyn_error_fields(&$item){
+   $item = '<li>'.$item.'</li>';
+}
+
+function design_dyn_error_string($arr){
+ array_walk_recursive($arr, 'design_dyn_error_fields');
+ return $arr;
+}
+
+function is_IE_browser(){
+  preg_match('/MSIE (.*?);/', $_SERVER['HTTP_USER_AGENT'], $matches);
+  if(count($matches)<2){
+    preg_match('/Trident\/\d{1,2}.\d{1,2}; rv:([0-9]*)/',
+    $_SERVER['HTTP_USER_AGENT'], $matches);
+  }
+  return count($matches);
+}
+
+function validateFloat($value){
+  if (filter_var($value, FILTER_VALIDATE_FLOAT)){
+      return true;
+  }else{
+      return false;
+  }
+}
+function validateTime($value){
+    //preg_match("/(1[012]|0[0-9]):[0-5][0-9]/", $value); //12hr
+    $r = preg_match("/(2[0-3]|[01][0-9]):[0-5][0-9]/", $value); // 24hr
+    return $r;
+}
+function validateGang($value){
+    $arr = explode('-',$value);
+    $cnt = count($arr);
+    if($cnt>2){
+        return false;
+    }
+    for($i=0;$i<$cnt;$i++){
+        $arr[$i] = (int)$arr[$i];//type casting
+    }
+    if($cnt == 1 && empty($arr[0])){
+        return false;
+    }else{
+        if(empty($arr[0]) || empty($arr[1])){
+            return false;
+        }
+        if($arr[0]>=$arr[1]){
+            return false;
+        }
+    }
+    return true;
+}
+function validateDistribution($value){
+    $arr = explode('-',$value);
+    $cnt = count($arr);
+    for($i=0;$i<$cnt;$i++){
+        $arr[$i] = (int)$arr[$i];//type casting
+        if(empty($arr[$i])){
+            return false;
+        }
+    }
+    return true;
+}
+function check_product_cell_data($value,$type){
+    $ret = true;
+    switch ($type) {
+        case CHK_NUMERIC:
+            $ret = ctype_digit((string)$value);
+        break;
+        case CHK_ALPNUMERIC:
+            $ret = ctype_alnum($value);
+        break;
+        case CHK_ALPHABETIC:
+            $ret = ctype_alpha($value);
+        break;
+        case CHK_DATE:
+            $ret = strtotimeQ3($value);
+        break;
+        case CHK_ALPNUMERIC_SPECIAL:
+            $ret = true; //since any character can come(German umlaut)
+        break;
+        case CHK_IMG_URL:
+            $ret = validateIMGURL($value);
+        break;
+        case CHK_FLOAT:
+            $ret = validateFloat($value);
+        break;
+        case CHK_TIME:
+            $ret = validateTime($value);
+        break;
+        case CHK_GANG:
+            $ret = validateGang($value);
+        break;
+        case CHK_DISTRIBUTION:
+            $ret = validateDistribution($value);
+        break;
+    }
+    return $ret;
+}
+function validate_product_import_data($data,$reference,$lineNo,&$unique,
+    &$errorArray){
+    $glb_product_import = $GLOBALS['glb_product_import'];
+    $productImportKeys = array_keys($glb_product_import);
+    $colNo = 0;
+    //added "IREQ","OINVALID_TYPE","PNOT_ALLOWED_VALUE" & "QNOT_UNIQUE"
+    //for sorting purpose
+    foreach ($glb_product_import as $rKey=>$rValue){
+        $userData = $data[$colNo];
+        if($rValue['REQ'] && $userData == ''){
+            $errorArray['IREQ'][$rKey] .= $lineNo.',';
+        }
+        if($rValue['REQ'] && strlen($userData)<$rValue['MIN']){
+            $errorArray['MIN'][$rKey] .= $lineNo.',';
+        }
+        if(strlen($userData)>$rValue['MAX']){
+           $errorArray['MAX'][$rKey] .= $lineNo.',';
+        }
+        if($userData!= '' &&
+        !check_product_cell_data($userData,$rValue['VTYPE'])){
+           $errorArray['OINVALID_TYPE'][$rKey] .= $lineNo.',';
+        }
+        if($userData!= '' && $rKey == 'PRODUCT_ACTUAL_SIZE'){
+           $availableSizes =
+           explode('-',$data[array_search('PRODUCT_AVAILABLE_SIZES'
+           ,$productImportKeys)]);
+           if(isset($availableSizes[0]) && isset($availableSizes[1])
+           && is_numeric($availableSizes[0]) && is_numeric($availableSizes[1])){
+             $arr = range($availableSizes[0], $availableSizes[1]);
+             if(!in_array($userData, $arr)){
+                $errorArray['PNOT_ALLOWED_VALUE'][$rKey] .= $lineNo.',';
+             }
+           }
+        }
+        if($userData!= '' && $rKey == 'PRODUCT_DISTRIBUTION'){
+           $availableSizes =
+           explode('-',$data[array_search('PRODUCT_AVAILABLE_SIZES'
+           ,$productImportKeys)]);
+           $distribution = explode('-',$userData);
+           $arr = array($availableSizes[0]);
+           if(isset($availableSizes[0]) && isset($availableSizes[1])
+           && is_numeric($availableSizes[0]) && is_numeric($availableSizes[1])){
+             $arr = range($availableSizes[0], $availableSizes[1]);
+           }
+          if(count($arr) != count($distribution)){
+            $errorArray['PNOT_ALLOWED_VALUE'][$rKey] .= $lineNo.',';
+          }
+        }
+        if($rValue['REFT']){
+            if(!isset($reference[$rValue['REFV']])){
+                $errorArray['PNOT_ALLOWED_VALUE'][$rKey] .= $lineNo.',';
+            }
+            else if(!in_array($userData, $reference[$rValue['REFV']])){
+              $errorArray['PNOT_ALLOWED_VALUE'][$rKey] .= $lineNo.',';
+            }
+        }
+        if($rValue['UNIQUE'] && isset($unique[$rKey])
+        && in_array($userData, $unique[$rKey]) && $userData!=''){
+            $errorArray['QNOT_UNIQUE'][$rKey] .= $lineNo.',';
+        }
+        $unique[$rKey][] = $userData;
+        $colNo++;
+    }
+    if(count($errorArray)){
+        return false;
+    }else{
+        return true;
+    }
+}
+/*USED TO VALIDATE UNIQUE VALUES WITH RESPECT TO DB RECORDS*/
+function validate_unique_product_fields($input,$keyHolder,$field,$key,
+&$errorArray){
+   if(is_array($input) && count($input)){
+       foreach ($input as $uValue){
+          $errorArray['NOT_UNIQUE'][$key] .=
+          array_search($uValue[$field], $keyHolder);
+       }
+   }
+   return $errorArray;
+}
+
+function fill_up_product_defined_cells($fieldName,$value,$expData){
+    if($value != ''){
+        return $value;
+    }
+    switch ($fieldName) {
+        case 'PRODUCT_BUYING_PRICE':
+        $value = $expData['buying_price'];
+        break;
+        
+        case 'PRODUCT_IS_FROOGLE':
+        $value = $expData['is_froogle'];
+        break;
+        
+        case 'PRODUCT_IS_KELKOO':
+        $value = $expData['is_kelkoo'];
+        break;
+        
+        case 'PRODUCT_LEVEL':
+        $value = $expData['level'];
+        break;
+        
+        case 'PRODUCT_RACK_POSITION':
+        $value = $expData['product_position'];
+        break;
+        
+        case 'PRODUCT_SELLING_PRICE':
+        $value = $expData['selling_price'];
+        break;
+    }
+    return $value;
+}
+
+function create_reference_data(){
+   include_once '../class/generalclass.php';
+   $genUtilObj = new generalClass();
+   /*RETRIVE KEYWORD & OTHER REFERENCE VALUES*/
+   $key[ITEM_SUPPLIER] = array_values($genUtilObj->keywordList(ITEM_SUPPLIER));
+   $key[BRAND_SUPPLIER]= array_values($genUtilObj->keywordList(BRAND_SUPPLIER));
+   $key[COLOR_SUPPLIER]= array_values($genUtilObj->keywordList(COLOR_SUPPLIER));
+   $key[COLOR_LILULIE] = array_values($genUtilObj->keywordList(COLOR_LILULIE));
+   $key[DISTRIBUTION] = array_values($genUtilObj->keywordList(DISTRIBUTION));
+   $key[GANG] = array_values($genUtilObj->keywordList(GANG));
+   $key[FT] = array_values($genUtilObj->keywordList(FT));
+   $key[SEASON] = array_values($genUtilObj->keywordList(SEASON));
+   $key[SHOE_SHAPE] = array_values($genUtilObj->keywordList(SHOE_SHAPE));
+   $key[PRODUCT_TYPE1] = array_values($genUtilObj->keywordList(PRODUCT_TYPE1));
+   $key[PRODUCT_TYPE2] = array_values($genUtilObj->keywordList(PRODUCT_TYPE2));
+   $key[PRODUCT_TYPE3] = array_values($genUtilObj->keywordList(PRODUCT_TYPE3));
+   $key[AGE] = array_values($genUtilObj->keywordList(AGE));
+   $key[GENDER] = array_values($genUtilObj->keywordList(GENDER));
+   $key[STYLE] = array_values($genUtilObj->keywordList(STYLE));
+   $key[COLOR_EBAY] = array_values($genUtilObj->keywordList(COLOR_EBAY));
+   $key[COLOR_AMAZON] = array_values($genUtilObj->keywordList(COLOR_AMAZON));
+   $key[HEEL_TYPE] = array_values($genUtilObj->keywordList(HEEL_TYPE));
+   
+   $key['supplier_code'] = array_values($genUtilObj->supplierList());
+   $key['supplier_ids']  = $genUtilObj->supplierList();
+   $key['category_code'] = array_values($genUtilObj->productCategory());
+   $key['category_ids']  = $genUtilObj->productCategory();
+   $key['EAN'] = array_values($genUtilObj->productEANs());
+   $key['VARIATION_ID'] = array_values($genUtilObj->productVariationIds());
+   
+   return $key;
+}
+
+function process_product_import_errors($errorArray){
+    $glb_product_import = $GLOBALS['glb_product_import'];
+    $errorString = '';
+    ksort($errorArray);
+    foreach ($errorArray as $errorType=>$errorDesc) {
+        foreach ($errorDesc as $field=>$lineNo) {
+          $name = $glb_product_import[$field]['NAME'];
+          $lineNo = trim($lineNo,',');
+          $lineNoArray = explode(',',$lineNo);
+          $last = array_pop($lineNoArray);
+          $lineNo = count($lineNoArray) ? implode(", ",$lineNoArray)
+          ." & ".$last.'&nbsp;'.t('lines'):$last.'&nbsp;'.t('line');
+          $errorString .= '<li>';
+          switch ($errorType) {
+            case 'IREQ':
+             $errorString .= $name.'&nbsp'.t('is required in').'&nbsp'.$lineNo;
+            break;
+            
+            case 'MIN':
+             $errorString .= t('Minimum allowed length for').'&nbsp'.
+             $name.'&nbsp'.t('is not satisfies in').'&nbsp'.$lineNo;
+            break;
+            
+            case 'MAX':
+             $errorString .= t('Maximum allowed length for').'&nbsp'.
+             $name.'&nbsp'.t('is not satisfies in').'&nbsp'.$lineNo;
+            break;
+            
+            case 'OINVALID_TYPE':
+             $errorString .= t('Invalid data type for').'&nbsp'.
+             $name.'&nbsp'.t('found in').'&nbsp'.$lineNo;
+            break;
+            
+            case 'PNOT_ALLOWED_VALUE':
+             $errorString .= t('Invalid value for').'&nbsp'.
+             $name.'&nbsp'.t('found in').'&nbsp'.$lineNo;
+            break;
+            
+            case 'QNOT_UNIQUE':
+             $errorString .= t('Duplicate value for').'&nbsp'.
+             $name.'&nbsp'.t('found in').'&nbsp'.$lineNo;
+            break;
+          }
+          $errorString .= '</li>';
+        }
+    }
+    return $errorString;
+}
+function display_search_box($search2){
+    ?>
+    <form id="commonSearchFrm" onsubmit="return false">
+    <div class="searchrecords">
+            <strong>
+            <?php echo t('Search')?>:</strong> &nbsp;<input type="text"
+            name="search" id="searchbox"
+            value="<?php echo $search2; ?>" />&nbsp;
+            <input type="image" name="searchbtn" id="searchbtn" src="
+            <?php echo IMAGE_URL?>/search.png" />
+        </div>
+    </form>
+    <?php
+}
+
+function validateInputJS() {
+	$jsArray   = array();
+	$jsArray[] = JS_URL.'/validations.js';
+	echo cache_js_files($jsArray);
+}
+?>
+

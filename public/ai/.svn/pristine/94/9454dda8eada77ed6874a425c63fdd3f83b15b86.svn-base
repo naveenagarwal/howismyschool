@@ -1,0 +1,62 @@
+$(document).ready(function() {
+
+  function hidePopUp(){
+    $(".close-btn").trigger("click");
+    $(".dropdown-menu").hide();
+  }
+
+  $(document).on('click', '#logout', function() {
+    User.logout();
+  });
+
+  $(document).on('click', '#open_list', function() {
+    User.openList();
+  });
+
+  $(document).on('click', '#file-save-design', function() {
+    User.saveDesign();
+  });
+
+  $(document).on("submit", "form#login_form", function(evt){
+    evt.preventDefault();
+    //if(User.validateLogin()) {
+      User.login();
+      hidePopUp();
+    //}
+    return false;
+  });
+
+  $(document).on("click", "#user_register", function(){
+    $("#login_form_input_container").append(User.createRegisterHTML());
+    $("#user_register").hide();
+    $("#user_login").removeClass("hide");
+    $("#login_btn").val("Register");
+    $('#lightbox-content').css({  });
+  });
+
+  $(document).on("click", "#user_login", function(){
+    $("#user_register").show();
+    $("#user_login").addClass("hide");
+    $(".registration-field").remove();
+    $("#login_btn").val("Login");
+    $('#lightbox-content').css({height: "200px", overflow: "none" });
+  });
+
+  $(document).on("click", ".open-design-for-edit", function(){
+    var designId = $(this).data("design_id");
+    User.openDesignForEdit(designId);
+    hidePopUp();
+  });
+
+  //User.getManufacturers();
+
+  //$(document).on("click", "#", function(){
+    //var manufacturerId = 1;
+    //User.getSizes(manufacturerId);
+  //});
+
+  $(document).on("click", "#save-seamless-wall", function(){
+    User.saveSeamlessDesign();
+  });
+
+});

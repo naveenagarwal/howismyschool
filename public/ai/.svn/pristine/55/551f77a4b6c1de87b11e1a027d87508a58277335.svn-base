@@ -1,0 +1,79 @@
+<?php
+
+/**
+ *
+ * Create Wall Class provides functions that simply perform the actions
+ * like save design, edit design.
+ * @author     	: rasingh - Q3tech
+ * @created on  : Aug 22, 2014
+ * @modified on : Aug 22, 2014
+ */
+class CreateWall {
+
+	private $db_connection = NULL;
+	private $table_users = '';
+	private $table_user_designs = '';
+
+	/**
+	 *
+	 * This is a constructor function where variables are intialized automatically
+	 * when object is created of this class
+	 * @param object $db_obj
+	 * @return null
+	 */
+	public function __construct($db_obj) {
+		$this->db_connection = $db_obj;
+		$this->table_users = $this->db_connection->get_table_mapping('users');
+		$this->table_user_designs = $this->db_connection->get_table_mapping('user_designs');
+	}
+
+	/**
+   * This function is used to save the design in the database
+   * @param int $user_design_id
+	 * @param string $json_info
+	 * @param string $html_info
+   * @return int
+   */
+	public function save_design($data_arr) {
+    if( !empty($data_arr) ) {
+      $user_design_id = $data_arr['user_design_id'];
+      $html_info = $data_arr['html_info'];
+      $json_info = $data_arr['json_info'];
+    }
+		if( $user_design_id != '' ) {
+			$query = 'UPDATE '.$this->table_user_designs;
+			$query .= ' SET json_info = "'. $json_info .'", html_info = "'. $html_info .'",';
+			$query .= ' modified_by = '.$_SESSION['USER_ID'].' , modified_at = "'.time().'"';
+			$query .= ' WHERE id = '.$user_design_id;
+			if($this->db_connection->edit($query)) return $user_design_id;
+      else return false;
+		}
+		else {
+			$query = 'INSERT INTO '.$this->table_user_designs;
+			$query .= ' (user_id, json_info, html_info, design_image_path, created_by, created_at)';
+			$query .= ' VALUES('.$_SESSION['USER_ID'].', "'. $json_info .'", "'. $html_info .'", "design_image_path",'.$_SESSION['USER_ID'].',"'.time().'")';
+			return $this->db_connection->insert($query);
+		}
+	}
+
+	/**
+   * This function is used to get wall details based on wall id
+   * @param int $wall_id
+   * @return string
+   */
+	public function get_wall_by_id($wall_id = '') {
+		// Code here
+	}
+
+	/**
+   * This function lists the walls based on user id.
+   * @param int $user_id
+   * @return string
+   */
+	public function get_walls_by_user_id($user_id = '') {
+		// Code here
+	}
+
+}
+
+?>

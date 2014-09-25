@@ -1,0 +1,8 @@
+1. Run "get_translation.php" file.
+   http://localhost/Lisa_rd/custom/db-codes/get_translation.php
+2. It will generate "report.xls" file.
+3. Open "report.xls" file and correct format and after this save "translation.xls" file.
+4. Now run "prepare_translation_file.php" file.
+   http://localhost/Lisa_rd/custom/db-codes/prepare_translation_file.php
+5. It will generate "translation.txt" file.
+6. Upload this file from Translation module.

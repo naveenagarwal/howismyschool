@@ -1,0 +1,25 @@
+<?php
+$jsonResult = array();
+$design_id = $_GET['designId'];
+if( $_SESSION['USER_ID'] == 0 || empty($_SESSION['USER_ID']) ) {
+  $jsonResult['message']  = t('Illegal operation');
+  die(json_encode($jsonResult));
+}
+
+//load model class
+$designObj = create_model_object($db_obj, DESIGN_PATH, 'Design');
+
+if( !$login->is_user_logged_in() ) {
+  $jsonResult['notLoggedIn']  = true;
+  $jsonResult['message']    = t('Please login first');
+}
+else {
+  $user_design = $designObj->get_design_by_id($design_id)[0];
+  $jsonResult['loggedIn']   = true;
+  $jsonResult['user_design']['HTML'] = $user_design['html_info'];
+  if(empty($user_design)){
+     $jsonResult['message']  = t('No such record found.');
+  }
+}
+die(json_encode($jsonResult));
+?>

@@ -1,0 +1,39 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  # If your site is running in a VirtualDocumentRoot at http://example.com/,
+  # uncomment the following line:
+  #RewriteBase /
+
+  # Rewrite URLs of the form 'x' to the form 'index.php?q=x'.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !=/favicon.ico
+  RewriteRule ^(.*)$ app/index.php?pg=$1 [L,QSA]
+</IfModule>
+# For Adding Expiry Headers. Comment out if not enabled
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 seconds"
+    ExpiresByType image/x-icon "access plus 2692000 seconds"
+    ExpiresByType image/jpeg "access plus 2692000 seconds"
+    ExpiresByType image/png "access plus 2692000 seconds"
+    ExpiresByType image/gif "access plus 2692000 seconds"
+    ExpiresByType application/x-shockwave-flash "access plus 2692000 seconds"
+    ExpiresByType text/css "access plus 2692000 seconds"
+    ExpiresByType text/javascript "access plus 2692000 seconds"
+    ExpiresByType application/x-javascript "access plus 2692000 seconds"
+    ExpiresByType application/javascript "access plus 2692000 seconds"
+    ExpiresByType text/html "access plus 600 seconds"
+    ExpiresByType application/xhtml+xml "access plus 600 seconds"
+    ExpiresByType image/icon "access plus 2692000 seconds"
+    ExpiresByType application/x-ico "access plus 2692000 seconds"
+    ExpiresByType application/ico "access plus 2692000 seconds"
+</IfModule>
+# For Adding Expiry Headers. Comment out if not enabled
+<IfModule mod_header.c>
+  <FilesMatch "\.ico$">
+    # cache .ico files for 1 year(31536000 sec)
+    Header set Cache-control max-age=31536000
+  </FilesMatch>
+</IfModule>
+# For Adding Compression. Comment out if not enabled

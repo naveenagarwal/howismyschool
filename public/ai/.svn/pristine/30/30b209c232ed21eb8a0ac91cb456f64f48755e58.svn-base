@@ -1,0 +1,31 @@
+<?php
+$jsonResult = array();
+
+if( $_SESSION['USER_ID'] == 0 ) {
+  $jsonResult['message']  = t('Illegal operation');
+  die(json_encode($jsonResult));
+}
+//load model class
+$aiObj = create_model_object($dbObj, AI_PATH, 'CreateWall');
+
+if( !$login->is_user_logged_in() ) {
+	$jsonResult['notLoggedIn'] 	= true;
+	$jsonResult['message'] 		= t('Please login first');
+}
+else {
+  $data_arr = array(
+                  'user_design_id' => $_POST['user_design_id'],
+                  'html_info' => $dbObj->mysqlDataEncode($_POST['html_info']),
+                  'json_info' => $dbObj->mysqlDataEncode($_POST['json_info'])
+                  );
+	$returnId = $aiObj->save_design($data_arr);
+  //die(gettype($returnId));
+	$jsonResult['loggedIn']  	= true;
+	if( $returnId ) {
+    $jsonResult['design_id']  = $returnId;
+    $jsonResult['message'] 	= t('Wall has been saved successfully');
+  }
+  else $jsonResult['message'] = t('Wall could not be saved due to some technical issue');
+}
+die(json_encode($jsonResult));
+?>

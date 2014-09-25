@@ -1,0 +1,83 @@
+<?php
+$pkField = trim($_REQUEST['id']);
+$returnURL = '';
+if ($_REQUEST['rurl'] != '') {
+    $returnURL = URL . trim($_REQUEST['rurl']). '&sortField='
+    .trim($_REQUEST['sortField'])
+    . '&sortOrderBy=' . trim($_REQUEST['sortOrderBy'])
+    . '&page=' . trim($_REQUEST['page']);
+}
+
+//load model class
+require_once('./model/translation/translation.php');
+$translationObj = new translation($db_obj);
+
+$pageURL = URL.$_SERVER['QUERY_STRING'];
+
+
+//process POST vars
+if(!empty($_POST['submit'])){
+$validationArray[] = array('value' => t('Source Label'),
+    'type' => 'input_text','required' => TRUE,'vtype' => 0,
+    'vmax' => MAX_SOURCE_LABEL);
+    $dataArray[]   = array('source_label' => $_POST['source_label']);
+    $columnArray[] = 'source_label';
+
+    $validationArray[] = array('value' => t('Translated Label'),
+    'type' => 'input_text','required' => TRUE,'vtype' => 0,
+    'vmax' => MAX_TRANSLATED_LABEL);
+    $dataArray[]   = array('translated_label' => $_POST['translated_label']);
+    $columnArray[] = 'translated_label';
+
+    $cnt = count($validationArray);
+    $errorFlag = false;
+    $successFlag = false;
+    for($i=0;$i<$cnt;$i++){
+        if(!$utility_obj->validate_form_field($validationArray[$i],$dataArray[$i],
+        $columnArray[$i])){
+            $errorFlag = true;
+            $utility_obj->set_flash_message($errorMessage,'error');
+            break;
+        }
+    }
+
+    if(!$errorFlag){
+        //check duplicate values
+        if($translationObj->check_duplicate_column('lang_code',
+        DEFAULT_TRANSLATION_LANGUAGE,'source_label',$_POST['source_label'],
+        $pkField)){
+            $errorFlag = true;
+            $utility_obj->set_flash_message(t('This source label already exists'),
+            'error');
+        }
+
+        if(!$errorFlag){
+            $data['pk'] = $pkField;
+            $data['lang_code'] = DEFAULT_TRANSLATION_LANGUAGE;
+            $data['source_label'] = $_POST['source_label'];
+            $data['translated_label'] = $_POST['translated_label'];
+            $data['is_active']     = 1;
+
+            if($translationObj->save_translation_data($data)){
+                $successFlag = true;
+                $utility_obj->set_flash_message(t('Data saved successfully'),
+                'success');
+                $utility_obj->redirectUser(URL.'translation/translation-list');
+				exit;
+            }else{
+                $errorFlag = true;
+                $utility_obj->set_flash_message(t('Data could not be saved'),
+                'error');
+            }
+        }
+    }
+}
+$noRecords = false;
+if($pkField ==''){
+    $noRecords = true;
+}else{
+    //fetch records
+    $resultSet  = $translationObj->load_translation_details($pkField);
+}
+require_once('./view/translation/translation-edit.php');
+?>

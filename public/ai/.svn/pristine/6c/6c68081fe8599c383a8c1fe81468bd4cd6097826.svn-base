@@ -1,0 +1,80 @@
+<?php
+$returnURL = '';
+if ($_REQUEST['rurl'] != '') {
+    $returnURL = URL . trim($_REQUEST['rurl']). '&sortField='
+    .trim($_REQUEST['sortField'])
+    . '&sortOrderBy=' . trim($_REQUEST['sortOrderBy'])
+    . '&page=' . trim($_REQUEST['page']);
+}
+
+//load model class
+require_once('./model/translation/translation.php');
+$translationObj = new translation($dbObj);
+
+$pageURL = URL.$_SERVER['QUERY_STRING'];
+
+
+//process POST vars
+if(!empty($_POST['submit'])){
+    $validationArray[] = array('value' => t('Source Label'),
+    'type' => 'input_text','required' => TRUE,'vtype' => 0,
+    'vmax' => MAX_SOURCE_LABEL);
+    $dataArray[]   = array('source_label' => $_POST['source_label']);
+    $columnArray[] = 'source_label';
+
+    $validationArray[] = array('value' => t('Translated Label'),
+    'type' => 'input_text','required' => TRUE,'vtype' => 0,
+    'vmax' => MAX_TRANSLATED_LABEL);
+    $dataArray[]   = array('translated_label' => $_POST['translated_label']);
+    $columnArray[] = 'translated_label';
+
+    $cnt = count($validationArray);
+    $errorFlag = false;
+    $successFlag = false;
+    for($i=0;$i<$cnt;$i++){
+        if(!$utilityObj->validateFormField($validationArray[$i],$dataArray[$i],
+        $columnArray[$i])){
+            $errorFlag = true;
+            $utilityObj->setFlashMessage($errorMessage,'error');
+            break;
+        }
+    }
+
+    if(!$errorFlag){
+        //save the data
+        //check duplicate values
+        if($translationObj->check_duplicate_column('lang_code',
+            DEFAULT_TRANSLATION_LANGUAGE,'source_label',
+            $_POST['source_label'])){
+            $errorFlag = true;
+            $utilityObj->setFlashMessage(t('This source label already exists'),
+            'error');
+        }
+
+        if(!$errorFlag){
+            $data['lang_code'] = DEFAULT_TRANSLATION_LANGUAGE;
+            $data['source_label'] = $_POST['source_label'];
+            $data['translated_label'] = $_POST['translated_label'];
+            $data['is_active']     = 1;
+
+            $returnId = $translationObj->save_translation_data($data);
+            if($returnId){
+                $successFlag = true;
+                $utilityObj->setFlashMessage(t('Data saved successfully'),
+                'success');
+                $pageURLArray = explode('rurl', $_SERVER['QUERY_STRING']);
+                $utilityObj->redirectUser(URL.'translation/translation-list');
+                exit;
+            }else{
+                $errorFlag = true;
+                $utilityObj->setFlashMessage(t('Data could not be saved'),
+                'error');
+            }
+        }
+    }
+}
+
+$noRecords = false;
+
+require_once('./view/translation/translation-add.php');
+?>

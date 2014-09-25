@@ -1,0 +1,101 @@
+$(document).ready(function(){
+
+  $(document).on("click", "a.tabs", function(){
+    var el = $(this);
+
+    $(".tab-pane").removeClass("active");
+    $("ul.nav-tabs li").removeClass("active");
+    $(el.attr("href")).addClass("active");
+    el.parent().addClass("active");
+
+  });
+
+  $(document).on("click", ".product", function(){
+    var product = $(this);
+    $('.tabs:last').click();
+    AccurateImage.renderProductData(parseInt(product.data("product_index") ) );
+  });
+
+  $(document).on("click", ".mortar", function(){
+    var mortar = $(this);
+    // set this to selected mortar in accurate image module
+    AccurateImage.setSelectedMortar(parseInt(mortar.data("mortar_index") ) );
+  });
+
+  $(document).on("click", ".brick-type", function(){
+    var brickType = $(this);
+    // Show the bricks of the selected brick type
+    AccurateImage.setSelectedBrickType(parseInt(brickType.data("brick_type_index") ) );
+    AccurateImage.renderBricks(parseInt(brickType.data("brick_type_index") ) );
+  });
+
+  $(document).on("click", ".brick", function(){
+    var brick = $(this);
+    AccurateImage.setSelectedBrick(parseInt(brick.data("brick_index") ) );
+  });
+
+  $(document).on("click", "#file-new-design", function(){
+    AccurateImage.createNewDesign();
+  });
+
+  $(document).on("click", "a.coursing", function(){
+    var coursing = $(this).data("coursing");
+    AccurateImage.setSelectedCoursing(coursing);
+  });
+
+  $(document).on("click", "a.select-wall-type", function(){
+    var wallDimension = $(this).data("wall_type");
+    AccurateImage.selectedWallDimesions = wallDimension;
+    AccurateImage.drawDefaultWall();
+    AccurateImage.pushChangeToUndoRedoStack();
+  });
+
+  $(document).on("click", "span.item", function(){
+    if($("#AIMenu").is(":visible")){
+      return;
+    }
+
+    AccurateImage.fillMortarItem($(this));
+    // AccurateImage.fillBrickItem($(this));
+    AccurateImage.fillCoursing($(this));
+    AccurateImage.setRandomBrick($(this));
+    AccurateImage.enableContextMenu();
+
+    AccurateImage.pushChangeToUndoRedoStack();
+  });
+
+  $(document).on("click", "a#save_as_image", function(){
+    AccurateImage.saveAsImage();
+  });
+
+  $(document).on("click", "a.zoom", function(){
+    var scale = parseInt($(this).data("zoom"));
+    AccurateImage.zoomWallBy(scale);
+  });
+
+  $(document).on("click", "a.select-stagger", function(){
+    var stagger = parseInt($(this).data("stagger"));
+    AccurateImage.staggerWallBy(stagger);
+    AccurateImage.pushChangeToUndoRedoStack();
+  });
+
+  $(document).on("click", "a#undo", function(){
+    AccurateImage.undo();
+  });
+
+  $(document).on("click", "a#redo", function(){
+    AccurateImage.redo();
+  });
+
+  $(document).on("submit", "form#customWallForm", function(evt){
+    evt.preventDefault();
+    var wallDimension = $("#x").val() + "x" + $("#y").val();
+    AccurateImage.selectedWallDimesions = wallDimension;
+    AccurateImage.drawDefaultWall();
+    AccurateImage.pushChangeToUndoRedoStack();
+    $(".close-btn").trigger("click");
+    $(".dropdown-menu").hide();
+    return false;
+  });
+
+});
