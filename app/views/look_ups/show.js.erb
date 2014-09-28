@@ -8,7 +8,7 @@ var data;
 <% if graph_array_data.present? %>
 
   data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
-  $('#class_room_avg_result').parent().find('.absoulte-position strong').html('Average Test scores For Class Room');
+  $('#class_room_avg_result').parent().find('.absoulte-position:first').html('<strong>Average Test scores For Class Room</strong>');
   Charts.drawChartFromArray(data, 'class_room_avg_result', 'Class Test' , 'Percentage(%)');
 
 <% end %>
@@ -17,7 +17,7 @@ var data;
 <% if graph_array_data.present? %>
 
   data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
-  $('#class_room_min_result').parent().find('.absoulte-position strong').html('Minimum Test scores For Class Room');
+  $('#class_room_min_result').parent().find('.absoulte-position:first').html('<strong>Minimum Test scores For Class Room</strong>');
   Charts.drawChartFromArray(data, 'class_room_min_result', 'Class Test' , 'Percentage(%)');
 
 <% end %>
@@ -26,7 +26,7 @@ var data;
 <% if graph_array_data.present? %>
 
   data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
-  $('#class_room_max_result').parent().find('.absoulte-position strong').html('Maximum Test scores For Class Room');
+  $('#class_room_max_result').parent().find('.absoulte-position:first').html('<strong>Maximum Test scores For Class Room</strong>');
   Charts.drawChartFromArray(data, 'class_room_max_result', 'Class Test' , 'Percentage(%)');
 
 <% end %>

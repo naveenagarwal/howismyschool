@@ -145,7 +145,7 @@ class ClassRoom < ActiveRecord::Base
     test_result = test_results_for_year.
       select("avg(percentage) as percentage, student_name").
       where(class_test_id: class_test_id, student_id: student_ids).
-      group("student_name")
+      group("student_name").order("percentage")
 
     test_result.each do |test_result|
       average_test_results << {
