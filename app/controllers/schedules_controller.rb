@@ -51,7 +51,7 @@ class SchedulesController < ApplicationController
   def create
     @schedule = Schedule.new(schedule_params)
     @schedule.event_for["ids"] = params[:schedule][:event_for][:ids].reject(&:blank?).join(",")
-    @schedule.event_for["names"] = ClassRoom.where(id: params[:schedule][:event_for][:ids].reject(&:blank?)).map(&:full_name)
+    @schedule.event_for["names"] = ClassRoom.where(id: params[:schedule][:event_for][:ids].reject(&:blank?)).map(&:full_name).join(', ')
     @schedule.creator = current_teacher
     @schedule.school_branch_id = current_school_branch.id
 
