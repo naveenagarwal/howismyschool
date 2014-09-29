@@ -414,7 +414,7 @@ form#look_up_form .inline-div {
   width: 15%;
 }
 
-select#lookup_class_room_select {
+select#lookup_class_room_select, select#compare_class_room_select, select#comapre_student_2_select, select#comapre_student_1_select {
   left: auto !important;
   top: auto !important;
 }

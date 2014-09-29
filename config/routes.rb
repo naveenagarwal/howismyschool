@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'compare/index'
+
   resources :comments
 
   devise_for :admin_users, ActiveAdmin::Devise.config
@@ -111,6 +113,13 @@ Rails.application.routes.draw do
   resources :look_ups, only: [:index] do
     collection do
       post 'show' => 'look_ups#show', as: :show
+      get 'class_room_students'
+    end
+  end
+
+  resources :compare, only: [:index] do
+    collection do
+      post 'show' => 'compare#show', as: :show
       get 'class_room_students'
     end
   end

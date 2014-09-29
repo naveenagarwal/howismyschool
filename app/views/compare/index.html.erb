@@ -1,0 +1,57 @@
+<h3>I'm Looking For</h3>
+
+<p>Select the option(s) below:</p>
+
+<%= form_tag show_compare_index_path, data: { remote: true }, id: "compare_form"  do %>
+
+  <div class="field">
+
+    <div class="inline-div">
+      <%= label_tag "Class Room" %>
+      <%= select_tag "class_room_id", options_for_select(@class_rooms_array), { include_blank: true, class: "select2", id: "compare_class_room_select", required: "required" } %>
+    </div>
+
+    <div class="inline-div">
+      <%= label_tag "Class Test" %>
+      <%= select_tag "class_test_id", options_for_select(@class_tests_array), { include_blank: true, multiple: true, class: "select2", id: "compare_class_test_select" } %>
+    </div>
+
+    <div class="inline-div">
+      <%= label_tag "Subject" %>
+      <%= select_tag "subject_id", options_for_select(@subjects_array), { include_blank: true, multiple: true, class: "select2", id: "compare_subject_select" } %>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="inline-div">
+      <%= label_tag "Student 1" %>
+      <%= select_tag "student_1_id", options_for_select([]), { include_blank: true, class: "select2 compare_student_select", id: "comapre_student_1_select", required: "required" } %>
+    </div>
+
+    <div class="inline-div">
+      <%= label_tag "Student 2" %>
+      <%= select_tag "student_2_id", options_for_select([]), { include_blank: true, class: "select2 compare_student_select", id: "comapre_student_2_select", required: "required" } %>
+    </div>
+
+  </div>
+
+  <div class="actions inline-div">
+    <%= submit_tag "Compare", data: { disable_with: "Please wait..." } %>
+  </div>
+
+<% end %>
+
+<br />
+
+<div id="inline-div" class="center-block">
+  <div>
+    <div class="absoulte-position">
+      <strong>
+      </strong>
+    </div>
+    <div class="compare-charts" id=''>
+    </div>
+  </div>
+</div>
+

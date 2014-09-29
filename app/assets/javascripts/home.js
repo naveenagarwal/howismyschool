@@ -11,6 +11,8 @@ $(document).on('page:load', function() {
   initializeDateTimePicker();
   loadStudentsOnClassRoomSelectForLookUp();
   classRoomCompleteTestResultsToggler();
+  loadStudentsOnClassRoomSelectForCompare();
+  checkStudentOnStudentSelectForCompare();
 
 });
 
@@ -27,6 +29,8 @@ $(document).ready(function() {
   initializeDateTimePicker();
   loadStudentsOnClassRoomSelectForLookUp();
   classRoomCompleteTestResultsToggler();
+  loadStudentsOnClassRoomSelectForCompare();
+  checkStudentOnStudentSelectForCompare();
 
   // var selectedAnswerType;
   // $(document).on("change", "select.answer-type", function(){
@@ -87,6 +91,29 @@ var loadStudentsOnClassRoomSelectForLookUp = function(){
       url: url,
       dataType: 'script'
     });
+  });
+};
+
+var loadStudentsOnClassRoomSelectForCompare = function(){
+  $(document).on('change', 'select#compare_class_room_select', function(){
+    var url = '/compare/class_room_students?class_room=' + $(this).val();
+    $.ajax({
+      url: url,
+      dataType: 'script'
+    });
+  });
+};
+
+var checkStudentOnStudentSelectForCompare = function(e){
+  $(document).on('change', 'select.compare_student_select', function(){
+    if($("select#comapre_student_1_select").val() == $("select#comapre_student_2_select").val()){
+      bootbox.alert("Please select different students for comparison.");
+      $("form#compare_form input[type=submit]").attr("disabled", true);
+      return false;
+    }else{
+      $("form#compare_form input[type=submit]").removeAttr("disabled");
+      return true;
+    }
   });
 };
 
