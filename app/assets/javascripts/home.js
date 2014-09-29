@@ -104,15 +104,15 @@ var loadStudentsOnClassRoomSelectForCompare = function(){
   });
 };
 
-var checkStudentOnStudentSelectForCompare = function(e){
+var checkStudentOnStudentSelectForCompare = function(){
   $(document).on('change', 'select.compare_student_select', function(){
     if($("select#comapre_student_1_select").val() == $("select#comapre_student_2_select").val()){
       bootbox.alert("Please select different students for comparison.");
-      $("form#compare_form input[type=submit]").attr("disabled", true);
-      return false;
+      $("form#compare_form input[type=submit]").attr("disabled", "disabled");
+    }else if($("select#comapre_student_1_select").val() == '' || $("select#comapre_student_2_select").val() == ''){
+      $("form#compare_form input[type=submit]").attr("disabled", "disabled");
     }else{
       $("form#compare_form input[type=submit]").removeAttr("disabled");
-      return true;
     }
   });
 };

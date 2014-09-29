@@ -17,10 +17,18 @@ class CompareController < ApplicationController
     def show
       chart_type = params[:chart_type] || DEFAULT_CHART_TYPE
 
-      @look_up = LookUp.new(
+      @look_up_student_1 = LookUp.new(
           year: params[:year],
           class_room_id:  params[:class_room_id],
-          student_id:     params[:student_id],
+          student_id:     params[:student_1_id],
+          subject_id:     params[:subject_id],
+          class_test_id:  params[:class_test_id],
+          chart_hash:     default_chart_hash(chart_type)
+        )
+      @look_up_student_2 = LookUp.new(
+          year: params[:year],
+          class_room_id:  params[:class_room_id],
+          student_id:     params[:student_2_id],
           subject_id:     params[:subject_id],
           class_test_id:  params[:class_test_id],
           chart_hash:     default_chart_hash(chart_type)

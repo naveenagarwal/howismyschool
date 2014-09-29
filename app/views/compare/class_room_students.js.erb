@@ -1,1 +1,2 @@
 $('select.compare_student_select').empty().append('<option val=""></option><%= j options_for_select(@students_array) %>');
+$("form#compare_form input[type=submit]").attr("disabled", "disabled");
