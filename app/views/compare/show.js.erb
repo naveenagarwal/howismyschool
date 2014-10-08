@@ -3,12 +3,14 @@ var container, testName, studentName, graphContainer;
 graphContainer = $('#inline-div');
 graphContainer.html('');
 
+studentName1 = $("select#comapre_student_1_select option:selected").text();
+studentName2 = $("select#comapre_student_2_select option:selected").text();
+
 <% graph_array_data = @look_up_student_1.student_average_test_result %>
 <% if graph_array_data.present? %>
 
-  studentName = $("select#comapre_student_1_select option:selected").text();
   graphContainer.append('<%= j render(partial: "/shared/graph_block", locals: { id: "student_1_avg_result" }) %>');
-  $('#student_1_avg_result').parent().find('.absoulte-position strong').html('Average Test scores : ' + studentName);
+  $('#student_1_avg_result').parent().find('.absoulte-position strong').html('Average Test scores : ' + studentName1);
 
   data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
   Charts.drawChartFromArray(data, 'student_1_avg_result', 'Class Test' , 'Percentage(%)');
@@ -18,11 +20,48 @@ graphContainer.html('');
 <% graph_array_data = @look_up_student_2.student_average_test_result %>
 <% if graph_array_data.present? %>
 
-  studentName = $("select#comapre_student_2_select option:selected").text();
   graphContainer.append('<%= j render(partial: "/shared/graph_block", locals: { id: "student_2_avg_result" }) %>');
-  $('#student_2_avg_result').parent().find('.absoulte-position strong').html('Average Test scores : ' + studentName);
+  $('#student_2_avg_result').parent().find('.absoulte-position strong').html('Average Test scores : ' + studentName2);
 
   data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
   Charts.drawChartFromArray(data, 'student_2_avg_result', 'Class Test' , 'Percentage(%)');
+
+<% end %>
+
+<% graph_array_data = @look_up_student_1.student_individual_test_results %>
+<% if graph_array_data.flatten.present? %>
+  graphContainer.append('<hr class="look_up_hr">');
+
+  <% graph_array_data.each.with_index do |graph_data, index|%>
+
+    data = JSON.parse('<%= graph_data[:test_result].to_json.html_safe %>');
+    container = 'student_1_test_result_<%= "#{index}" %>';
+    if($('#' + container).length < 1){
+      graphContainer.append('<%= j render(partial: "/shared/graph_block", locals: { id: "student_1_test_result_#{index}" }) %>');
+    }
+    testName = '<%= "#{graph_data[:test_name]}".html_safe %>';
+    $('#' + container).parent().find('.absoulte-position strong').html(testName + ' Test scores For: ' + studentName1);
+    Charts.drawChartFromArray(data, container, 'Subjects' , 'Percentage(%)');
+
+  <% end %>
+
+<% end %>
+
+<% graph_array_data = @look_up_student_2.student_individual_test_results %>
+<% if graph_array_data.flatten.present? %>
+  graphContainer.append('<hr class="look_up_hr">');
+
+  <% graph_array_data.each.with_index do |graph_data, index|%>
+
+    data = JSON.parse('<%= graph_data[:test_result].to_json.html_safe %>');
+    container = 'student_2_test_result_<%= "#{index}" %>';
+    if($('#' + container).length < 1){
+      graphContainer.append('<%= j render(partial: "/shared/graph_block", locals: { id: "student_2_test_result_#{index}" }) %>');
+    }
+    testName = '<%= "#{graph_data[:test_name]}".html_safe %>';
+    $('#' + container).parent().find('.absoulte-position strong').html(testName + ' Test scores For: ' + studentName2);
+    Charts.drawChartFromArray(data, container, 'Subjects' , 'Percentage(%)');
+
+  <% end %>
 
 <% end %>
