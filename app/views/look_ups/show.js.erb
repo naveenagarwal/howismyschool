@@ -40,7 +40,7 @@ var data;
   <% graph_array_data = @look_up.student_average_test_result %>
   <% if graph_array_data.present? %>
 
-    $('#inline-div').append('<%= j render(partial: "graph_block", locals: { id: "student_avg_result" }) %>');
+    $('#inline-div').append('<%= j render(partial: "/shared/graph_block", locals: { id: "student_avg_result" }) %>');
     $('#student_avg_result').parent().find('.absoulte-position strong').html('Average Test scores : ' + studentName);
 
     data = JSON.parse('<%= graph_array_data.to_json.html_safe %>');
@@ -56,7 +56,7 @@ var data;
       data = JSON.parse('<%= graph_data[:test_result].to_json.html_safe %>');
       container = 'test_result_<%= "#{index}" %>';
       if($('#' + container).length < 1){
-        $('#inline-div').append('<%= j render(partial: "graph_block", locals: { id: "test_result_#{index}" }) %>');
+        $('#inline-div').append('<%= j render(partial: "/shared/graph_block", locals: { id: "test_result_#{index}" }) %>');
       }
       testName = '<%= "#{graph_data[:test_name]}".html_safe %>';
       $('#' + container).parent().find('.absoulte-position strong').html(testName + ' Test scores For: ' + studentName);

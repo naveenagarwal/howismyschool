@@ -17,3 +17,27 @@ convert image.png -alpha on -channel rgba image.tga
 set black background to transparent
 
 convert -fuzz 10% -transparent black orig1.jpg 1.png
+
+#############################################
+
+for alpha image
+
+convert md_10_alpha.png -crop 256x84+0+0 md_10_alpha_1.png;
+convert -fuzz 10% -transparent white md_10_alpha_1.png md_10_alpha_1.png;
+convert +transparent black md_10_alpha_1.png md_10_alpha_1.png;
+
+from below it, for mortoar
+
+for 10
+
+convert md_10_alpha.png -crop 256x84+0+84 md_10_alpha_2.png;
+convert -fuzz 5% -transparent white md_10_alpha_2.png md_10_alpha_2.png;
+
+for 20
+convert md_20_alpha.png -crop 320x96+0+96 md_20_alpha_1.png;
+convert -fuzz 5% -transparent white md_20_alpha_1.png md_20_alpha_1.png;
+
+for 30
+
+convert md_30_alpha.png -crop 255x84+0+84 md_30_alpha_1.png;
+convert -fuzz 5% -transparent white md_30_alpha_1.png md_30_alpha_1.png;
