@@ -1,50 +1,50 @@
-x = []
-i = 0
-j = 0
+array = [
+  [11,1,13],
+  [14,11,7],
+  [5,14,9],
+  [6,7,4]
+]
 
-while(true) do
-  break if i > 15
-  x[i] = []
-  while(true) do
-    if x[i].size >= 17
-      j = 0
-      break
-    end
+class Node
+  attr_accessor :val, :left, :right
 
-    if i == 0
-      if j == 0
-        x[i][j] = rand(16)
-      else
-        while(true) do
-          z = rand(16)
-          if x[i][j - 1] != z
-            x[i][j] =  z
-            break
-          end
-        end
-      end
-    elsif i > 0
-      if j > 0
-        while(true) do
-          z = rand(16)
-          if x[i][j - 1] != z && x[i - 1][j - 1] != z && x[i-1][j] != z && x[i-1][j+1] != z
-            x[i][j] = z
-            break
-          end
-        end
-      else
-        while(true) do
-          z = rand(16)
-          if x[i - 1][j] != z && x[i-1][j+1] != z
-            x[i][j] = z
-            break
-          else
-            next
-          end
-        end
-      end
-    end
-    j += 1
+  def initialize(val, left = nil, right = nil)
+   @val = val
+   @left = left
+   @right = right
   end
-  i += 1
+
 end
+
+root = Node.new array[0][1]
+left_node = Node.new array[0][0]
+right_node = Node.new array[0][2]
+root.left = left_node
+root.right = right_node
+
+right_nodes = [root.right]
+
+array[1..-1].each do |a|
+  if(left_node.val == a[1])
+    left_node.left = Node.new a[0]
+    right_nodes << (left_node.right = Node.new a[2])
+    left_node = left_node.left
+  else
+    right_nodes.each do |rn|
+      if rn.val == a[1]
+        rn.left = Node.new a[0]
+        rn.right = Node.new a[2]
+      end
+    end
+  end
+end
+
+def preorder(n)
+  return if n.nil?
+
+  puts n.val
+  preorder n.left
+  preorder n.right
+end
+
+preorder root

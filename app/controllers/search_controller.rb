@@ -53,7 +53,7 @@ class SearchController < ApplicationController
 
           response.headers["x-search-term"] = params[:q]
         rescue Exception => e
-          byebug
+          # byebug
           @results = []
           set_flash_messages type: "error", message: "Error in Searching... Please try after some time"
         end
